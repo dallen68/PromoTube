@@ -52,7 +52,7 @@ public class Channel {
     }
 
     public String toString() {
-        return "Channel: " + channelUrl + "\nUploads Playlist: " + uploadPlaylistId +
+        return "Channel: " + channelUrl + "\nUploads Playlist: " + uploadPlaylistId
                 + "\nLast video uploaded on: " + lastVideoDate.toString() 
                 + "\nScrape date: " + scrapeDate.toString();
     }
