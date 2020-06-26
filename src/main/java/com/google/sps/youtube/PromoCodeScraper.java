@@ -31,11 +31,29 @@ public class PromoCodeScraper {
       this.youtube = youtube;
   }
 
-  private PromoCodeScraper(){}
+  private PromoCodeScraper(){
+    youtube = new YouTube.Builder(new NetHttpTransport(),
+        JacksonFactory.getDefaultInstance(),
+        null)
+        .setApplicationName(APPLICATION_NAME)
+        .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY))
+        .build();
+  }
 
   public String scrapeChannelUploadPlaylist(String channelId){
-      return "";
-  }
+    try {
+        YouTube.Channels.List request = youtube.channels()
+            .list("contentDetails");
+        ChannelListResponse response = request.setId(channelId).execute();
+        if(response.getItems()==null){
+            throw new IllegalArgumentException("Incorrect channel-id");
+        }
+        List<Channel> channelsInfo = response.getItems();
+        return channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads();
+      } catch (Exception e){
+            return "";
+      }
+   }
 
   public String scrapeVideosFromChannel(String uploadId){
       return "";
