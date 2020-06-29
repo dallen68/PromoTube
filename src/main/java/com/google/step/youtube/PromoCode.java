@@ -1,70 +1,27 @@
 package com.google.step.youtube;
 
+import com.google.auto.value.AutoValue;
 import java.util.Date;
 
 /**
- * Object for a promotional code and information on its source. 
+ * Value type for a promotional code and information on its source. 
  */
-public class PromoCode {
+@AutoValue
+abstract class PromoCode {
 
-    private String promoCode;
-    private int rating;
-    // URLs will be strored as Strings to match type in datastore
-    private String channelUrl;
-    private String videoUrl;
-    private Date videoUploadDate;
-
-    public PromoCode (String promoCode, int rating, String channelUrl, String videoUrl, Date videoUploadDate) {
-        this.promoCode = promoCode;
-        this.rating = rating;
-        this.channelUrl = channelUrl;
-        this.videoUrl = videoUrl;
-        this.videoUploadDate = videoUploadDate;
+    public static PromoCode create (String promoCode, int rating, String channelUrl, 
+                                    String videoUrl, Date videoUploadDate) {
+        return new AutoValue_PromoCode(promoCode, rating, channelUrl, videoUrl, videoUploadDate);
     }
 
-    public void setPromoCode (String promoCode) {
-        this.promoCode = promoCode;
-    }
+    public abstract String getPromoCode();
 
-    public void setRating (int rating) {
-        this.rating = rating;
-    }
+    public abstract int getRating();
 
-    public void setChannelUrl (String channelUrl) {
-        this.channelUrl = channelUrl;
-    }
+    public abstract String getChannelUrl();
 
-    public void setVideoUrl (String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
+    public abstract String getVideoUrl();
 
-    public void setVideoUploadDate (Date videoUploadDate) {
-        this.videoUploadDate = videoUploadDate;
-    }
-
-    public String getPromoCode () {
-        return promoCode;
-    }
-
-    public int setRating () {
-        return rating;
-    }
-
-    public String getChannelUrl () {
-        return channelUrl;
-    }
-
-    public String getVideoUrl () {
-        return videoUrl;
-    }
-
-    public Date getVideoUploadDate () {
-        return videoUploadDate;
-    }
-
-    public String toString() {
-        return "Promocode: " + promoCode + "\nRating: " + rating + "\nVideo: " + videoUrl 
-                + "\nUploaded on: " + videoUploadDate.toString() + "\nFrom channel: " + channelUrl;
-    }
+    public abstract Date getVideoUploadDate();
 }
 
