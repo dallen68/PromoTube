@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body >
-      <p>
-          Hello World!!
-      </p>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <title>PromoTube</title>
+        <link rel="stylesheet" href="style.css">
+            <script src="script.js"></script>
+    </head>
+    <body >
+        <div class="content">
+        <h1>PromoTube</h1>
+        <form id="searchForm">
+            <input type="text" id="formInput" name="formInput" value="Enter Channel URL">
+            <input type="submit" value="Enter">
+        </form>
+
+        <div class="promoCodeList">
+            <table>
+                <tr>
+                    <th>VideoURL</th>
+                    <th>PROMO CODE</th>
+                    <th>Rating</th>
+                    <th><button>Like</button></th>
+                    <th><button>Dislike</button></th>
+                </tr>
+
+                <tr>
+                    <th><a href="youtube.com">youtube.com</a></th>
+                    <th>XXXXX</th>
+                    <th>5</th>
+                    <th><button>Like</button></th>
+                    <th><button>Dislike</button></th>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </body>
 </html>
