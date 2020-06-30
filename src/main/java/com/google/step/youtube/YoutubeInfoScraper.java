@@ -43,8 +43,8 @@ public class YoutubeInfoScraper {
   * @param ytResponse Pass in this object or any other object that implements YoutubeResponse.
   * @param channelId Id of a channel.  Can be found in channel's urls.
   * e.g. https://www.youtube.com/channel/<CHANNEL-ID>
-  * @return string of the channel's upload playlist id.  Null if id is invalid or 
-  * no items were found.
+  * @return an optional string of the channel's upload playlist id. The optional will be empty 
+  * if id is invalid or no items were found.
   */
   public Optional<String> scrapeChannelUploadPlaylist(String channelId)
     throws IOException {
