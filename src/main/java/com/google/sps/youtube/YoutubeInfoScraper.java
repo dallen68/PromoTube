@@ -17,28 +17,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import com.google.sps.youtube.YoutubeResponse;
 import java.util.Properties; 
+import java.util.Optional;
 import java.io.FileInputStream;
 
 
 public class YoutubeInfoScraper implements YoutubeResponse {
 
   // TODO: Add seperate file to hold API Key  
-  private String API_KEY = "";
+  private static final String API_KEY = "";
   private static final String APPLICATION_NAME = "promotube";
 
   private YouTube youtube;
 
-  private YoutubeInfoScraper(YouTube youtube){
+  public YoutubeInfoScraper(YouTube youtube) {
       this.youtube = youtube;
   }
 
-  private YoutubeInfoScraper(){
-    youtube = new YouTube.Builder(new NetHttpTransport(),
+  public YoutubeInfoScraper() {
+    this(new YouTube.Builder(new NetHttpTransport(),
         JacksonFactory.getDefaultInstance(),
         null)
         .setApplicationName(APPLICATION_NAME)
         .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY))
-        .build();
+        .build());
   }
 
   /**
@@ -48,14 +49,14 @@ public class YoutubeInfoScraper implements YoutubeResponse {
   * @return string of the channel's upload playlist id.  Null if id is invalid or 
   * no items were found.
   */
-  public String scrapeChannelUploadPlaylist(YoutubeResponse ytResponse, String channelId)
-    throws IOException{
+  public Optional<String> scrapeChannelUploadPlaylist(YoutubeResponse ytResponse, String channelId)
+    throws IOException {
         ChannelListResponse response = ytResponse.getYoutubeChannelListResponse(channelId);
-        if(response==null || response.getItems()==null || response.getItems().size()==0){
-            return "null";
+        if (response==null || response.getItems()==null || response.getItems().isEmpty()){
+            return Optional.empty();
         }
         List<Channel> channelsInfo = response.getItems();
-        return channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads();
+        return Optional.of(channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads());
    }
 
   @Override
@@ -63,12 +64,4 @@ public class YoutubeInfoScraper implements YoutubeResponse {
     throws IOException{ 
         return youtube.channels().list("contentDetails").setId(channelId).execute();
    }
-
-  public static YoutubeInfoScraper getNewInstance(){
-      return new YoutubeInfoScraper();
-  }
-
-  public static YoutubeInfoScraper setYoutubeAndGetNewInstance(YouTube youtube){
-      return new YoutubeInfoScraper(youtube);
-  }
 }
