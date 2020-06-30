@@ -20,17 +20,19 @@ import java.util.Properties;
 import java.util.Optional;
 import java.io.FileInputStream;
 
-
+/**
+*  Scrapes a channel's upload playlist and scrapes the channel's videos + descriptions 
+*/
 public class YoutubeInfoScraper implements YoutubeResponse {
 
   // TODO: Add seperate file to hold API Key  
   private static final String API_KEY = "";
   private static final String APPLICATION_NAME = "promotube";
 
-  private YouTube youtube;
+  private YouTube youTubeClient;
 
-  public YoutubeInfoScraper(YouTube youtube) {
-      this.youtube = youtube;
+  public YoutubeInfoScraper(YouTube youTubeClient) {
+      this.youTubeClient = youTubeClient;
   }
 
   public YoutubeInfoScraper() {
@@ -62,6 +64,6 @@ public class YoutubeInfoScraper implements YoutubeResponse {
   @Override
   public ChannelListResponse getYoutubeChannelListResponse(String channelId)
     throws IOException{ 
-        return youtube.channels().list("contentDetails").setId(channelId).execute();
+        return youTubeClient.channels().list("contentDetails").setId(channelId).execute();
    }
 }
