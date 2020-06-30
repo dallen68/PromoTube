@@ -15,12 +15,13 @@
 package com.google.step.youtube;
 
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.anyString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +34,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.YouTube.Channels;
+import com.google.api.services.youtube.YouTube.Channels.List;
 import java.io.IOException;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,8 +50,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 public final class YoutubeInfoScraperTest {
 
   private YoutubeInfoScraper scraper;
-  private ChannelListResponse mockResponse;
-  private YoutubeResponse apiResponse; 
+  private ChannelListResponse mockResponse; 
+  private YouTube mockYouTubeClient;
+  private YouTube.Channels mockChannels;
+  private YouTube.Channels.List mockListChannels;
 
   private static final String CHANNEL_ID = "CHANNEL_ID";
   private static final String CHANNEL_ID_THAT_DOES_NOT_EXIST = "CHANNEL_ID_THAT_DOES_NOT_EXIST";
@@ -58,30 +62,29 @@ public final class YoutubeInfoScraperTest {
   private static final String IOEXCEPTION = "IOEXCEPTION";
   
   @Before
-  public void setUp() {
-    apiResponse = mock(YoutubeResponse.class);
-    scraper = new YoutubeInfoScraper(
-        new YouTube.Builder(new NetHttpTransport(),
-        JacksonFactory.getDefaultInstance(),
-        /* httpRequestInitializer= */ null)
-        .setApplicationName("APPLICATION_NAME")
-        .setYouTubeRequestInitializer(new YouTubeRequestInitializer("API_KEY"))
-        .build());
+  public void setUp() throws Exception {
+      mockYouTubeClient = mock(YouTube.class);
+      mockChannels = mock(YouTube.Channels.class);
+      mockListChannels = mock(YouTube.Channels.List.class);
+      when(mockYouTubeClient.channels()).thenReturn(mockChannels);
+      when(mockChannels.list("contentDetails")).thenReturn(mockListChannels);
+      when(mockListChannels.setId(anyString())).thenReturn(mockListChannels);
+      scraper = new YoutubeInfoScraper(mockYouTubeClient);
   }
 
   @Test
   public void scrapeChannelUploadPlaylist_nonExistentChannelId() throws Exception{
       ChannelListResponse mockResponse = new ChannelListResponse();
-      when(apiResponse.getYoutubeChannelListResponse(CHANNEL_ID_THAT_DOES_NOT_EXIST)).thenReturn(mockResponse.setItems(null));
-      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(apiResponse, CHANNEL_ID_THAT_DOES_NOT_EXIST);
+      when(mockListChannels.execute()).thenReturn(mockResponse.setItems(null));
+      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_THAT_DOES_NOT_EXIST);
       assertEquals(false, actual.isPresent());
   }
 
  @Test
   public void scrapeChannelUploadPlaylist_emptyList() throws Exception{
       ChannelListResponse mockResponse = new ChannelListResponse();
-      when(apiResponse.getYoutubeChannelListResponse(CHANNEL_ID)).thenReturn(mockResponse.setItems(Arrays.asList()));
-      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(apiResponse, CHANNEL_ID);
+      when(mockListChannels.execute()).thenReturn(mockResponse.setItems(Arrays.asList()));
+      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
       assertEquals(false, actual.isPresent());
   }
 
@@ -92,14 +95,15 @@ public final class YoutubeInfoScraperTest {
       channel.setContentDetails(new ChannelContentDetails().setRelatedPlaylists(
           new RelatedPlaylists().setUploads(UPLOAD_ID)));
       mockResponse.setItems(Arrays.asList(channel));
-      when(apiResponse.getYoutubeChannelListResponse(CHANNEL_ID_THAT_EXISTS)).thenReturn(mockResponse);
-      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(apiResponse, CHANNEL_ID_THAT_EXISTS);
+      when(mockListChannels.execute()).thenReturn(mockResponse);
+      Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_THAT_EXISTS);
       assertEquals(UPLOAD_ID, actual.get());
   }
 
   @Test 
   public void scrapeChannelUploadPlaylist_IOException() throws Exception{
-      when(apiResponse.getYoutubeChannelListResponse(IOEXCEPTION)).thenThrow(IOException.class);
-      assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(apiResponse, IOEXCEPTION));
+      when(mockListChannels.execute()).thenThrow(IOException.class);
+      assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(IOEXCEPTION));
   }
+  
 }
