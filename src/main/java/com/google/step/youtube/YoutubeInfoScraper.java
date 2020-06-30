@@ -1,5 +1,5 @@
 
-package com.google.sps.youtube;
+package com.google.step.youtube;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import com.google.sps.youtube.YoutubeResponse;
+import com.google.step.youtube.YoutubeResponse;
 import java.util.Properties; 
 import java.util.Optional;
 import java.io.FileInputStream;
