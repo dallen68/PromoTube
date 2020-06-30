@@ -33,7 +33,7 @@ public class YoutubeInfoScraper {
   public YoutubeInfoScraper() {
     this(new YouTube.Builder(new NetHttpTransport(),
         JacksonFactory.getDefaultInstance(),
-        null)
+        /* httpRequestInitializer= */ null)
         .setApplicationName(APPLICATION_NAME)
         .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY))
         .build());
