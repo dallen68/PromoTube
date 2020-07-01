@@ -51,10 +51,8 @@ public final class YoutubeInfoScraperTest {
 
   private YoutubeInfoScraper scraper;
   private ChannelListResponse mockResponse; 
-  private YouTube mockYouTubeClient;
-  private YouTube.Channels mockChannels;
   private YouTube.Channels.List mockListChannels;
-
+  
   private static final String CHANNEL_ID = "CHANNEL_ID";
   private static final String CHANNEL_ID_THAT_DOES_NOT_EXIST = "CHANNEL_ID_THAT_DOES_NOT_EXIST";
   private static final String CHANNEL_ID_THAT_EXISTS = "CHANNEL_ID_THAT_EXISTS";
@@ -63,8 +61,8 @@ public final class YoutubeInfoScraperTest {
   
   @Before
   public void setUp() throws Exception {
-      mockYouTubeClient = mock(YouTube.class);
-      mockChannels = mock(YouTube.Channels.class);
+      YouTube mockYouTubeClient = mock(YouTube.class);
+      YouTube.Channels mockChannels = mock(YouTube.Channels.class);
       mockListChannels = mock(YouTube.Channels.List.class);
       when(mockYouTubeClient.channels()).thenReturn(mockChannels);
       when(mockChannels.list("contentDetails")).thenReturn(mockListChannels);

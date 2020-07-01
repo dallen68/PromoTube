@@ -49,10 +49,12 @@ public class YoutubeInfoScraper {
   public Optional<String> scrapeChannelUploadPlaylist(String channelId)
     throws IOException {
         ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
-        if (response==null || response.getItems()==null || response.getItems().isEmpty()){
+        // getItems() return null when no items match the criteria. 
+        if (response.getItems()==null || response.getItems().isEmpty()){
             return Optional.empty();
         }
         List<Channel> channelsInfo = response.getItems();
+        // Since we are only requesting one channel-id, we only get one item back.  
         return Optional.of(channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads());
    }
 }
