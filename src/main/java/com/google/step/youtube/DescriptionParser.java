@@ -12,6 +12,7 @@ public class DescriptionParser {
 
     // enum is package private in order to access in tests
     enum Patterns {
+        
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})"));
 
         private final Pattern regex;
@@ -25,6 +26,12 @@ public class DescriptionParser {
         }
     }
 
+    /** 
+     * Parses the given string for promotional codes and affiliate links.
+     *
+     * @param description of the YouTube video to be parsed.
+     * @return A list of all promotional codes and affiliate links found in the description, duplicates allowed.
+     */
     public static List<String> parse (String description) {
         List<String> codes = new ArrayList<>();
 
@@ -34,6 +41,13 @@ public class DescriptionParser {
         return codes;
     }
 
+    /** 
+     * Finds all matches in the given string from the given regex pattern.
+     *
+     * @param pattern of the regular experssion to use for matching.
+     * @param description of the YouTube video to be parsed.
+     * @return A list of all matches found in description.
+     */
     public static List<String> findMatches(Pattern pattern, String description) {
         List<String> matches = new ArrayList<>();
         Matcher matcher = pattern.matcher(description);
