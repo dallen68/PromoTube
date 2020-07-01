@@ -71,7 +71,7 @@ public final class YoutubeInfoScraperTest {
   }
 
   @Test
-  public void scrapeChannelUploadPlaylist_nonExistentChannelId() throws IOException{
+  public void scrapeChannelUploadPlaylist_nonExistentChannelId() throws IOException {
       ChannelListResponse mockResponse = new ChannelListResponse();
       when(mockListChannels.execute()).thenReturn(mockResponse.setItems(null));
       Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_THAT_DOES_NOT_EXIST);
@@ -79,7 +79,7 @@ public final class YoutubeInfoScraperTest {
   }
 
  @Test
-  public void scrapeChannelUploadPlaylist_emptyList() throws IOException{
+  public void scrapeChannelUploadPlaylist_emptyList() throws IOException {
       ChannelListResponse mockResponse = new ChannelListResponse();
       when(mockListChannels.execute()).thenReturn(mockResponse.setItems(Arrays.asList()));
       Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
@@ -87,7 +87,7 @@ public final class YoutubeInfoScraperTest {
   }
 
   @Test
-  public void scrapeChannelUploadPlaylist_channelExists() throws IOException{
+  public void scrapeChannelUploadPlaylist_channelExists() throws IOException {
       mockResponse = new ChannelListResponse();
       Channel channel = new Channel();
       channel.setContentDetails(new ChannelContentDetails().setRelatedPlaylists(
@@ -99,7 +99,7 @@ public final class YoutubeInfoScraperTest {
   }
 
   @Test 
-  public void scrapeChannelUploadPlaylist_IOException() throws IOException{
+  public void scrapeChannelUploadPlaylist_IOException() throws IOException {
       when(mockListChannels.execute()).thenThrow(IOException.class);
       assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(IOEXCEPTION));
   }
