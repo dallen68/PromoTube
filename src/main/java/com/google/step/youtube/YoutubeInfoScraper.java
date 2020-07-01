@@ -40,7 +40,7 @@ public class YoutubeInfoScraper {
   }
 
   /**
-  * @param channelId Id of a channel.  Can be found in channel's urls.
+  * @param channelId Id of a channel. Can be found in channel's urls.
   * e.g. https://www.youtube.com/channel/<CHANNEL-ID>
   * @return an optional string of the channel's upload playlist id. The optional will be empty 
   * if id is invalid or no items were found.
