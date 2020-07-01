@@ -32,7 +32,8 @@ public final class DescriptionParserTest {
     /** String will return matches from all regexs in parse() */
     @Test
     public void parse_MatchAll() {
-        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
+            + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
 
         List<String> actual = DescriptionParser.parse(desc);
         List<String> expected = Arrays.asList("FUNGBROS10");
@@ -42,7 +43,8 @@ public final class DescriptionParserTest {
     /** String will only have matches from CODE_NO_QUOTES regex */
     @Test
     public void parse_CODE_NO_QUOTES() {
-        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
+            + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
 
         List<String> actual = DescriptionParser.parse(desc);
         List<String> expected = Arrays.asList("FUNGBROS10");
@@ -61,7 +63,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: standard case - 1 space, end of string, all caps, letters and numbers */
     @Test
     public void codeNoQuotes_Standard() {
-        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
+            + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("FUNGBROS10");
@@ -91,7 +94,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: edge case - 1 letter promocode is not matched */
     @Test
     public void codeNoQuotes_1LetterPromocode() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code R at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code R at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Collections.emptyList();
@@ -101,7 +105,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: edge case - 2 letter promocode is matched */
     @Test
     public void codeNoQuotes_2LetterPromocode() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code RO at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code RO at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("RO");
@@ -111,7 +116,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: lookbehind not lookahead - promocode is before word 'code' */
     @Test
     public void codeNoQuotes_Lookbehind() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the ROOSTER code at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the ROOSTER code at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Collections.emptyList();
@@ -121,7 +127,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: more than 1 space between 'code' and promocode is not matched */
     @Test
     public void codeNoQuotes_2Spaces() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code  ROOSTER at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code  ROOSTER at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Collections.emptyList();
@@ -131,7 +138,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: newline between 'code' and promocode is acceptable */
     @Test
     public void codeNoQuotes_NewLine() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code\nROOSTER at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code\nROOSTER at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("ROOSTER");
@@ -141,7 +149,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: special charaters and symbols not included in match */
     @Test
     public void codeNoQuotes_Symbols() {
-        String desc = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code ROOSTER! at checkout!";
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code ROOSTER! at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("ROOSTER");
@@ -161,7 +170,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: 'code' at very end of string */
     @Test
     public void codeNoQuotes_CodeAtEnd() {
-        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your first purchase of a website or domain using code BOULDERINGBOBAT";
+        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
+            + "first purchase of a website or domain using code BOULDERINGBOBAT";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("BOULDERINGBOBAT");
@@ -171,7 +181,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: promocode made of all numbers is still matched */
     @Test
     public void codeNoQuotes_PromocodeAllNumbers() {
-        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your first purchase of a website or domain using code 12345";
+        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
+            + "first purchase of a website or domain using code 12345";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("12345");
@@ -181,7 +192,8 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: String must have standalone 'code' word */
     @Test
     public void codeNoQuotes_StandaloneCode() {
-        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your first purchase of a website or domain using Decode BOULDERINGBOBAT";
+        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
+            + "first purchase of a website or domain using Decode BOULDERINGBOBAT";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Collections.emptyList();
@@ -191,9 +203,12 @@ public final class DescriptionParserTest {
     /** CODE_NO_QUOTES: multiple matches in 1 String, order does not matter */
     @Test
     public void codeNoQuotes_MultipleMatches() {
-        String desc = "This episode originally recorded June 8, 2020, and is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone at the top of "
-            + "the homepage, and type in code ROOSTERTEETH to claim your special offer), Mercari (Buy or sell almost anything on Mercari on the App store or at http://mercari.com), "
-            + "and Bespoke Post (Get 20% off your first monthly box when you sign up at http://boxofawesome.com and enter the code ROOSTER at checkout!).";
+        String desc = "This episode originally recorded June 8, 2020, and is sponsored by Stamps.com "
+            + "(Go to http://stamps.com, click on the microphone at the top of the homepage, "
+            + "and type in code ROOSTERTEETH to claim your special offer), Mercari "
+            + "(Buy or sell almost anything on Mercari on the App store or at http://mercari.com), "
+            + "and Bespoke Post (Get 20% off your first monthly box when you sign up at http://boxofawesome.com "
+            + "and enter the code ROOSTER at checkout!).";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("ROOSTERTEETH", "ROOSTER");
