@@ -32,7 +32,7 @@ public class DescriptionParser {
      * @param description of the YouTube video to be parsed.
      * @return A list of all promotional codes and affiliate links found in the description, duplicates allowed.
      */
-    public static List<String> parse (String description) {
+    public static List<String> parse(String description) {
         List<String> codes = new ArrayList<>();
 
         for (Patterns regex : Patterns.values()) {
