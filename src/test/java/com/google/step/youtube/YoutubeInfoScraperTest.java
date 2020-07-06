@@ -15,15 +15,11 @@
 package com.google.step.youtube;
 
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.anyString;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import com.google.api.services.youtube.model.Channel;
@@ -31,9 +27,6 @@ import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlayli
 import com.google.api.services.youtube.model.ChannelContentDetails;
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.YouTube.PlaylistItems;
@@ -45,7 +38,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
