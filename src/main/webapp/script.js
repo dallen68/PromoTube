@@ -1,6 +1,5 @@
 function ratePromoCode(tableRow, rating) {
     var videoUrl = document.getElementById('promoCodeTable').rows[tableRow].cells[0].firstChild.getAttribute("href");
-    console.log(videoUrl);
     fetch('/promo-code?rating=' + rating + '&videoUrl=' + videoUrl, {method: 'POST'});
     getCodes();
 }
