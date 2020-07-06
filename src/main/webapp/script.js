@@ -1,10 +1,10 @@
 function ratePromoCode(tableRow, rating) {
     var videoUrl = document.getElementById('promoCodeTable').rows[tableRow].cells[0].firstChild.getAttribute("href");
     fetch('/promo-code?rating=' + rating + '&videoUrl=' + videoUrl, {method: 'POST'});
-    getCodes();
+    displayCodes();
 }
 
-async function getCodes() {
+async function displayCodes() {
     const response = await fetch('/promo-code');
     const codes = await response.json();
     const tableEl = document.getElementById('promoCodeTable');
