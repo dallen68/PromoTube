@@ -50,7 +50,7 @@ public class YoutubeInfoScraper {
     throws IOException {
         ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
         // getItems() return null when no items match the criteria (channelId). 
-        if (response.getItems()==null || response.getItems().isEmpty()){
+        if (response.getItems()==null || response.getItems().isEmpty()) {
             return Optional.empty();
         }
         List<Channel> channelsInfo = response.getItems();
@@ -70,7 +70,7 @@ public class YoutubeInfoScraper {
             .setPlaylistId(uploadId)
             .execute();
         // getItems() return null when no items match the criteria (uploadId). 
-        if (response.getItems()==null || response.getItems().isEmpty()){
+        if (response.getItems()==null || response.getItems().isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
