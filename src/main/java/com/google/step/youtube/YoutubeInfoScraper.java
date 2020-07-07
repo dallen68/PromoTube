@@ -80,11 +80,11 @@ public class YoutubeInfoScraper {
         return Optional.of(response.getItems());
    }
 
-   /**
-   *  @param uploadId Id of a channel's upload playlist.
-   *  @return an optional list of PromoCode objects.  the optional will return empty
-   *  if id is invalid or no items in the playlist are found.  
-   */
+  /**
+  * @param uploadId Id of a channel's upload playlist.
+  * @return an optional list of PromoCode objects.  the optional will return empty
+  * if id is invalid or no items in the playlist are found.  
+  */
    public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId)
     throws IOException {
         Optional<List<PlaylistItem>> playlistItems = getPlaylistItems(uploadId);
