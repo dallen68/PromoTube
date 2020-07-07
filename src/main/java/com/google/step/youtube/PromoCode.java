@@ -19,4 +19,3 @@ abstract class PromoCode {
 
     public abstract Date getVideoUploadDate();
 }
-
