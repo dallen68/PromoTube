@@ -12,6 +12,7 @@ import com.google.api.services.youtube.model.ChannelContentDetails;
 import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlaylists;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
+import java.util.Map;
 import java.util.List;
 import java.io.IOException; 
 import java.util.Optional;
@@ -74,5 +75,14 @@ public class YoutubeInfoScraper {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
+   }
+
+   public void scrapePromoCodesFromPlaylist(String uploadId)
+    throws IOException {
+        Optional<List<PlaylistItem>> playlistItems = getPlaylistItems(uploadId);
+        if (playlistItems.isEmpty()) {
+            return playlistItems;
+        }
+
    }
 }
