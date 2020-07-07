@@ -19,9 +19,8 @@ public final class DescriptionParserTest {
      * ==================== GENERAL TESTS FOR PARSE ==================== *
      *                                                                   */
 
-    /** String will return no matches from all regexs in parse() */
     @Test
-    public void parse_matchNone() {
+    public void parse_matchesFromNone() {
         String desc = "Check out our UPDATED version which has all the NEW ELEMENTS here:  https://youtu.be/rz4Dd1I_fX0"
                         + "\nThe TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
                         + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
@@ -29,9 +28,8 @@ public final class DescriptionParserTest {
         assertThat(DescriptionParser.parse(desc), equalTo(Collections.emptyList()));
     }
 
-    /** String will return matches from all regexs in parse() */
     @Test
-    public void parse_matchAll() {
+    public void parse_matchesFromAll() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
             + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10. "
             + "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -40,7 +38,6 @@ public final class DescriptionParserTest {
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10", "COOLIRPA")));
     }
 
-    /** String will only have matches from CODE_NO_QUOTES regex */
     @Test
     public void parse_codeNoQuotes() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
@@ -49,7 +46,6 @@ public final class DescriptionParserTest {
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10")));
     }
 
-    /** String will only have matches from CODE_WITH_QUOTES regex */
     @Test
     public void parse_codeWithQuotes() {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -65,7 +61,6 @@ public final class DescriptionParserTest {
 
     private static final Pattern CODE_NO_QUOTES_PATTERN = DescriptionParser.Patterns.CODE_NO_QUOTES.getPattern();
 
-    /** CODE_NO_QUOTES: letters and numbers */
     @Test
     public void codeNoQuotes_lettersAndNumbers() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
@@ -75,7 +70,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("FUNGBROS10")));
     }
 
-    /** CODE_NO_QUOTES: case sensitivity - match promocode until first lowercase */
     @Test
     public void codeNoQuotes_promocodeCaseSensitive() {
         String desc = "Use code LINUSsssS and get 25% off GlassWire at https://lmg.gg/glasswire";
@@ -84,7 +78,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
-    /** CODE_NO_QUOTES: case insensitivity for keyword 'code' */
     @Test
     public void codeNoQuotes_keywordCaseInsensitive() {
         String desc = "Use cOdE LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
@@ -93,7 +86,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
-    /** CODE_NO_QUOTES: edge case - 1 chararcter promocode is not matched */
     @Test
     public void codeNoQuotes_1ChararcterPromocode() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -103,7 +95,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_NO_QUOTES: edge case - 2 chararcter promocode is matched */
     @Test
     public void codeNoQuotes_2CharacterPromocode() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -113,7 +104,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("RO")));
     }
 
-    /** CODE_NO_QUOTES: lookbehind not lookahead - promocode is before word 'code' */
     @Test
     public void codeNoQuotes_lookbehind() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -123,7 +113,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_NO_QUOTES: more than 1 space between 'code' and promocode is not matched */
     @Test
     public void codeNoQuotes_2Spaces() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -133,7 +122,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_NO_QUOTES: newline between 'code' and promocode is acceptable */
     @Test
     public void codeNoQuotes_newLine() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -143,7 +131,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("ROOSTER")));
     }
 
-    /** CODE_NO_QUOTES: special charaters and symbols not included in match */
     @Test
     public void codeNoQuotes_symbols() {
         String desc = "Get 20% off your first monthly box when you sign up at "
@@ -153,7 +140,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("ROOSTER")));
     } 
 
-    /** CODE_NO_QUOTES: 'code' at very beginning of string */
     @Test
     public void codeNoQuotes_keywordAtStart() {
         String desc = "code LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
@@ -162,7 +148,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
-    /** CODE_NO_QUOTES: 'code' at very end of string */
     @Test
     public void codeNoQuotes_keywordAtEnd() {
         String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
@@ -172,7 +157,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("BOULDERINGBOBAT")));
     }
 
-    /** CODE_NO_QUOTES: promocode made of all numbers is still matched */
     @Test
     public void codeNoQuotes_promocodeAllNumbers() {
         String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
@@ -182,7 +166,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("12345")));
     }
 
-    /** CODE_NO_QUOTES: String must have standalone 'code' word */
     @Test
     public void codeNoQuotes_standaloneKeyword() {
         String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
@@ -192,7 +175,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     } 
 
-    /** CODE_NO_QUOTES: multiple matches in 1 String */
     @Test
     public void codeNoQuotes_multipleMatches() {
         String desc = "This episode originally recorded June 8, 2020, and is sponsored by Stamps.com "
@@ -214,7 +196,6 @@ public final class DescriptionParserTest {
 
     private static final Pattern CODE_WITH_QUOTES_PATTERN = DescriptionParser.Patterns.CODE_WITH_QUOTES.getPattern();
 
-    /** CODE_WITH_QUOTES_PATTERN: letters (both upper and lowercase), numbers, and symbols */
     @Test
     public void codeWithQuotes_lettersNumbersSymbols() {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -224,7 +205,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("CooL1R-PA!")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: keyword case insensitive */
     @Test
     public void codeWithQuotes_keywordCaseInsensitive() {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -234,7 +214,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("COOLIRPA")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: 0 characters inside quotes not matched */
     @Test
     public void codeWithQuotes_0CharacterPromocode() {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -244,7 +223,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: 1 character inside quotes is matched */
     @Test
     public void codeWithQuotes_1CharacterPromocode() {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
@@ -254,7 +232,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("C")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: keyword at start of description */
     @Test
     public void codeWithQuotes_keywordAtStart() {
         String desc = "Code \"COOLIRPA\" and save 33% on your first Native Deodorant Pack - "
@@ -264,7 +241,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("COOLIRPA")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: keyword at end of description */
     @Test
     public void codeWithQuotes_keywordAtEnd() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -274,7 +250,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: 2 spaces between keyword and quotes is not matched */
     @Test
     public void codeWithQuotes_2Spaces() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -284,7 +259,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: a line break between the keyword and code is acceptable */
     @Test
     public void codeWithQuotes_newLineBetween() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -294,7 +268,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: a line break inside the set of quotes will invalidate match */
     @Test
     public void codeWithQuotes_newLineInsideQuotes() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -304,7 +277,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: keyword must come before the code, not after */
     @Test
     public void codeWithQuotes_lookbehind() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -314,7 +286,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: keyword cannot be embedded inside another word */
     @Test
     public void codeWithQuotes_standaloneKeyword() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -324,7 +295,7 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: end match at first set of quotes encountered (lazy) */
+    // lazy matching: end match at first set of quotes encountered 
     @Test
     public void codeWithQuotes_lazyMatching() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -334,7 +305,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: also allow single quotes */
     @Test
     public void codeWithQuotes_singleQuotes() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -344,7 +314,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: also allow a mix of both quotes */
     @Test
     public void codeWithQuotes_singleAndDoubleQuotes() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
@@ -354,7 +323,6 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
-    /** CODE_WITH_QUOTES_PATTERN: 2 matches found */
     @Test
     public void codeWithQuotes_multipleMatches() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
