@@ -63,7 +63,7 @@ public class YoutubeInfoScraper {
   * @return an optional list of PlaylistItems. Each item contains a video-id, description and a date. 
   * The optional will be empty if id is invalid or no items were found.
   */
-   public Optional<List<PlaylistItem>> getPlaylistItems(String uploadId)
+   public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId)
     throws IOException {
        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet")
             .setMaxResults(50L)

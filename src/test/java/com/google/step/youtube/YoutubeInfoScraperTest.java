@@ -113,33 +113,33 @@ public final class YoutubeInfoScraperTest {
   }
 
   @Test
-  public void getPlaylistItems_nonExistentUploadId() throws IOException {
+  public void scrapePlaylistItems_nonExistentUploadId() throws IOException {
       mockPlaylistResponse = new PlaylistItemListResponse();
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(null));
-      Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID_THAT_DOES_NOT_EXIST);
+      Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID_THAT_DOES_NOT_EXIST);
       assertThat(actual.isPresent(), equalTo(false));
   }
 
   @Test
-  public void getPlaylistItems_emptyList() throws IOException {
+  public void scrapePlaylistItems_emptyList() throws IOException {
       mockPlaylistResponse = new PlaylistItemListResponse();
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(Arrays.asList()));
-      Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID);
+      Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
       assertThat(actual.isPresent(), equalTo(false));
   }
 
   @Test
-  public void getPlaylistItems_uploadIdExists() throws IOException {
+  public void scrapePlaylistItems_uploadIdExists() throws IOException {
       mockPlaylistResponse = new PlaylistItemListResponse();
       mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem(), new PlaylistItem()));
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
-      Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID);
+      Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
       assertThat(actual.get(), equalTo(mockPlaylistResponse.getItems()));
   }
 
   @Test 
-  public void getPlaylistItems_IOException() throws IOException {
+  public void scrapePlaylistItems_IOException() throws IOException {
       when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
-      assertThrows(IOException.class, () -> scraper.getPlaylistItems(IOEXCEPTION));
+      assertThrows(IOException.class, () -> scraper.scrapePlaylistItems(IOEXCEPTION));
   }
 }
