@@ -12,7 +12,9 @@ import com.google.api.services.youtube.model.ChannelContentDetails;
 import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlaylists;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
+import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException; 
 import java.util.Optional;
@@ -77,12 +79,20 @@ public class YoutubeInfoScraper {
         return Optional.of(response.getItems());
    }
 
-   public void scrapePromoCodesFromPlaylist(String uploadId)
+   public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId)
     throws IOException {
         Optional<List<PlaylistItem>> playlistItems = getPlaylistItems(uploadId);
         if (playlistItems.isEmpty()) {
-            return playlistItems;
+            return Optional.empty();
         }
-
+        List<PromoCode> promoCodes = new ArrayList<>(); 
+        for(PlaylistItem item : playlistItems.get()) {
+            PlaylistItemSnippet snippet = item.getSnippet();
+            List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
+            for(String promocode : itemPromoCodes){
+                promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(), snippet.getPublishedAt()));
+            }
+        }
+        return Optional.of(promoCodes);
    }
 }
