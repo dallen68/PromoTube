@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/promo-code")
 public class PromoCodeServlet extends HttpServlet {
+    
+    @Override
+    public void init() {
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
