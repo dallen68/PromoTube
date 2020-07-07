@@ -83,7 +83,7 @@ public final class YoutubeInfoScraperTest {
       mockChannelResponse = new ChannelListResponse();
       when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(null));
       Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_THAT_DOES_NOT_EXIST);
-      assertThat(false, equalTo(actual.isPresent()));
+      assertThat(actual.isPresent(), equalTo(false));
   }
 
  @Test
@@ -91,7 +91,7 @@ public final class YoutubeInfoScraperTest {
       mockChannelResponse = new ChannelListResponse();
       when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(Arrays.asList()));
       Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
-      assertThat(false, equalTo(actual.isPresent()));
+      assertThat(actual.isPresent(), equalTo(false));
   }
 
   @Test
@@ -103,7 +103,7 @@ public final class YoutubeInfoScraperTest {
       mockChannelResponse.setItems(Arrays.asList(channel));
       when(mockListChannels.execute()).thenReturn(mockChannelResponse);
       Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_THAT_EXISTS);
-      assertThat(UPLOAD_ID, equalTo(actual.get()));
+      assertThat(actual.get(), equalTo(UPLOAD_ID));
   }
 
   @Test 
@@ -117,7 +117,7 @@ public final class YoutubeInfoScraperTest {
       mockPlaylistResponse = new PlaylistItemListResponse();
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(null));
       Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID_THAT_DOES_NOT_EXIST);
-      assertThat(false, equalTo(actual.isPresent()));
+      assertThat(actual.isPresent(), equalTo(false));
   }
 
   @Test
@@ -125,7 +125,7 @@ public final class YoutubeInfoScraperTest {
       mockPlaylistResponse = new PlaylistItemListResponse();
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(Arrays.asList()));
       Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID);
-      assertThat(false, equalTo(actual.isPresent()));
+      assertThat(actual.isPresent(), equalTo(false));
   }
 
   @Test
@@ -134,7 +134,7 @@ public final class YoutubeInfoScraperTest {
       mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem(), new PlaylistItem()));
       when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
       Optional<List<PlaylistItem>> actual = scraper.getPlaylistItems(UPLOAD_ID);
-      assertThat(mockPlaylistResponse.getItems(), equalTo(actual.get()));
+      assertThat(actual.get(), equalTo(mockPlaylistResponse.getItems()));
   }
 
   @Test 
