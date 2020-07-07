@@ -9,19 +9,13 @@ import java.util.Date;
 @AutoValue
 abstract class PromoCode {
 
-    public static PromoCode create (String promoCode, int rating, String channelUrl, 
-                                    String videoUrl, Date videoUploadDate) {
-        return new AutoValue_PromoCode(promoCode, rating, channelUrl, videoUrl, videoUploadDate);
+    public static PromoCode create (String promoCode, String videoId, Date videoUploadDate) {
+        return new AutoValue_PromoCode(promoCode, videoId, videoUploadDate);
     }
 
     public abstract String getPromoCode();
 
-    public abstract int getRating();
-
-    public abstract String getChannelUrl();
-
-    public abstract String getVideoUrl();
+    public abstract String getVideoId();
 
     public abstract Date getVideoUploadDate();
 }
-
