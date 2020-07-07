@@ -1,7 +1,7 @@
 package com.google.step.youtube;
 
 import com.google.auto.value.AutoValue;
-import com.google.api.client.util.DateTime;
+import java.util.Date;
 
 /**
  * Value type for a promotional code and information on its source. 
@@ -9,7 +9,7 @@ import com.google.api.client.util.DateTime;
 @AutoValue
 abstract class PromoCode {
 
-    public static PromoCode create (String promoCode, String videoId, DateTime videoUploadDate) {
+    public static PromoCode create (String promoCode, String videoId, Date videoUploadDate) {
         return new AutoValue_PromoCode(promoCode, videoId, videoUploadDate);
     }
 
@@ -17,5 +17,5 @@ abstract class PromoCode {
 
     public abstract String getVideoId();
 
-    public abstract DateTime getVideoUploadDate();
+    public abstract Date getVideoUploadDate();
 }

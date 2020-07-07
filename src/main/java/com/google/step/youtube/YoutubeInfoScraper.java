@@ -16,6 +16,7 @@ import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.io.IOException; 
 import java.util.Optional;
 
@@ -79,6 +80,11 @@ public class YoutubeInfoScraper {
         return Optional.of(response.getItems());
    }
 
+   /**
+   *  @param uploadId Id of a channel's upload playlist.
+   *  @return an optional list of PromoCode objects.  the optional will return empty
+   *  if id is invalid or no items in the playlist are found.  
+   */
    public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId)
     throws IOException {
         Optional<List<PlaylistItem>> playlistItems = getPlaylistItems(uploadId);
@@ -90,7 +96,8 @@ public class YoutubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
             for(String promocode : itemPromoCodes){
-                promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(), snippet.getPublishedAt()));
+                promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(), 
+                    new Date(snippet.getPublishedAt().getValue())));
             }
         }
         return Optional.of(promoCodes);
