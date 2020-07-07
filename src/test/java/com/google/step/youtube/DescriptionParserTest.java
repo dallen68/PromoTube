@@ -334,5 +334,20 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Arrays.asList("bobat15", "COOLIRPA")));
     }
 
+
+    /*                                                                   *
+     * =========== TEST 'GO TO' AND 'AT' FOR AFFILATE LINKS ============ *
+     * ex. "go to https://google.com" | "50% off at https://website.com" */
+
+    private final Pattern GOTO_AT_LINKS_PATTERN = DescriptionParser.Patterns.GOTO_AT_LINKS.getPattern();
+    
+    @Test
+    public void gotoAtLinks_lettersNumbersSymbols() {
+        String desc = "Go to https://NordVPN.com/123!pewdiepie-test and use code PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
+
+        List<String> actual = DescriptionParser.findMatches(GOTO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://NordVPN.com/123!pewdiepie-test")));
+    }
+
 }
 
