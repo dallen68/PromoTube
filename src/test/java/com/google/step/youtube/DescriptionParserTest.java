@@ -26,7 +26,7 @@ public final class DescriptionParserTest {
                         + "\nThe TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
                         + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
 
-        assertThat(Collections.emptyList(), equalTo(DescriptionParser.parse(desc)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Collections.emptyList()));
     }
 
     /** String will return matches from all regexs in parse() */
@@ -37,7 +37,7 @@ public final class DescriptionParserTest {
             + "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
             + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\".";
 
-        assertThat(Arrays.asList("FUNGBROS10", "COOLIRPA"), equalTo(DescriptionParser.parse(desc)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10", "COOLIRPA")));
     }
 
     /** String will only have matches from CODE_NO_QUOTES regex */
@@ -46,7 +46,7 @@ public final class DescriptionParserTest {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
             + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
 
-        assertThat(Arrays.asList("FUNGBROS10"), equalTo(DescriptionParser.parse(desc)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10")));
     }
 
     /** String will only have matches from CODE_WITH_QUOTES regex */
@@ -55,7 +55,7 @@ public final class DescriptionParserTest {
         String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
         + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\". ";
 
-        assertThat(Arrays.asList("COOLIRPA"), equalTo(DescriptionParser.parse(desc)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("COOLIRPA")));
     }
 
 
@@ -72,7 +72,7 @@ public final class DescriptionParserTest {
             + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("FUNGBROS10"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("FUNGBROS10")));
     }
 
     /** CODE_NO_QUOTES: case sensitivity - match promocode until first lowercase */
@@ -81,7 +81,7 @@ public final class DescriptionParserTest {
         String desc = "Use code LINUSsssS and get 25% off GlassWire at https://lmg.gg/glasswire";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("LINUS"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
     /** CODE_NO_QUOTES: case insensitivity for keyword 'code' */
@@ -90,7 +90,7 @@ public final class DescriptionParserTest {
         String desc = "Use cOdE LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("LINUS"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
     /** CODE_NO_QUOTES: edge case - 1 chararcter promocode is not matched */
@@ -100,7 +100,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the code R at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_NO_QUOTES: edge case - 2 chararcter promocode is matched */
@@ -110,7 +110,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the code RO at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("RO"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("RO")));
     }
 
     /** CODE_NO_QUOTES: lookbehind not lookahead - promocode is before word 'code' */
@@ -120,7 +120,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the ROOSTER code at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_NO_QUOTES: more than 1 space between 'code' and promocode is not matched */
@@ -130,7 +130,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the code  ROOSTER at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_NO_QUOTES: newline between 'code' and promocode is acceptable */
@@ -140,7 +140,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the code\nROOSTER at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("ROOSTER"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("ROOSTER")));
     }
 
     /** CODE_NO_QUOTES: special charaters and symbols not included in match */
@@ -150,7 +150,7 @@ public final class DescriptionParserTest {
             + "http://boxofawesome.com and enter the code ROOSTER! at checkout!";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("ROOSTER"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("ROOSTER")));
     } 
 
     /** CODE_NO_QUOTES: 'code' at very beginning of string */
@@ -159,7 +159,7 @@ public final class DescriptionParserTest {
         String desc = "code LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("LINUS"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("LINUS")));
     }
 
     /** CODE_NO_QUOTES: 'code' at very end of string */
@@ -169,7 +169,7 @@ public final class DescriptionParserTest {
             + "first purchase of a website or domain using code BOULDERINGBOBAT";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("BOULDERINGBOBAT"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("BOULDERINGBOBAT")));
     }
 
     /** CODE_NO_QUOTES: promocode made of all numbers is still matched */
@@ -179,7 +179,7 @@ public final class DescriptionParserTest {
             + "first purchase of a website or domain using code 12345";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("12345"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("12345")));
     }
 
     /** CODE_NO_QUOTES: String must have standalone 'code' word */
@@ -189,7 +189,7 @@ public final class DescriptionParserTest {
             + "first purchase of a website or domain using Decode BOULDERINGBOBAT";
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     } 
 
     /** CODE_NO_QUOTES: multiple matches in 1 String */
@@ -204,7 +204,7 @@ public final class DescriptionParserTest {
 
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("ROOSTERTEETH", "ROOSTER");
-        assertThat(expected, equalTo(actual));
+        assertThat(actual, equalTo(expected));
     }
 
 
@@ -221,7 +221,7 @@ public final class DescriptionParserTest {
             + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"CooL1R-PA!\".";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("CooL1R-PA!"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("CooL1R-PA!")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: keyword case insensitive */
@@ -231,7 +231,7 @@ public final class DescriptionParserTest {
             + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my coDe \"COOLIRPA\".";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("COOLIRPA"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("COOLIRPA")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: 0 characters inside quotes not matched */
@@ -241,7 +241,7 @@ public final class DescriptionParserTest {
             + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my coDe \"\". ";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: 1 character inside quotes is matched */
@@ -251,7 +251,7 @@ public final class DescriptionParserTest {
             + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my coDe \"C\". ";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("C"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("C")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: keyword at start of description */
@@ -261,7 +261,7 @@ public final class DescriptionParserTest {
             + "normally $36, you'll get it for $24! Click here: https://bit.ly/nativecoolirpa.";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("COOLIRPA"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("COOLIRPA")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: keyword at end of description */
@@ -271,7 +271,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code \"bobat15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat15"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: 2 spaces between keyword and quotes is not matched */
@@ -281,7 +281,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code  \"bobat15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: a line break between the keyword and code is acceptable */
@@ -291,7 +291,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code\n\"bobat15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat15"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: a line break inside the set of quotes will invalidate match */
@@ -301,7 +301,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code \"boba\nt15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: keyword must come before the code, not after */
@@ -311,7 +311,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer \"bobat15\" code";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: keyword cannot be embedded inside another word */
@@ -321,7 +321,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer decode \"bobat15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Collections.emptyList(), equalTo(actual));
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: end match at first set of quotes encountered (lazy) */
@@ -331,7 +331,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code \"bobat\"15\"";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: also allow single quotes */
@@ -341,7 +341,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code 'bobat15'";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat15"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: also allow a mix of both quotes */
@@ -351,7 +351,7 @@ public final class DescriptionParserTest {
             + "https://darkventures.co.uk/shop with offer code \"bobat15'";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat15"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat15")));
     }
 
     /** CODE_WITH_QUOTES_PATTERN: 2 matches found */
@@ -363,7 +363,7 @@ public final class DescriptionParserTest {
             + "$24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\".";
 
         List<String> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
-        assertThat(Arrays.asList("bobat15", "COOLIRPA"), equalTo(actual));
+        assertThat(actual, equalTo(Arrays.asList("bobat15", "COOLIRPA")));
     }
 
 }
