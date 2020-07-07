@@ -1,11 +1,3 @@
-//This function is not currently in use but may be used in further implementations
-// function ratePromoCode(tableRow, rating) {
-//     var videoUrl = document.getElementById('promoCodeTable').rows[tableRow].cells[0].firstChild.getAttribute("href");
-//     console.log(videoUrl);
-//     fetch('/promo-code?rating=' + rating + '&videoUrl=' + videoUrl, {method: 'POST'});
-//     getCodes();
-// }
-
 async function displayCodes() {
     const response = await fetch('/promo-code');
     const codes = await response.json();
