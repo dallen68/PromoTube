@@ -32,6 +32,10 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.YouTube.PlaylistItems;
 import com.google.api.services.youtube.model.PlaylistItem;
+import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.client.util.DateTime;
+import java.util.Date;
+import com.google.api.services.youtube.model.ResourceId;
 import java.util.List;
 import java.io.IOException;
 import org.junit.Assert;
@@ -56,6 +60,7 @@ public final class YoutubeInfoScraperTest {
   private static final String CHANNEL_ID_THAT_EXISTS = "CHANNEL_ID_THAT_EXISTS";
   private static final String UPLOAD_ID_THAT_DOES_NOT_EXIST = "UPLOAD_ID_THAT_DOES_NOT_EXIST";
   private static final String UPLOAD_ID = "UPLOAD_ID";
+  private static final String VIDEO_ID = "VIDEO_ID";
   private static final String IOEXCEPTION = "IOEXCEPTION";
   
   @Before
@@ -141,5 +146,38 @@ public final class YoutubeInfoScraperTest {
   public void scrapePlaylistItems_IOException() throws IOException {
       when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
       assertThrows(IOException.class, () -> scraper.scrapePlaylistItems(IOEXCEPTION));
+  }
+
+  @Test 
+  public void scrapePromoCodesFromPlaylist_nonExistentUploadId() throws IOException {
+      mockPlaylistResponse = new PlaylistItemListResponse();
+      when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(null));
+      Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID_THAT_DOES_NOT_EXIST);
+      assertThat(actual.isPresent(), equalTo(false));
+  }
+
+  @Test 
+  public void scrapePromoCodesFromPlaylist_oneItem() throws IOException {
+      mockPlaylistResponse = new PlaylistItemListResponse();
+      String descriptio1 = "Get 20% off your first monthly box when you sign up at "
+            + "http://boxofawesome.com and enter the code RO at checkout!";
+     // String description2 = "Use cOdE LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
+      mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet()
+        .setDescription(description).setPublishedAt(new DateTime(0L)).setResourceId(new ResourceId()
+        .setVideoId(VIDEO_ID)))));
+      when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
+      Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
+      assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, new Date(0L)))));
+  }
+
+  @Test 
+  public void scrapePromoCodesFromPlaylist_noItems() throws IOException {
+      mockPlaylistResponse = new PlaylistItemListResponse();
+      mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet()
+        .setDescription(description).setPublishedAt(new DateTime(0L)).setResourceId(new ResourceId()
+        .setVideoId(VIDEO_ID)))));
+      when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
+      Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
+      assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, new Date(0L)))));
   }
 }
