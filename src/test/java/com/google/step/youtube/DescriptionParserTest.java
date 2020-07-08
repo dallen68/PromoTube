@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,9 +20,10 @@ public final class DescriptionParserTest {
 
     @Test
     public void parse_matchesFromNone() {
-        String desc = "Check out our UPDATED version which has all the NEW ELEMENTS here:  https://youtu.be/rz4Dd1I_fX0"
-                        + "\nThe TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
-                        + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
+        String desc = "Check out our UPDATED version which has all the NEW ELEMENTS here:  "
+            + "https://youtu.be/rz4Dd1I_fX0"
+            + "\nThe TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
+            + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
 
         assertThat(DescriptionParser.parse(desc), equalTo(Collections.emptyList()));
     }
@@ -33,9 +33,12 @@ public final class DescriptionParserTest {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
             + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10. "
             + "Save 33% on your first Native Deodorant Pack - normally $36, you'll get " 
-            + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\".";
+            + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\"."
+            + "Go to https://NordVPN.com/pewdiepie and use code PEWDIEPIE to "
+            + "get 70% off a 3 year plan plus 1 additional month free.";
 
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10", "COOLIRPA")));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("FUNGBROS10", "PEWDIEPIE", 
+                                                    "COOLIRPA", "https://NordVPN.com/pewdiepie")));
     }
 
     @Test
@@ -52,6 +55,14 @@ public final class DescriptionParserTest {
         + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\". ";
 
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("COOLIRPA")));
+    }
+
+    @Test
+    public void parse_toAtLink() {
+        String desc = "Go to https://NordVPN.com/pewdiepie and"
+            + "get 70% off a 3 year plan plus 1 additional month free.";
+
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList("https://NordVPN.com/pewdiepie")));
     }
 
 
@@ -336,17 +347,96 @@ public final class DescriptionParserTest {
 
 
     /*                                                                   *
-     * =========== TEST 'GO TO' AND 'AT' FOR AFFILATE LINKS ============ *
+     * ============= TEST 'TO' AND 'AT' FOR AFFILATE LINKS ============= *
      * ex. "go to https://google.com" | "50% off at https://website.com" */
 
-    private final Pattern GOTO_AT_LINKS_PATTERN = DescriptionParser.Patterns.GOTO_AT_LINKS.getPattern();
+    private final Pattern TO_AT_LINKS_PATTERN = DescriptionParser.Patterns.TO_AT_LINKS.getPattern();
     
     @Test
-    public void gotoAtLinks_lettersNumbersSymbols() {
-        String desc = "Go to https://NordVPN.com/123!pewdiepie-test and use code PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
+    public void toAtLinks_lettersNumbersSymbols() {
+        String desc = "Go to https://NordVPN.com/123!pewdiepie-test and use code PEWDIEPIE to "
+            + "get 70% off a 3 year plan plus 1 additional month free.";
 
-        List<String> actual = DescriptionParser.findMatches(GOTO_AT_LINKS_PATTERN, desc);
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
         assertThat(actual, equalTo(Arrays.asList("https://NordVPN.com/123!pewdiepie-test")));
+    }
+
+    @Test
+    public void toAtLinks_toCaseInsensitive() {
+        String desc = "Go tO https://NordVPN.com/pewdiepie and use code PEWDIEPIE to "
+            + "get 70% off a 3 year plan plus 1 additional month free.";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://NordVPN.com/pewdiepie")));
+    }
+
+    @Test
+    public void toAtLinks_atCaseInsensitive() {
+        String desc = "Get 20% off your first monthly box when you sign up AT http://boxofawesome.com";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("http://boxofawesome.com")));
+    }
+
+    @Test
+    public void toAtLinks_0CharacterLinkBody() {
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http:// and enter the code ROOSTER at checkout!";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void toAtLinks_1CharacterLinkBody() {
+        String desc = "Get 20% off your first monthly box when you sign up at "
+            + "http://a and enter the code ROOSTER at checkout!";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("http://a")));
+    }
+
+    @Test
+    public void toAtLinks_multipleMatchesHttpsAndHttp() {
+        String desc = "Go to https://NordVPN.com/pewdiepie and use code PEWDIEPIE to get 70% "
+            + "off a 3 year plan plus 1 additional month free."
+            + "Go to http://stamps.com, click on the microphone at the top of the homepage";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://NordVPN.com/pewdiepie", "http://stamps.com")));
+    }
+
+    @Test
+    public void toAtLinks_noHttpOnlyWWW() {
+        String desc = "Go to www.NordVPN.com/pewdiepie and use code PEWDIEPIE to get 70% "
+            + "off a 3 year plan plus 1 additional month free.";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
+    }
+    
+    @Test
+    public void toAtLinks_lookbehind() {
+        String desc = "Use code LINUS and get 25% off GlassWire https://lmg.gg/glasswire at";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void toAtLinks_standaloneAt() {
+        String desc = "Use code LINUS and get 25% off GlassWire what https://lmg.gg/glasswire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void toAtLinks_standaloneTo() {
+        String desc = "Use code LINUS and get 25% off GlassWire burrito https://lmg.gg/glasswire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
     }
 
 }
