@@ -13,7 +13,8 @@ public class DescriptionParser {
     // enum is package private in order to access in tests
     enum Patterns {
         
-        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})"));
+        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")), 
+        CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))"));
 
         private final Pattern regex;
 
