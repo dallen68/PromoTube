@@ -10,9 +10,12 @@ public class PromoCodeServlet extends HttpServlet {
     
     @Override
     public void init() {
+        YoutubeInfoScraper InfoScraper = new YoutubeInfoScraper();
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String channelId = request.getParameter("formInput");
+        InfoScraper.scrapeChannelUploadPlaylist(channelId);
     }
 }
