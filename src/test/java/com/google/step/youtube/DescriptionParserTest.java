@@ -439,5 +439,71 @@ public final class DescriptionParserTest {
         assertThat(actual, equalTo(Collections.emptyList()));
     }
 
+    @Test
+    public void toAtLinks_keywordAtStart() {
+        String desc = "At https://lmg.gg/glasswire use code LINUS and get 25% off GlassWire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://lmg.gg/glasswire")));
+    }
+
+    @Test
+    public void toAtLinks_keywordAtEnd() {
+        String desc = "Use code LINUS and get 25% off GlassWire at https://lmg.gg/glasswire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://lmg.gg/glasswire")));
+    }
+
+    @Test
+    public void toAtLinks_2SpacesBetween() {
+        String desc = "Use code LINUS and get 25% off GlassWire at  https://lmg.gg/glasswire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void toAtLinks_newLineBetween() {
+        String desc = "Use code LINUS and get 25% off GlassWire at\nhttps://lmg.gg/glasswire";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://lmg.gg/glasswire")));
+    }
+
+    @Test
+    public void toAtLinks_stopMatchingAtSpace() {
+        String desc = "Head to https://www.squarespace.com/boulderin... to save 10% off your "
+            + "first purchase of a website or domain using code BOULDERINGBOBAT. ";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://www.squarespace.com/boulderin...")));
+    }
+
+    @Test
+    public void toAtLinks_stopMatchingAtNewline() {
+        String desc = "Head to https://www.squarespace.com/boulderin...\nto save 10% off your "
+            + "first purchase of a website or domain using code BOULDERINGBOBAT. ";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("https://www.squarespace.com/boulderin...")));
+    }
+
+    @Test
+    public void toAtLinks_stopMatchingAtComma() {
+        String desc = "Go to http://stamps.com, click on the microphone";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("http://stamps.com")));
+    }
+
+    @Test
+    public void toAtLinks_stopMatchingAtCloseParens() {
+        String desc = "Buy or sell almost anything on Mercari on the App store or at http://mercari.com)";
+
+        List<String> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(actual, equalTo(Arrays.asList("http://mercari.com")));
+    }
+
 }
 
