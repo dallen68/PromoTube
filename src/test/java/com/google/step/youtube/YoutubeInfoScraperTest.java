@@ -52,10 +52,9 @@ public final class YoutubeInfoScraperTest {
     private PlaylistItems.List mockListPlaylistItems;
     private PlaylistItemListResponse mockPlaylistResponse;
 
-    private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final String CHANNEL_ID_NONEXISTENT = "CHANNEL_ID_NONEXISTENT";
-    private static final String CHANNEL_ID_EXISTENT = "CHANNEL_ID_EXISTENT";
     private static final String UPLOAD_ID_THAT_DOES_NOT_EXIST = "UPLOAD_ID_THAT_DOES_NOT_EXIST";
+    private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String IOEXCEPTION = "IOEXCEPTION";
@@ -105,7 +104,7 @@ public final class YoutubeInfoScraperTest {
                 new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
         mockChannelResponse.setItems(Arrays.asList(channel));
         when(mockListChannels.execute()).thenReturn(mockChannelResponse);
-        Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID_EXISTENT);
+        Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
         assertThat(actual.get(), equalTo(UPLOAD_ID));
     }
 
