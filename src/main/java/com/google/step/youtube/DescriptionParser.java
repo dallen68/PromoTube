@@ -48,7 +48,7 @@ public class DescriptionParser {
     /**
      * Finds all matches in the given string from the given regex pattern.
      *
-     * @param pattern     of the regular experssion to use for matching.
+     * @param pattern of the regular experssion to use for matching.
      * @param description of the YouTube video to be parsed.
      * @return A list of all matches found in description.
      */
