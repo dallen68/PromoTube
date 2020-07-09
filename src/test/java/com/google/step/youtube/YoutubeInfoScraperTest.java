@@ -21,27 +21,28 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.hamcrest.Matchers.equalTo;
 
-import java.util.Arrays;
-import org.junit.Before;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.Channel;
-import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.ChannelContentDetails;
 import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlaylists;
-import java.util.Date;
-import com.google.api.client.util.DateTime;
-import java.io.IOException;
-import java.util.List;
-import org.mockito.runners.MockitoJUnitRunner;
-import java.util.Optional;
 import com.google.api.services.youtube.model.PlaylistItem;
-import com.google.api.services.youtube.YouTube.PlaylistItems;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
-import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
+import com.google.api.services.youtube.YouTube.Channels;
+import com.google.api.services.youtube.YouTube.PlaylistItems;
+import com.google.api.services.youtube.YouTube;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.mockito.runners.MockitoJUnitRunner;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public final class YoutubeInfoScraperTest {

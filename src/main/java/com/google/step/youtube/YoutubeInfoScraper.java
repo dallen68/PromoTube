@@ -1,20 +1,20 @@
 
 package com.google.step.youtube;
 
-import java.util.ArrayList;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
-import java.util.Date;
-import java.io.IOException;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import java.util.List;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import java.util.Optional;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Scrapes a channel's upload playlist and scrapes the channel's videos +
