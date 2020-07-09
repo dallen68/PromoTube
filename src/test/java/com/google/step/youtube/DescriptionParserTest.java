@@ -176,8 +176,8 @@ public final class DescriptionParserTest {
                 + "(Go to http://stamps.com, click on the microphone at the top of the homepage, "
                 + "and type in code ROOSTERTEETH to claim your special offer), Mercari "
                 + "(Buy or sell almost anything on Mercari on the App store or at http://mercari.com), "
-                + "and Bespoke Post (Get 20% off your first monthly box when you sign up at http://boxofawesome.com "
-                + "and enter the code ROOSTER at checkout!).";
+                + "and Bespoke Post (Get 20% off your first monthly box when you sign up at "
+                + "http://boxofawesome.com and enter the code ROOSTER at checkout!).";
         List<String> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         List<String> expected = Arrays.asList("ROOSTERTEETH", "ROOSTER");
         assertThat(actual, equalTo(expected));
