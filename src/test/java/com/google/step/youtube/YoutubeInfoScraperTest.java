@@ -160,10 +160,10 @@ public final class YoutubeInfoScraperTest {
                 + "http://boxofawesome.com and enter the code RO at checkout!";
         mockPlaylistResponse.setItems(
                 Arrays.asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(description)
-                        .setPublishedAt(new DateTime(0L)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+                        .setPublishedAt(new DateTime(MOCK_DATE)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, new Date(0L)))));
+        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, new Date(MOCK_DATE)))));
     }
 
     @Test
@@ -206,7 +206,7 @@ public final class YoutubeInfoScraperTest {
                 + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
         mockPlaylistResponse.setItems(Arrays
                 .asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(descriptionWithNoCode)
-                        .setPublishedAt(new DateTime(0L)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+                        .setPublishedAt(new DateTime(MOCK_DATE)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get().isEmpty(), equalTo(true));
