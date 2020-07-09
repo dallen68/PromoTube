@@ -7,7 +7,7 @@ import java.util.Date;
  * Value type for a promotional code and information on its source. 
  */
 @AutoValue
-abstract class PromoCode {
+public abstract class PromoCode {
 
     public static PromoCode create (String promoCode, String videoId, Date videoUploadDate) {
         return new AutoValue_PromoCode(promoCode, videoId, videoUploadDate);
