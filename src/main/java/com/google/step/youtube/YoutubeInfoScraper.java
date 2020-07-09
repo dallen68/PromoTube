@@ -2,7 +2,6 @@
 package com.google.step.youtube;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -11,6 +10,8 @@ import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelContentDetails;
 import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlaylists;
+import com.google.api.services.youtube.model.PlaylistItemListResponse;
+import com.google.api.services.youtube.model.PlaylistItem;
 import java.util.List;
 import java.io.IOException; 
 import java.util.Optional;
@@ -49,11 +50,29 @@ public class YoutubeInfoScraper {
     throws IOException {
         ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
         // getItems() return null when no items match the criteria (channelId). 
-        if (response.getItems()==null || response.getItems().isEmpty()){
+        if (response.getItems()==null || response.getItems().isEmpty()) {
             return Optional.empty();
         }
         List<Channel> channelsInfo = response.getItems();
         // Since we are only requesting one channel-id, we only get one item back.  
         return Optional.of(channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads());
+   }
+
+  /**
+  * @param uploadId Id of a channel's upload playlist.
+  * @return an optional list of PlaylistItems. Each item contains a video-id, description and a date. 
+  * The optional will be empty if id is invalid or no items were found.
+  */
+   public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId)
+    throws IOException {
+       PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet")
+            .setMaxResults(50L)
+            .setPlaylistId(uploadId)
+            .execute();
+        // getItems() return null when no items match the criteria (uploadId). 
+        if (response.getItems()==null || response.getItems().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(response.getItems());
    }
 }
