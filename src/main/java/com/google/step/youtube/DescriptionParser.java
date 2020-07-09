@@ -6,14 +6,15 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- * Class for parsing the descriptions of YouTube videos for promotional codes and affiliate links. 
+ * Class for parsing the descriptions of YouTube videos for promotional codes
+ * and affiliate links.
  */
 public class DescriptionParser {
 
     // enum is package private in order to access in tests
     enum Patterns {
-        
-        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")), 
+
+        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
         CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))")),
         TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+"));
 
@@ -28,11 +29,12 @@ public class DescriptionParser {
         }
     }
 
-    /** 
+    /**
      * Parses the given string for promotional codes and affiliate links.
      *
      * @param description of the YouTube video to be parsed.
-     * @return A list of all promotional codes and affiliate links found in the description, duplicates allowed.
+     * @return A list of all promotional codes and affiliate links found in the
+     *         description, duplicates allowed.
      */
     public static List<String> parse(String description) {
         List<String> codes = new ArrayList<>();
@@ -43,7 +45,7 @@ public class DescriptionParser {
         return codes;
     }
 
-    /** 
+    /**
      * Finds all matches in the given string from the given regex pattern.
      *
      * @param pattern of the regular experssion to use for matching.
@@ -59,6 +61,5 @@ public class DescriptionParser {
         }
         return matches;
     }
-  
-}
 
+}
