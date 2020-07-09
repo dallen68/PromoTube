@@ -1,5 +1,6 @@
 async function displayCodes() {
-    const response = await fetch('/promo-code');
+    var formInput = document.getElementById('formInput').value;
+    const response = await fetch('/promo-code?formInput=' + formInput);
     const codes = await response.json();
     const tableEl = document.getElementById('promoCodeTable');
     tableEl.innerHTML =
@@ -12,7 +13,7 @@ async function displayCodes() {
         var row = tableEl.insertRow(-1);
         var videoUrl = row.insertCell(0);
         var promoCode = row.insertCell(1);
-        videoUrl.innerHTML = '<a href="' + codes[i].videoUrl +'">' + codes[i].videoUrl + '</a>'
+        videoUrl.innerHTML = '<a href="https://www.youtube.com/watch?v=' + codes[i].videoId +'">https://www.youtube.com/watch?v=' + codes[i].videoId + '</a>';
         promoCode.innerHTML = codes[i].promoCode;
     }
 }

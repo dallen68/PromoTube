@@ -6,13 +6,13 @@
         <link rel="stylesheet" href="style.css">
             <script src="script.js"></script>
     </head>
-    <body >
+    <body">
         <div class="content">
         <h1>PromoTube</h1>
-        <form id="searchForm">
-            <input type="text" id="formInput" name="formInput" value="Enter Channel URL">
-            <input type="submit" value="Enter">
-        </form>
+        <div id="searchForm">
+            <input type="text" id="formInput" name="formInput" value="Enter Channel Id">
+            <input type="submit" value="Enter" onclick="displayCodes()">
+        </div>
 
         <div class="promoCodeList">
             <table id="promoCodeTable">
@@ -21,10 +21,6 @@
                     <th>PROMO CODE</th>
                 </tr>
 
-                <tr>
-                    <td><a href="youtube.com">youtube.com</a></td>
-                    <td>XXXXX</td>
-                </tr>
             </table>
         </div>
         </div>
