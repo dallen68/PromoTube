@@ -43,7 +43,6 @@ import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public final class YoutubeInfoScraperTest {
 
