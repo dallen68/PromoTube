@@ -28,7 +28,7 @@ public class YoutubeInfoScraper {
 
     private final YouTube youTubeClient;
 
-    public YoutubeInfoScraper(final YouTube youTubeClient) {
+    public YoutubeInfoScraper(YouTube youTubeClient) {
         this.youTubeClient = youTubeClient;
     }
 
@@ -44,13 +44,13 @@ public class YoutubeInfoScraper {
      * @return an optional string of the channel's upload playlist id. The optional
      *         will be empty if id is invalid or no items were found.
      */
-    public Optional<String> scrapeChannelUploadPlaylist(final String channelId) throws IOException {
-        final ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
+    public Optional<String> scrapeChannelUploadPlaylist(String channelId) throws IOException {
+        ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
         // getItems() return null when no items match the criteria (channelId).
         if (response.getItems() == null || response.getItems().isEmpty()) {
             return Optional.empty();
         }
-        final List<Channel> channelsInfo = response.getItems();
+        List<Channel> channelsInfo = response.getItems();
         // Since we are only requesting one channel-id, we only get one item back.
         return Optional.of(channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads());
     }
@@ -60,16 +60,16 @@ public class YoutubeInfoScraper {
      * @return an optional list of PromoCode objects. the optional will return empty
      *         if id is invalid or no items in the playlist are found.
      */
-    public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(final String uploadId) throws IOException {
-        final Optional<List<PlaylistItem>> playlistItems = scrapePlaylistItems(uploadId);
+    public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId) throws IOException {
+        Optional<List<PlaylistItem>> playlistItems = scrapePlaylistItems(uploadId);
         if (playlistItems.isEmpty()) {
             return Optional.empty();
         }
-        final List<PromoCode> promoCodes = new ArrayList<>();
-        for (final PlaylistItem item : playlistItems.get()) {
-            final PlaylistItemSnippet snippet = item.getSnippet();
-            final List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
-            for (final String promocode : itemPromoCodes) {
+        List<PromoCode> promoCodes = new ArrayList<>();
+        for (PlaylistItem item : playlistItems.get()) {
+            PlaylistItemSnippet snippet = item.getSnippet();
+            List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
+            for (String promocode : itemPromoCodes) {
                 promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(),
                         new Date(snippet.getPublishedAt().getValue())));
             }
@@ -83,8 +83,8 @@ public class YoutubeInfoScraper {
      *         description and a date. The optional will be empty if id is invalid
      *         or no items were found.
      */
-    public Optional<List<PlaylistItem>> scrapePlaylistItems(final String uploadId) throws IOException {
-        final PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(50L)
+    public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId) throws IOException {
+        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(50L)
                 .setPlaylistId(uploadId).execute();
         // getItems() return null when no items match the criteria (uploadId).
         if (response.getItems() == null || response.getItems().isEmpty()) {
