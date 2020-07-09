@@ -14,12 +14,12 @@
 
 package com.google.step.youtube;
 
-import static org.mockito.Mockito.anyString;
-import static org.junit.Assert.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
-import static org.hamcrest.Matchers.equalTo;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.Channel;
