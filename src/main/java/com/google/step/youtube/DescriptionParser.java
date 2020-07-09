@@ -15,7 +15,7 @@ public class DescriptionParser {
         
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")), 
         CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))")),
-        TO_AT_LINKS(Pattern.compile("((?<=\\b(?i)to\\s)|(?<=\\b(?i)at\\s))(https*:\\/\\/)[^\\s,\\)]+"));
+        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+"));
 
         private final Pattern regex;
 
