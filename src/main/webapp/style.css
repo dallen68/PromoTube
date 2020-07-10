@@ -27,3 +27,7 @@
 .promoCodeList table{
     display: inline;
 }
+
+.form-control{
+    text-align : center;
+}
