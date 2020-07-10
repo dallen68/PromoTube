@@ -15,6 +15,10 @@ import java.util.Optional;
 public class PromoCodeServlet extends HttpServlet {
 
     private YoutubeInfoScraper infoScraper;
+
+    public PromoCodeServlet(YoutubeInfoScraper infoScraper) {
+        this.infoScraper = infoScraper;
+    }
     
     @Override
     public void init() {
@@ -25,13 +29,13 @@ public class PromoCodeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String channelId = request.getParameter("formInput");
         try {
-            Optional<String> playlistID = infoScraper.scrapeChannelUploadPlaylist(channelId);
-            if (!playlistID.isPresent()) {
+            Optional<String> playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId);
+            if (!playlistId.isPresent()) {
                 response.setContentType("application/json");
                 String json = new Gson().toJson(false);
                 response.getWriter().println(json);
             } else {
-                Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistID.get());
+                Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistId.get());
                 response.setContentType("application/json");
                 String json = new Gson().toJson(promoCodeList.get());
                 response.getWriter().println(json);
