@@ -90,8 +90,8 @@ public final class PromoCodeServletTest {
     }
 
     @Test
-    public void properChannelIdRequest() throws ServletException, IOException {
-        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
+    public void incorrectChannelIdRequest() throws ServletException, IOException {
+        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
         
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -103,7 +103,7 @@ public final class PromoCodeServletTest {
         promoCodeServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(1 == 0 , equalTo(false));
+        assertThat(result , equalTo("false\n"));
 
     }
 }
