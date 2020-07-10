@@ -157,9 +157,9 @@ public final class YoutubeInfoScraperTest {
     public void scrapePromoCodesFromPlaylist_oneItem() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
         String description = "Get 20% off your first monthly box and enter the code RO at checkout!";
-        mockPlaylistResponse.setItems(
-                Arrays.asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(description)
-                        .setPublishedAt(new DateTime(MOCK_DATE)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+        mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(
+                new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(MOCK_DATE))
+                        .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, new Date(MOCK_DATE)))));
@@ -192,8 +192,9 @@ public final class YoutubeInfoScraperTest {
                         .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("http://boxofawesome.com", VIDEO_ID, new Date(MOCK_DATE)),
-                PromoCode.create("LINUS", VIDEO_ID, new Date(MOCK_DATE)))));
+        assertThat(actual.get(),
+                equalTo(Arrays.asList(PromoCode.create("http://boxofawesome.com", VIDEO_ID, new Date(MOCK_DATE)),
+                        PromoCode.create("LINUS", VIDEO_ID, new Date(MOCK_DATE)))));
     }
 
     @Test
@@ -202,9 +203,9 @@ public final class YoutubeInfoScraperTest {
         String descriptionWithNoCode = "Check out our UPDATED version which has all the NEW ELEMENTS here: "
                 + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
                 + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
-        mockPlaylistResponse.setItems(Arrays
-                .asList(new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(descriptionWithNoCode)
-                        .setPublishedAt(new DateTime(MOCK_DATE)).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+        mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(
+                new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(MOCK_DATE))
+                        .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get().isEmpty(), equalTo(true));
