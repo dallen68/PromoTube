@@ -4,19 +4,12 @@
     margin: 50px;
     padding: 50px;
     background-color: transparent;
-    font-family: "Open Sans", "Roboto", Verdana, Arial, sans-serif;
-}
-
-.content {
+    font-family: "Open Sans", "Oswald", "Roboto", Verdana, Arial, sans-serif;
     text-align: center;
 }
 
 .promoCodeList {
     text-align: center;
-    margin-top: 100px
-}
-
-.promoCodeList table{
     display: inline;
 }
 
@@ -39,9 +32,5 @@
 #table-header {
     width: 10%;
     font-size: 18px;
-}
-
-.content {
-    font-family:  'Oswald';
 }
 
