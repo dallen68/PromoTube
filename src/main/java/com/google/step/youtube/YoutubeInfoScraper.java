@@ -57,7 +57,7 @@ public class YoutubeInfoScraper {
 
     /**
      * @param uploadId Id of a channel's upload playlist.
-     * @return an optional list of PromoCode objects. the optional will return empty
+     * @return an optional list of PromoCode objects. The optional will return empty
      *         if id is invalid or no items in the playlist are found.
      */
     public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId) throws IOException {
