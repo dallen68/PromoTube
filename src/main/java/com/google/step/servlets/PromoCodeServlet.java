@@ -25,10 +25,16 @@ public class PromoCodeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String channelId = request.getParameter("formInput");
         Optional<String> playlistID = infoScraper.scrapeChannelUploadPlaylist(channelId);
-        Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistID.get());
-
-        response.setContentType("application/json");
-        String json = new Gson().toJson(promoCodeList.get());
-        response.getWriter().println(json);
+        if (!playlistID.isPresent()) {
+             response.setContentType("application/json");
+            String json = new Gson().toJson(false);
+            response.getWriter().println(json);
+        } else {
+            Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistID.get());
+            response.setContentType("application/json");
+            String json = new Gson().toJson(promoCodeList.get());
+            response.getWriter().println(json);
+        }
+        
     }
 }
