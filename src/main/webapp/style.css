@@ -4,25 +4,26 @@
     margin: 50px;
     padding: 50px;
     background-color: transparent;
-    font-family: "Roboto", Verdana, Arial, sans-serif;
+    font-family: "Open Sans", "Roboto", Verdana, Arial, sans-serif;
 }
 
 .content {
     text-align: center;
 }
 
-.title {
-    font-size: 32px;
-    margin-top: 50px;
-    font-family: 'Oswald';
-}
-
 .promoCodeList {
     text-align: center;
     margin-top: 100px
 }
+
 .promoCodeList table{
     display: inline;
+}
+
+.logo {
+    width: 600px;
+    height: 300px;
+    margin-top: 50px;
 }
 
 .form-control{
@@ -37,5 +38,6 @@
 
 #table-header {
     width: 10%;
+    font-size: 18px;
 }
 
