@@ -1,13 +1,18 @@
 .content {
-    font-family: Arial, Helvetica, sans-serif;
     color: black;
     justify-content: flex-start;
-    margin: 0;
-    padding: 0;
+    margin: 50;
+    padding: 50;
+    background-color: transparent;
+    font-family: "Roboto", Verdana, Arial, sans-serif;
 }
 
-.content h1 {
+.content {
     text-align: center;
+}
+
+.title {
+    font-size: 32px;
 }
 
 #searchForm {

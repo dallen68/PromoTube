@@ -8,27 +8,28 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     </head>
-    <body >
+    <body>
         <div class="content">
-        <h1>PromoTube</h1>
-        <form id="searchForm">
-            <input type="text" id="formInput" name="formInput" value="Enter Channel URL">
-            <input type="submit" value="Enter">
-        </form>
+            <div class="title text-center">PromoTube</div>
+            <br>
+            <form id="searchForm">
+                <input type="text" id="formInput" name="formInput" value="Enter Channel URL">
+                <input type="submit" value="Enter">
+            </form>
 
-        <div class="promoCodeList">
-            <table id="promoCodeTable">
-                <tr>
-                    <th>VideoURL</th>
-                    <th>PROMO CODE</th>
-                </tr>
+            <div class="promoCodeList col-md">
+                <table class="table table-hover table-responsive table-striped" id="promoCodeTable">
+                    <tr>
+                        <th style="width: 50%">Video Url</th>
+                        <th style="width: 50%">PROMO CODE</th>
+                    </tr>
 
-                <tr>
-                    <td><a href="youtube.com">youtube.com</a></td>
-                    <td>XXXXX</td>
-                </tr>
-            </table>
-        </div>
+                    <tr>
+                        <td><a href="youtube.com">youtube.com</a></td>
+                        <td>XXXXX</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </body>
 </html>
