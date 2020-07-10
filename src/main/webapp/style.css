@@ -16,12 +16,6 @@
     margin-top: 50px;
 }
 
-#searchForm {
-    margin: auto;
-    text-align: center;
-    width: 80%;
-}
-
 .promoCodeList {
     text-align: center;
     margin-top: 100px
@@ -32,5 +26,15 @@
 
 .form-control{
     text-align : center;
+}
+
+#searchForm {
+    margin: auto;
+    text-align: center;
+    width: 80%;
+}
+
+#table-header {
+    width: 10%;
 }
 
