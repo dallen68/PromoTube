@@ -101,4 +101,20 @@ public final class PromoCodeServletTest {
 
         assertThat(result , equalTo("false\n"));
     }
+
+    @Test
+    public void correctChannelIdRequestNoCodes() throws IOException {
+        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
+        
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        when(response.getWriter()).thenReturn(pw);
+        when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(Optional.empty());
+        servlet.doGet(request, response);
+        String result = sw.getBuffer().toString();
+
+        assertThat(result , equalTo("false\n"));
+    }
 }
