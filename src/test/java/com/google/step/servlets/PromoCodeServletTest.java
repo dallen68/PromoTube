@@ -6,7 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.anyString;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,7 +53,7 @@ public final class PromoCodeServletTest {
     }
 
     @Test
-    public void incorrectChannelIdRequest() throws ServletException, IOException {
+    public void incorrectChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
         
         StringWriter sw = new StringWriter();
@@ -70,7 +69,7 @@ public final class PromoCodeServletTest {
     }
 
     @Test
-    public void correctChannelIdRequest() throws ServletException, IOException {
+    public void correctChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
         
         StringWriter sw = new StringWriter();
@@ -88,7 +87,7 @@ public final class PromoCodeServletTest {
     }
 
     @Test
-    public void channelIdRequestThrowsException() throws ServletException, IOException {
+    public void channelIdRequestThrowsException() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
         
         StringWriter sw = new StringWriter();
