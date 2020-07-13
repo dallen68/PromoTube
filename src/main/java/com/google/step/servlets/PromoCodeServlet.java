@@ -32,18 +32,15 @@ public class PromoCodeServlet extends HttpServlet {
             Optional<String> playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId);
             if (!playlistId.isPresent()) {
                 response.setContentType("application/json");
-                String json = new Gson().toJson(false);
-                response.getWriter().println(json);
+                response.getWriter().println(new Gson().toJson(false));
             } else {
                 Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistId.get());
                 response.setContentType("application/json");
-                String json = new Gson().toJson(promoCodeList.get());
-                response.getWriter().println(json);
+                response.getWriter().println(new Gson().toJson(promoCodeList.get()));
             }
         } catch(IOException exception) {
             response.setContentType("application/json");
-            String json = new Gson().toJson(false);
-            response.getWriter().println(json);
+            response.getWriter().println(new Gson().toJson(false));
         }
         
     }
