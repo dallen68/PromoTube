@@ -38,7 +38,7 @@ public class PromoCodeServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.getWriter().println(new Gson().toJson(promoCodeList.get()));
             }
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             response.setContentType("application/json");
             response.getWriter().println(new Gson().toJson(false));
         }
