@@ -49,8 +49,6 @@ public final class PromoCodeServletTest {
 
     @Before
     public void setup() throws IOException {
-        //MockitoAnnotations.initMocks(this);
-        
         infoScraper = mock(YoutubeInfoScraper.class);
         servlet = new PromoCodeServlet(infoScraper);
     }
@@ -85,7 +83,8 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result , equalTo("[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Jan 1, 1970, 12:00:00 AM\"}]\n"));
+        assertThat(result ,
+                   equalTo("[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Jan 1, 1970, 12:00:00 AM\"}]\n"));
     }
 
     @Test
