@@ -32,7 +32,6 @@ public final class PromoCodeServletTest {
     private PromoCodeServlet servlet;
 
     private static final String CHANNEL_ID_NONEXISTENT = "CHANNEL_ID_NONEXISTENT";
-    private static final String UPLOAD_ID_NONEXISTENT = "UPLOAD_ID_NONEXISTENT";
     private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
@@ -64,7 +63,7 @@ public final class PromoCodeServletTest {
         PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
-        when(infoScraper.scrapeChannelUploadPlaylist(anyString())).thenReturn(Optional.empty());
+        when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID_NONEXISTENT)).thenReturn(Optional.empty());
 
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
@@ -97,7 +96,7 @@ public final class PromoCodeServletTest {
         PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
-        when(infoScraper.scrapeChannelUploadPlaylist(anyString())).thenThrow(IOException.class);
+        when(infoScraper.scrapeChannelUploadPlaylist(IOEXCEPTION)).thenThrow(IOException.class);
 
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
