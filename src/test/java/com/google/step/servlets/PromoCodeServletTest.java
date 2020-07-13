@@ -1,12 +1,7 @@
 package com.google.step.servlets;
 
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.any;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.anyString;
@@ -24,27 +19,11 @@ import java.util.Optional;
 
 import com.google.step.youtube.YoutubeInfoScraper;
 import com.google.step.youtube.PromoCode;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.youtube.model.Channel;
-import com.google.api.services.youtube.model.ChannelListResponse;
-import com.google.api.services.youtube.model.ChannelContentDetails;
-import com.google.api.services.youtube.model.ChannelContentDetails.RelatedPlaylists;
-import com.google.api.services.youtube.model.PlaylistItem;
-import com.google.api.services.youtube.model.PlaylistItemSnippet;
-import com.google.api.services.youtube.model.PlaylistItemListResponse;
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.YouTube.Channels;
-import com.google.api.services.youtube.YouTube.PlaylistItems;
-import com.google.api.services.youtube.YouTube;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
