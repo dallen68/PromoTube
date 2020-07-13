@@ -36,7 +36,12 @@ public class PromoCodeServlet extends HttpServlet {
             } else {
                 Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistId.get());
                 response.setContentType("application/json");
-                response.getWriter().println(new Gson().toJson(promoCodeList.get()));
+                if (promoCodeList.isPresent()) {
+                    response.getWriter().println(new Gson().toJson(promoCodeList.get()));
+                } else {
+                    response.getWriter().println(new Gson().toJson(false));
+                }
+                
             }
         } catch (IOException exception) {
             response.setContentType("application/json");
