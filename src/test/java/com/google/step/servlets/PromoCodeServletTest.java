@@ -4,7 +4,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.anyString;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class PromoCodeServletTest {
-        
+
     private PromoCodeServlet servlet;
 
     private static final String CHANNEL_ID_NONEXISTENT = "CHANNEL_ID_NONEXISTENT";
@@ -39,7 +38,7 @@ public final class PromoCodeServletTest {
 
     @Mock
     HttpServletRequest request;
- 
+
     @Mock
     HttpServletResponse response;
 
@@ -55,66 +54,66 @@ public final class PromoCodeServletTest {
     @Test
     public void incorrectChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
-        
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
+
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID_NONEXISTENT)).thenReturn(Optional.empty());
 
         servlet.doGet(request, response);
-        String result = sw.getBuffer().toString();
+        final String result = sw.getBuffer().toString();
 
-        assertThat(result , equalTo("false\n"));
+        assertThat(result, equalTo("false\n"));
     }
 
     @Test
     public void correctChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
-        
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
+
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
-        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(Optional.of(Arrays.asList(
-                PromoCode.create("LINUS", VIDEO_ID, new Date(MOCK_DATE)))));
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.create("LINUS", VIDEO_ID, new Date(MOCK_DATE)))));
         servlet.doGet(request, response);
-        String result = sw.getBuffer().toString();
+        final String result = sw.getBuffer().toString();
 
-        assertThat(result ,
-                   equalTo("[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Dec 31, 1969, 7:00:00 PM\"}]\n"));
+        assertThat(result, equalTo(
+                "[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Dec 31, 1969, 7:00:00 PM\"}]\n"));
     }
 
     @Test
     public void channelIdRequestThrowsException() throws IOException {
         when(request.getParameter("formInput")).thenReturn(IOEXCEPTION);
-        
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
+
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(IOEXCEPTION)).thenThrow(IOException.class);
 
         servlet.doGet(request, response);
-        String result = sw.getBuffer().toString();
+        final String result = sw.getBuffer().toString();
 
-        assertThat(result , equalTo("false\n"));
+        assertThat(result, equalTo("false\n"));
     }
 
     @Test
     public void correctChannelIdRequestNoCodes() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
-        
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
+
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(Optional.empty());
         servlet.doGet(request, response);
-        String result = sw.getBuffer().toString();
+        final String result = sw.getBuffer().toString();
 
-        assertThat(result , equalTo("false\n"));
+        assertThat(result, equalTo("false\n"));
     }
 }

@@ -19,7 +19,7 @@ public class PromoCodeServlet extends HttpServlet {
     public PromoCodeServlet(YoutubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
-    
+
     @Override
     public void init() {
         infoScraper = new YoutubeInfoScraper();
@@ -41,12 +41,12 @@ public class PromoCodeServlet extends HttpServlet {
                 } else {
                     response.getWriter().println(new Gson().toJson(false));
                 }
-                
+
             }
         } catch (IOException exception) {
             response.setContentType("application/json");
             response.getWriter().println(new Gson().toJson(false));
         }
-        
+
     }
 }
