@@ -83,12 +83,12 @@ public final class PromoCodeServletTest {
         String result = sw.getBuffer().toString();
 
         assertThat(result ,
-                   equalTo("[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Jan 1, 1970, 12:00:00 AM\"}]\n"));
+                   equalTo("[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Dec 31, 1969, 7:00:00 PM\"}]\n"));
     }
 
     @Test
     public void channelIdRequestThrowsException() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
+        when(request.getParameter("formInput")).thenReturn(IOEXCEPTION);
         
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
