@@ -14,7 +14,7 @@ import java.util.Optional;
 @WebServlet("/promo-code")
 public class PromoCodeServlet extends HttpServlet {
 
-    private YoutubeInfoScraper infoScraper;
+    private final YoutubeInfoScraper infoScraper;
 
     public PromoCodeServlet(YoutubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
