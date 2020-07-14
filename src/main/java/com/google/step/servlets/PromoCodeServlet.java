@@ -19,6 +19,9 @@ public class PromoCodeServlet extends HttpServlet {
     public PromoCodeServlet(YoutubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
+    public PromoCodeServlet() {
+        init();
+    }
 
     @Override
     public void init() {

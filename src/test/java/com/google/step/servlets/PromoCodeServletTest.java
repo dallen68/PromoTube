@@ -64,7 +64,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         final String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("false\n"));
+         assertThat(result, equalTo("false\n"));
     }
 
     @Test

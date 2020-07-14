@@ -1,24 +1,36 @@
 .content {
-    font-family: Arial, Helvetica, sans-serif;
     color: black;
     justify-content: flex-start;
-    margin: 0;
-    padding: 0;
-}
-
-.content h1 {
-    text-align: center;
-}
-
-#searchForm {
-    margin: auto;
+    margin: 50px;
+    padding: 50px;
+    background-color: transparent;
+    font-family: "Open Sans", "Oswald", "Roboto", Verdana, Arial, sans-serif;
     text-align: center;
 }
 
 .promoCodeList {
     text-align: center;
-    margin-top: 100px
-}
-.promoCodeList table{
     display: inline;
 }
+
+.logo {
+    width: 600px;
+    height: 300px;
+    margin-top: 50px;
+}
+
+.form-control{
+    text-align : center;
+}
+
+#searchForm {
+    margin: auto;
+    text-align: center;
+    width: 80%;
+}
+
+#table-header {
+    width: 10%;
+    font-size: 18px;
+}
+

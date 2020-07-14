@@ -1,28 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>PromoTube</title>
         <link rel="stylesheet" href="style.css">
-            <script src="script.js"></script>
+        <script src="script.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <!-- TODO: download bootstrap instead of linking to it -->
     </head>
+    <header>
+        <div class="text-center">
+            <img src="images/promoTube_logo.png" class="img-fluid logo" alt="PromoTube Logo"/>
+        </div>
+    </header>
     <body>
         <div class="content">
-        <h1>PromoTube</h1>
+            
         <div id="searchForm">
-            <input type="text" id="formInput" name="formInput" value="Enter Channel Id">
-            <input type="submit" value="Enter" onclick="displayCodes()">
+            <input type="text" id="formInput" class="form-control" name="formInput" placeholder="Enter Channel ID">
+            <br>
+            <input type="submit" class="btn btn-primary" value="Submit" onclick="displayCodes()">
         </div>
-
-        <div class="promoCodeList">
-            <table id="promoCodeTable">
-                <tr>
-                    <th>VideoURL</th>
-                    <th>PROMO CODE</th>
-                </tr>
-
-            </table>
-        </div>
+                
+            <br>
+            <div class="promoCodeList col-md">
+                <table class="table table-hover table-responsive table-striped" id="promoCodeTable">
+                    <tr>
+                        <th id="table-header">Video</th>
+                        <th id="table-header">Promo Code or Affiliate Link</th>
+                    </tr>
+                </table>
+            </div>
         </div>
     </body>
 </html>
