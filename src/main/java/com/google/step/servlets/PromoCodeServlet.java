@@ -27,7 +27,11 @@ public class PromoCodeServlet extends HttpServlet {
     public void init() {
         infoScraper = new YoutubeInfoScraper();
     }
-
+    /**
+     * Takes in formInput as a parameter and then checks for a promoCodes based on the channelId.
+     * If the channelId is not proper then the json will return false.
+     * In a case where an exception is thrown the json will return false.
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String channelId = request.getParameter("formInput");
