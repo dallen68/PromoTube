@@ -36,8 +36,8 @@ public class DescriptionParser {
      * @return A list of all promotional codes and affiliate links found in the
      *         description, duplicates allowed.
      */
-    public static List<String> parse(String description) {
-        List<String> codes = new ArrayList<>();
+    public static List<OfferSnippet> parse(String description) {
+        List<OfferSnippet> codes = new ArrayList<>();
 
         for (Patterns regex : Patterns.values()) {
             codes.addAll(findMatches(regex.getPattern(), description));
@@ -52,14 +52,34 @@ public class DescriptionParser {
      * @param description of the YouTube video to be parsed.
      * @return A list of all matches found in description.
      */
-    public static List<String> findMatches(Pattern pattern, String description) {
-        List<String> matches = new ArrayList<>();
+    public static List<OfferSnippet> findMatches(Pattern pattern, String description) {
+        List<OfferSnippet> matches = new ArrayList<>();
         Matcher matcher = pattern.matcher(description);
 
         while (matcher.find()) {
-            matches.add(matcher.group());
+            matches.add(OfferSnippet.create(matcher.group(), getSnippet(matcher.start(), description)));
         }
         return matches;
+    }
+
+    /**
+     * Finds the snippet (paragraph) of description which conatins the promocode index.
+     * 
+     * @param promocodeIndex The index in the description which marks the start of the promocode.
+     * @param description of the video from which the promocode was extracted.
+     * @return The snippet (paragraph) which contains the promocodeIndex. A paragraph delineated by 
+     *         two (2) newline characters (\n).
+     */
+    private static String getSnippet(int promocodeIndex, String description) {
+        String delineator = "\n\n";
+
+        int startDelineator = description.lastIndexOf(delineator, promocodeIndex);
+        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
+
+        int endDelineator = description.indexOf(delineator, promocodeIndex);
+        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
+
+        return description.substring(startSnippet, endSnippet);
     }
 
 }
