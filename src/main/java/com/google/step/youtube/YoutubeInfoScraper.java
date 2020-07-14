@@ -1,7 +1,6 @@
 
 package com.google.step.youtube;
 
-import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
@@ -25,14 +24,15 @@ public class YoutubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
-
     private final YouTube youTubeClient;
+    private final YouTube.Channels.List channelRequest;
 
-    public YoutubeInfoScraper(YouTube youTubeClient) {
+    public YoutubeInfoScraper(YouTube youTubeClient) throws IOException {
         this.youTubeClient = youTubeClient;
+        channelRequest = youTubeClient.channels().list("contentDetails");
     }
 
-    public YoutubeInfoScraper() {
+    public YoutubeInfoScraper() throws IOException {
         this(new YouTube.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(),
                 /* httpRequestInitializer= */ null).setApplicationName(APPLICATION_NAME)
                         .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY)).build());
@@ -45,14 +45,19 @@ public class YoutubeInfoScraper {
      *         will be empty if id is invalid or no items were found.
      */
     public Optional<String> scrapeChannelUploadPlaylist(String channelId) throws IOException {
-        ChannelListResponse response = youTubeClient.channels().list("contentDetails").setId(channelId).execute();
-        // getItems() return null when no items match the criteria (channelId).
-        if (response.getItems() == null || response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
-        List<Channel> channelsInfo = response.getItems();
-        // Since we are only requesting one channel-id, we only get one item back.
-        return Optional.of(channelsInfo.get(0).getContentDetails().getRelatedPlaylists().getUploads());
+        ChannelListResponse response = channelRequest.setId(channelId).execute();
+        return getYoutubeChannelResponse(response);
+    }
+
+    /**
+     * @param userName username of a channel. Can be found in channel's urls. e.g.
+     *                 https://www.youtube.com/user/<USER-NAME>
+     * @return an optional string of the channel's upload playlist id. The optional
+     *         will be empty if id is invalid or no items were found.
+     */
+    public Optional<String> scrapeUserUploadPlaylist(String userName) throws IOException {
+        ChannelListResponse response = channelRequest.setForUsername(userName).execute();
+        return getYoutubeChannelResponse(response);
     }
 
     /**
@@ -91,5 +96,14 @@ public class YoutubeInfoScraper {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
+    }
+
+    private Optional<String> getYoutubeChannelResponse(ChannelListResponse response) {
+        // getItems() return null when no items match the criteria (channelId).
+        if (response.getItems() == null || response.getItems().isEmpty()) {
+            return Optional.empty();
+        }
+        // Since we are only requesting one channel-id, we only get one item back.
+        return Optional.of(response.getItems().get(0).getContentDetails().getRelatedPlaylists().getUploads());
     }
 }
