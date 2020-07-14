@@ -37,13 +37,13 @@ public final class PromoCodeServletTest {
     private static final long MOCK_DATE = 0L;
 
     @Mock
-    HttpServletRequest request;
+    private HttpServletRequest request;
 
     @Mock
-    HttpServletResponse response;
+    private HttpServletResponse response;
 
     @Mock
-    YoutubeInfoScraper infoScraper;
+    private YoutubeInfoScraper infoScraper;
 
     @Before
     public void setup() throws IOException {
@@ -55,14 +55,14 @@ public final class PromoCodeServletTest {
     public void incorrectChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_NONEXISTENT);
 
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID_NONEXISTENT)).thenReturn(Optional.empty());
 
         servlet.doGet(request, response);
-        final String result = sw.getBuffer().toString();
+        String result = sw.getBuffer().toString();
 
          assertThat(result, equalTo("false\n"));
     }
@@ -71,15 +71,15 @@ public final class PromoCodeServletTest {
     public void correctChannelIdRequest() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
 
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
                 .thenReturn(Optional.of(Arrays.asList(PromoCode.create("LINUS", VIDEO_ID, new Date(MOCK_DATE)))));
         servlet.doGet(request, response);
-        final String result = sw.getBuffer().toString();
+        String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"LINUS\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Dec 31, 1969, 7:00:00 PM\"}]\n"));
@@ -89,14 +89,14 @@ public final class PromoCodeServletTest {
     public void channelIdRequestThrowsException() throws IOException {
         when(request.getParameter("formInput")).thenReturn(IOEXCEPTION);
 
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(IOEXCEPTION)).thenThrow(IOException.class);
 
         servlet.doGet(request, response);
-        final String result = sw.getBuffer().toString();
+        String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo("false\n"));
     }
@@ -105,14 +105,14 @@ public final class PromoCodeServletTest {
     public void correctChannelIdRequestNoCodes() throws IOException {
         when(request.getParameter("formInput")).thenReturn(CHANNEL_ID);
 
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(Optional.empty());
         servlet.doGet(request, response);
-        final String result = sw.getBuffer().toString();
+        String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo("false\n"));
     }
