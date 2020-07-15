@@ -65,7 +65,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-         assertThat(result, equalTo("false\n"));
+         assertThat(result, equalTo("[]\n"));
     }
 
     @Test
@@ -99,7 +99,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("false\n"));
+        assertThat(result, equalTo("[]\n"));
     }
 
     @Test
@@ -115,6 +115,6 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("false\n"));
+        assertThat(result, equalTo("[]\n"));
     }
 }
