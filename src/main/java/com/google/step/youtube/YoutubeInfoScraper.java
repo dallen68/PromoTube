@@ -70,7 +70,7 @@ public class YoutubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
             for (String promocode : itemPromoCodes) {
-                promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(),
+                promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(), snippet.getTitle(),
                         new Date(snippet.getPublishedAt().getValue())));
             }
         }
