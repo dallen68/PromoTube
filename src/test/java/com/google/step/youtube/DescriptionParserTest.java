@@ -2,7 +2,6 @@ package com.google.step.youtube;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.RETURNS_MOCKS;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -41,27 +40,23 @@ public final class DescriptionParserTest {
                 + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\"."
                 + "\n\nGo to https://NordVPN.com/pewdiepie and use code PEWDIEPIE to "
                 + "get 70% off a 3 year plan plus 1 additional month free.";
-
         String expectedSnippetFUNGBROS10 = "Get 10% off (save up to $44!) your own authentic "
                 + "Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5 and "
                 + "code FUNGBROS10. ";
         OfferSnippet expectedFUNGBROS10 = OfferSnippet.create("FUNGBROS10", expectedSnippetFUNGBROS10);
-
         String expectedSnippetPEWDIEPIE = "Go to https://NordVPN.com/pewdiepie and use code "
                 + "PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
         OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", expectedSnippetPEWDIEPIE);
-
         String expectedSnippetCOOLIRPA = "Save 33% on your first Native Deodorant Pack - normally "
                 + "$36, you'll get it for $24! Click here: https://bit.ly/nativecoolirpa and use "
                 + "my code \"COOLIRPA\".";
         OfferSnippet expectedCOOLIRPA = OfferSnippet.create("COOLIRPA", expectedSnippetCOOLIRPA);
-
         String expectedSnippetNordVPN = "Go to https://NordVPN.com/pewdiepie and use code "
                 + "PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
         OfferSnippet expectedNordVPN = OfferSnippet.create("https://NordVPN.com/pewdiepie", expectedSnippetNordVPN);
-
         List<OfferSnippet> expected = 
             Arrays.asList(expectedFUNGBROS10, expectedPEWDIEPIE, expectedCOOLIRPA, expectedNordVPN);
+        
         assertThat(DescriptionParser.parse(desc), equalTo(expected));
     }
 

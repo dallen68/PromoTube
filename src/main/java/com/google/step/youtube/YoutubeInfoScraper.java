@@ -68,8 +68,9 @@ public class YoutubeInfoScraper {
         List<PromoCode> promoCodes = new ArrayList<>();
         for (PlaylistItem item : playlistItems.get()) {
             PlaylistItemSnippet snippet = item.getSnippet();
-            List<String> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
-            for (String promocode : itemPromoCodes) {
+            List<OfferSnippet> itemPromoCodes = DescriptionParser.parse(snippet.getDescription());
+            for (OfferSnippet promoSnippet : itemPromoCodes) {
+                String promocode = promoSnippet.getPromoCode();
                 promoCodes.add(PromoCode.create(promocode, snippet.getResourceId().getVideoId(),
                         new Date(snippet.getPublishedAt().getValue())));
             }
