@@ -34,6 +34,7 @@ public final class PromoCodeServletTest {
     private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
+    private static final String VIDEO_TITLE = "VIDEO_TITLE";
     private static final String IOEXCEPTION_CHANNEL_ID = "IOEXCEPTION_CHANNEL_ID";
     private static final Date MOCK_DATE = new Date(0);
     private static final String CHANNEL_NAME = "CHANNEL_NAME";
@@ -67,7 +68,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-         assertThat(result, equalTo("[]\n"));
+        assertThat(result, equalTo("[]\n"));
     }
 
     @Test
@@ -80,12 +81,12 @@ public final class PromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
-                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, MOCK_DATE))));
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
-                "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\","
+                "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
                 + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
     }
 

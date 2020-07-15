@@ -9,8 +9,8 @@ import java.util.Date;
 @AutoValue
 public abstract class PromoCode {
 
-    public static PromoCode create (String promoCode, String snippet, String videoId, Date videoUploadDate) {
-        return new AutoValue_PromoCode(promoCode, snippet, videoId, videoUploadDate);
+    public static PromoCode create (String promoCode, String snippet, String videoId, String videoTitle, Date videoUploadDate) {
+        return new AutoValue_PromoCode(promoCode, snippet, videoId, videoTitle, videoUploadDate);
     }
 
     public abstract String getPromoCode();
@@ -18,6 +18,8 @@ public abstract class PromoCode {
     public abstract String getSnippet();
 
     public abstract String getVideoId();
+
+    public abstract String getVideoTitle();
 
     public abstract Date getVideoUploadDate();
 }
