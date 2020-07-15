@@ -34,26 +34,15 @@ public final class DescriptionParserTest {
 
     @Test
     public void parse_matchesFromAll() {
-        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
-                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10. \n\n"
-                + "Save 33% on your first Native Deodorant Pack - normally $36, you'll get "
-                + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\"."
-                + "\n\nGo to https://NordVPN.com/pewdiepie and use code PEWDIEPIE to "
-                + "get 70% off a 3 year plan plus 1 additional month free.";
-        String expectedSnippetFUNGBROS10 = "Get 10% off (save up to $44!) your own authentic "
-                + "Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5 and "
-                + "code FUNGBROS10. ";
-        OfferSnippet expectedFUNGBROS10 = OfferSnippet.create("FUNGBROS10", expectedSnippetFUNGBROS10);
-        String expectedSnippetPEWDIEPIE = "Go to https://NordVPN.com/pewdiepie and use code "
-                + "PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
-        OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", expectedSnippetPEWDIEPIE);
-        String expectedSnippetCOOLIRPA = "Save 33% on your first Native Deodorant Pack - normally "
-                + "$36, you'll get it for $24! Click here: https://bit.ly/nativecoolirpa and use "
-                + "my code \"COOLIRPA\".";
-        OfferSnippet expectedCOOLIRPA = OfferSnippet.create("COOLIRPA", expectedSnippetCOOLIRPA);
-        String expectedSnippetNordVPN = "Go to https://NordVPN.com/pewdiepie and use code "
-                + "PEWDIEPIE to get 70% off a 3 year plan plus 1 additional month free.";
-        OfferSnippet expectedNordVPN = OfferSnippet.create("https://NordVPN.com/pewdiepie", expectedSnippetNordVPN);
+        String descFUNGBROS10 = "Use code FUNGBROS10. ";
+        String descCOOLIRPA = "Click here and use my code \"COOLIRPA\".";
+        String descPEWDIEPIE = "Go to https://NordVPN.com/pewdiepie and use code PEWDIEPIE ";
+        String desc = descFUNGBROS10 + "\n\n" + descCOOLIRPA + "\n\n" + descPEWDIEPIE;
+
+        OfferSnippet expectedFUNGBROS10 = OfferSnippet.create("FUNGBROS10", descFUNGBROS10);
+        OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", descPEWDIEPIE);
+        OfferSnippet expectedCOOLIRPA = OfferSnippet.create("COOLIRPA", descCOOLIRPA);
+        OfferSnippet expectedNordVPN = OfferSnippet.create("https://NordVPN.com/pewdiepie", descPEWDIEPIE);
         List<OfferSnippet> expected = 
             Arrays.asList(expectedFUNGBROS10, expectedPEWDIEPIE, expectedCOOLIRPA, expectedNordVPN);
         
@@ -61,46 +50,36 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void parse_codeNoQuotes() {
-        String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
-                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10"
-                + "\n\nRyan: https://www.instagram.com/ryan.w.benson/";
-        String expectedSnippet = "Get 10% off (save up to $44!) your own authentic Japanese snack "
-                + "box from Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
-        OfferSnippet expected = OfferSnippet.create("FUNGBROS10", expectedSnippet);
+    public void parse_codeNoQuotes_extraParagraphAfter() {
+        String snippetFUNGBROS10 = "Use code FUNGBROS10 ";
+        String desc = snippetFUNGBROS10 + "\n\nRyan: https://www.instagram.com/ryan.w.benson/";
+        OfferSnippet expected = OfferSnippet.create("FUNGBROS10", snippetFUNGBROS10);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
 
     @Test
-    public void parse_codeWithQuotes() {
-        String desc = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get "
-                + "it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\". ";
-        String expectedSnippet = "Save 33% on your first Native Deodorant Pack - normally $36, you'll get"
-        + " it for $24! Click here: https://bit.ly/nativecoolirpa and use my code \"COOLIRPA\". ";
-        OfferSnippet expected = OfferSnippet.create("COOLIRPA", expectedSnippet);
+    public void parse_codeWithQuotes_oneParagraphDescription() {
+        String desc = "Click here and use my code \"COOLIRPA\". ";
+        OfferSnippet expected = OfferSnippet.create("COOLIRPA", desc);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
 
     @Test
-    public void parse_toAtLink() {
-        String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n\nGo to "
-                + "https://NordVPN.com/pewdiepie and get 70% off a 3 year plan plus 1 additional "
-                + "month free.";
-        String expectedSnippet = "Go to https://NordVPN.com/pewdiepie and get 70% off a 3 year "
-                + "plan plus 1 additional month free.";
-        OfferSnippet expected = OfferSnippet.create("https://NordVPN.com/pewdiepie", expectedSnippet);
+    public void parse_toAtLink_extraParagraphBefore() {
+        String snippetNordVPN = "Go to https://NordVPN.com/pewdiepie and get 70% off";
+        String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n\n" + snippetNordVPN;
+        OfferSnippet expected = OfferSnippet.create("https://NordVPN.com/pewdiepie", snippetNordVPN);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
 
     @Test
     public void parse_repeatedPromoCodesDifferentSnippets() {
-        String desc = "Use my code \"COOLIRPA\".\n\nAlso my code \"COOLIRPA\"";
+        String firstCOOLIRPA = "Use my code \"COOLIRPA\".";
+        String secondCOOLIRPA = "Also my code \"COOLIRPA\"";
+        String desc = firstCOOLIRPA + "\n\n" + secondCOOLIRPA;
 
-        String firstExpectedSnippet = "Use my code \"COOLIRPA\".";
-        OfferSnippet firstExpected = OfferSnippet.create("COOLIRPA", firstExpectedSnippet);
-
-        String secondExpectedSnippet = "Also my code \"COOLIRPA\"";
-        OfferSnippet secondExpected = OfferSnippet.create("COOLIRPA", secondExpectedSnippet);
+        OfferSnippet firstExpected = OfferSnippet.create("COOLIRPA", firstCOOLIRPA);
+        OfferSnippet secondExpected = OfferSnippet.create("COOLIRPA", secondCOOLIRPA);
         
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(firstExpected, secondExpected)));
     }
