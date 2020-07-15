@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-         assertThat(result, equalTo("false\n"));
+         assertThat(result, equalTo("[]\n"));
     }
 
     @Test
@@ -83,7 +84,7 @@ public final class PromoCodeServletTest {
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
-                "[{\"promoCode\":\"CHANNEL_NAME\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"Dec 31, 1969, 7:00:00 PM\"}]\n"));
+                "[{\"promoCode\":\"CHANNEL_NAME\",\"videoId\":\"VIDEO_ID\",\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
     }
 
     @Test
@@ -99,7 +100,7 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("false\n"));
+        assertThat(result, equalTo("[]\n"));
     }
 
     @Test
@@ -115,6 +116,6 @@ public final class PromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("false\n"));
+        assertThat(result, equalTo("[]\n"));
     }
 }
