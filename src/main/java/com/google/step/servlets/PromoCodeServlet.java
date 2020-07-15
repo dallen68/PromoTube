@@ -2,6 +2,7 @@ package com.google.step.servlets;
 
 import com.google.step.youtube.YoutubeInfoScraper;
 import com.google.step.youtube.PromoCode;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,8 +30,9 @@ public class PromoCodeServlet extends HttpServlet {
     }
     /**
      * Takes in formInput as a parameter and then checks for a promoCodes based on the channelId.
-     * If the channelId is not proper then the json will return false.
-     * In a case where an exception is thrown the json will return false.
+     * If the channelId is real and there are codes the json will return a list of promoCodes.
+     * If the channelId is not proper then the json will return an empty list.
+     * In a case where an exception is thrown the json will return an empty list.
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,13 +45,13 @@ public class PromoCodeServlet extends HttpServlet {
                 if (promoCodeList.isPresent()) {
                     response.getWriter().println(new Gson().toJson(promoCodeList.get()));
                 } else {
-                    response.getWriter().println(new Gson().toJson(false));
+                    response.getWriter().println(new Gson().toJson(ImmutableList.of()));
                 }
             } else {
-                response.getWriter().println(new Gson().toJson(false));
+                response.getWriter().println(new Gson().toJson(ImmutableList.of()));
             }
         } catch (IOException exception) {
-            response.getWriter().println(new Gson().toJson(false));
+            response.getWriter().println(new Gson().toJson(ImmutableList.of()));
         }
 
     }
