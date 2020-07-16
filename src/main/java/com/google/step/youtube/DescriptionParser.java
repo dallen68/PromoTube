@@ -45,7 +45,7 @@ public class DescriptionParser {
         List<OfferSnippet> offers = new ArrayList<>();
         for (int i = description.toLowerCase().indexOf(company.toLowerCase()); i != -1;) {
             String snippet = getCompleteSnippet(i, description);
-            description = description.substring(i + company.length());
+            description = description.substring(i + company.length() - 1);
             offers.addAll(parse(snippet));
         }
         return offers;
