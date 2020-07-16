@@ -30,8 +30,11 @@ import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.ResourceId;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.YouTube.PlaylistItems;
+import com.google.api.services.youtube.YouTube.Search;
 import com.google.api.services.youtube.YouTube;
 import java.io.IOException;
 import java.util.Arrays;
@@ -48,9 +51,11 @@ public final class YoutubeInfoScraperTest {
 
     private YoutubeInfoScraper scraper;
     private ChannelListResponse mockChannelResponse;
+    private PlaylistItemListResponse mockPlaylistResponse;
+    private SearchListResponse mockSearchResponse;
     private Channels.List mockListChannels;
     private PlaylistItems.List mockListPlaylistItems;
-    private PlaylistItemListResponse mockPlaylistResponse;
+    private Search.List mockListSearch;
 
     private static final String NONEXISTENT_CHANNEL_ID = "NONEXISTENT_CHANNEL_ID";
     private static final String NONEXISTENT_UPLOAD_ID = "NONEXISTENT_UPLOAD_ID";
@@ -58,6 +63,8 @@ public final class YoutubeInfoScraperTest {
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
+    private static final String KEYWORD = "KEYWORD";
+    private static final String KEYWORD_NO_RESULTS = "KEYWORD_NO_RESULTS";
     private static final String IOEXCEPTION = "IOEXCEPTION";
     private static final Date MOCK_DATE = new Date(0L);
 
@@ -77,6 +84,14 @@ public final class YoutubeInfoScraperTest {
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setMaxResults(50L)).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
+
+        Search mockSearch = mock(Search.class);
+        mockListSearch = mock(Search.List.class);
+        when(mockYouTubeClient.search()).thenReturn(mockSearch);
+        when(mockSearch.list("")).thenReturn(mockListSearch);
+        when(mockListSearch.setMaxResults(50L)).thenReturn(mockListSearch);
+        when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
+        when(mockListSearch.setFields("items(id)")).thenReturn(mockListSearch);
 
         scraper = new YoutubeInfoScraper(mockYouTubeClient);
     }
@@ -166,7 +181,7 @@ public final class YoutubeInfoScraperTest {
         assertThat(actual.get(),
                 equalTo(Arrays.asList(
                         PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
-                        VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+                                VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
     }
 
     @Test
@@ -198,10 +213,13 @@ public final class YoutubeInfoScraperTest {
                         .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(
-                PromoCode.create("http://boxofawesome.com",
-                        "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, MOCK_DATE),
-                PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+        assertThat(actual.get(),
+                equalTo(Arrays.asList(
+                        PromoCode.create("http://boxofawesome.com",
+                                "Get 20% off your first monthly box when you sign up at http://boxofawesome.com",
+                                VIDEO_ID, VIDEO_TITLE, MOCK_DATE),
+                        PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE,
+                                MOCK_DATE))));
     }
 
     @Test
@@ -223,4 +241,37 @@ public final class YoutubeInfoScraperTest {
         when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
         assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromPlaylist(IOEXCEPTION));
     }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_returnNull() throws IOException {
+        mockSearchResponse = new SearchListResponse();
+        when(mockListSearch.execute()).thenReturn(mockSearchResponse.setItems(null));
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD_NO_RESULTS);
+        assertThat(actual.isPresent(), equalTo(false));
+    }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_emptyList() throws IOException {
+        mockSearchResponse = new SearchListResponse();
+        when(mockListSearch.execute()).thenReturn(mockSearchResponse.setItems(Arrays.asList()));
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD_NO_RESULTS);
+        assertThat(actual.isPresent(), equalTo(false));
+    }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_returnVideoIds() throws IOException {
+        mockSearchResponse = new SearchListResponse();
+        mockSearchResponse.setItems(Arrays.asList(new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID)),
+                new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID))));
+        when(mockListSearch.execute()).thenReturn(mockSearchResponse);
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD);
+        assertThat(actual.get(), equalTo(Arrays.asList(VIDEO_ID, VIDEO_ID)));
+    }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_IOException() throws IOException {
+        when(mockListSearch.execute()).thenThrow(IOException.class);
+        assertThrows(IOException.class, () -> scraper.scrapeVideoIdsFromSearch(IOEXCEPTION));
+    }
+
 }
