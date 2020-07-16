@@ -128,7 +128,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeUserUploadPlaylist_emptyList()  throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(Arrays.asList()));
         Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -162,7 +162,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapePlaylistItems_emptyList() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
+        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(Arrays.asList()));
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
