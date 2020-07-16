@@ -56,12 +56,11 @@ public final class YoutubeInfoScraperTest {
     private static final String NONEXISTENT_UPLOAD_ID = "NONEXISTENT_UPLOAD_ID";
     private static final String NONEXISTENT_USER_NAME = "NONEXISTENT_USER_NAME";
     private static final String CHANNEL_ID = "CHANNEL_ID";
-    private static final String USER_NAME = "USER_NAME";
+    private static final String USERNAME = "USERNAME";
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
-    private static final String IOEXCEPTION = "IOEXCEPTION";
-    private static final Date MOCK_DATE = new Date(0L);
+    private static final Date DATE = new Date(0L);
 
     @Before
     public void setUp() throws IOException {
@@ -87,7 +86,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeChannelUploadPlaylist_nonExistentChannelId() throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(null));
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
         Optional<String> actual = scraper.scrapeChannelUploadPlaylist(NONEXISTENT_CHANNEL_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -95,7 +94,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeChannelUploadPlaylist_emptyList() throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(Arrays.asList()));
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
         Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -115,13 +114,13 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeChannelUploadPlaylist_IOException() throws IOException {
         when(mockListChannels.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(IOEXCEPTION));
+        assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(CHANNEL_ID));
     }
 
     @Test
     public void scrapeUserUploadPlaylist_nonExistentUserName()  throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(null));
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
         Optional<String> actual = scraper.scrapeUserUploadPlaylist(NONEXISTENT_USER_NAME);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -129,8 +128,8 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeUserUploadPlaylist_emptyList()  throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(Arrays.asList()));
-        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USER_NAME);
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
+        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
         assertThat(actual.isPresent(), equalTo(false));
     }
 
@@ -142,20 +141,20 @@ public final class YoutubeInfoScraperTest {
                 new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
         mockChannelResponse.setItems(Arrays.asList(channel));
         when(mockListChannels.execute()).thenReturn(mockChannelResponse);
-        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USER_NAME);
+        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
         assertThat(actual.get(), equalTo(UPLOAD_ID));
     }
 
     @Test
     public void scrapeUserUploadPlaylist_IOException() throws IOException {
         when(mockListChannels.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeUserUploadPlaylist(IOEXCEPTION));
+        assertThrows(IOException.class, () -> scraper.scrapeUserUploadPlaylist(USERNAME));
     }
 
     @Test
     public void scrapePlaylistItems_nonExistentUploadId() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(null));
+        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(NONEXISTENT_UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -163,7 +162,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapePlaylistItems_emptyList() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(Arrays.asList()));
+        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -180,13 +179,13 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapePlaylistItems_IOException() throws IOException {
         when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapePlaylistItems(IOEXCEPTION));
+        assertThrows(IOException.class, () -> scraper.scrapePlaylistItems(UPLOAD_ID));
     }
 
     @Test
     public void scrapePromoCodesFromPlaylist_nonExistentUploadId() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(null));
+        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(NONEXISTENT_UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -196,17 +195,17 @@ public final class YoutubeInfoScraperTest {
         mockPlaylistResponse = new PlaylistItemListResponse();
         String description = "Get 20% off your first monthly box and enter the code RO at checkout!";
         mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(
-                new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(MOCK_DATE))
+                new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(DATE))
                         .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
     public void scrapePromoCodesFromPlaylist_noItems() throws IOException {
         mockPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse.setItems(Arrays.asList()));
+        when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
@@ -222,19 +221,19 @@ public final class YoutubeInfoScraperTest {
                 + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
         mockPlaylistResponse.setItems(Arrays.asList(
                 new PlaylistItem().setSnippet(
-                        new PlaylistItemSnippet().setDescription(description1).setPublishedAt(new DateTime(MOCK_DATE))
+                        new PlaylistItemSnippet().setDescription(description1).setPublishedAt(new DateTime(DATE))
                                 .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
                 new PlaylistItem().setSnippet(
-                        new PlaylistItemSnippet().setDescription(description2).setPublishedAt(new DateTime(MOCK_DATE))
+                        new PlaylistItemSnippet().setDescription(description2).setPublishedAt(new DateTime(DATE))
                                 .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
                 new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(descriptionWithNoCode)
-                        .setPublishedAt(new DateTime(MOCK_DATE)).setTitle(VIDEO_TITLE)
+                        .setPublishedAt(new DateTime(DATE)).setTitle(VIDEO_TITLE)
                         .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(),
-                equalTo(Arrays.asList(PromoCode.create("http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, MOCK_DATE),
-                        PromoCode.create("LINUS", VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+                equalTo(Arrays.asList(PromoCode.create("http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
+                        PromoCode.create("LINUS", VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -244,7 +243,7 @@ public final class YoutubeInfoScraperTest {
                 + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
                 + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
         mockPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(
-                new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(MOCK_DATE))
+                new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE))
                         .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(mockPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
@@ -254,6 +253,6 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapePromoCodesFromPlaylist_IOException() throws IOException {
         when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromPlaylist(IOEXCEPTION));
+        assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID));
     }
 }
