@@ -94,7 +94,7 @@ public final class YoutubeInfoScraperTest {
     @Test
     public void scrapeChannelUploadPlaylist_emptyList() throws IOException {
         mockChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(mockChannelResponse);
+        when(mockListChannels.execute()).thenReturn(mockChannelResponse.setItems(Arrays.asList()));
         Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
