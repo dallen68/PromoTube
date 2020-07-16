@@ -54,7 +54,7 @@ public final class YoutubeInfoScraperTest {
 
     private static final String NONEXISTENT_CHANNEL_ID = "NONEXISTENT_CHANNEL_ID";
     private static final String NONEXISTENT_UPLOAD_ID = "NONEXISTENT_UPLOAD_ID";
-    private static final String NONEXISTENT_USER_NAME = "NONEXISTENT_USER_NAME";
+    private static final String NONEXISTENT_USERNAME = "NONEXISTENT_USERNAME";
     private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final String USERNAME = "USERNAME";
     private static final String UPLOAD_ID = "UPLOAD_ID";
@@ -121,7 +121,7 @@ public final class YoutubeInfoScraperTest {
     public void scrapeUserUploadPlaylist_nonExistentUserName()  throws IOException {
         mockChannelResponse = new ChannelListResponse();
         when(mockListChannels.execute()).thenReturn(mockChannelResponse);
-        Optional<String> actual = scraper.scrapeUserUploadPlaylist(NONEXISTENT_USER_NAME);
+        Optional<String> actual = scraper.scrapeUserUploadPlaylist(NONEXISTENT_USERNAME);
         assertThat(actual.isPresent(), equalTo(false));
     }
 
