@@ -5,6 +5,8 @@ import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
@@ -70,9 +72,9 @@ public class YoutubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parse(snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
-                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(),
-                        snippet.getResourceId().getVideoId(), snippet.getTitle(), 
-                        new Date(snippet.getPublishedAt().getValue())));
+                promoCodes.add(
+                        PromoCode.create(offer.getPromoCode(), offer.getSnippet(), snippet.getResourceId().getVideoId(),
+                                snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
             }
         }
         return Optional.of(promoCodes);
@@ -92,5 +94,24 @@ public class YoutubeInfoScraper {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param keyword Word to search with.
+     * @return an optional list of PlaylistItems. Each item contains a video-id,
+     *         description and a date. The optional will be empty if id is invalid
+     *         or no items were found.
+     */
+    public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
+        SearchListResponse response = youTubeClient.search().list("").setMaxResults(50L).setQ(keyword)
+                .setFields("items(id)").execute();
+        if (response.getItems() == null || response.getItems().isEmpty()) {
+            return Optional.empty();
+        }
+        List<String> videoIds = new ArrayList<>();
+        for (SearchResult result : response.getItems()) {
+            videoIds.add(result.getId().getVideoId());
+        }
+        return Optional.of(videoIds);
     }
 }
