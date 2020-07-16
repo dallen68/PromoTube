@@ -37,7 +37,7 @@ public final class DescriptionParserTest {
         String descFUNGBROS10 = "Use code FUNGBROS10. ";
         String descCOOLIRPA = "Click here and use my code \"COOLIRPA\".";
         String descPEWDIEPIE = "Go to https://NordVPN.com/pewdiepie and use code PEWDIEPIE ";
-        String desc = descFUNGBROS10 + "\n\n" + descCOOLIRPA + "\n\n" + descPEWDIEPIE;
+        String desc = descFUNGBROS10 + "\n" + descCOOLIRPA + "\n" + descPEWDIEPIE + "\n";
 
         OfferSnippet expectedFUNGBROS10 = OfferSnippet.create("FUNGBROS10", descFUNGBROS10);
         OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", descPEWDIEPIE);
@@ -50,24 +50,24 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void parse_codeNoQuotes_extraParagraphAfter() {
+    public void parse_codeNoQuotes_extraLineAfter() {
         String snippetFUNGBROS10 = "Use code FUNGBROS10 ";
-        String desc = snippetFUNGBROS10 + "\n\nRyan: https://www.instagram.com/ryan.w.benson/";
+        String desc = snippetFUNGBROS10 + "\nRyan: https://www.instagram.com/ryan.w.benson/";
         OfferSnippet expected = OfferSnippet.create("FUNGBROS10", snippetFUNGBROS10);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
 
     @Test
-    public void parse_codeWithQuotes_oneParagraphDescription() {
+    public void parse_codeWithQuotes_oneLineDescription() {
         String desc = "Click here and use my code \"COOLIRPA\". ";
         OfferSnippet expected = OfferSnippet.create("COOLIRPA", desc);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
 
     @Test
-    public void parse_toAtLink_extraParagraphBefore() {
+    public void parse_toAtLink_extraLineBefore() {
         String snippetNordVPN = "Go to https://NordVPN.com/pewdiepie and get 70% off";
-        String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n\n" + snippetNordVPN;
+        String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n" + snippetNordVPN + "\n";
         OfferSnippet expected = OfferSnippet.create("https://NordVPN.com/pewdiepie", snippetNordVPN);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
@@ -76,13 +76,24 @@ public final class DescriptionParserTest {
     public void parse_repeatedPromoCodesDifferentSnippets() {
         String firstCOOLIRPA = "Use my code \"COOLIRPA\".";
         String secondCOOLIRPA = "Also my code \"COOLIRPA\"";
-        String desc = firstCOOLIRPA + "\n\n" + secondCOOLIRPA;
+        String desc = firstCOOLIRPA + "\n" + secondCOOLIRPA + "\n";
 
         OfferSnippet firstExpected = OfferSnippet.create("COOLIRPA", firstCOOLIRPA);
         OfferSnippet secondExpected = OfferSnippet.create("COOLIRPA", secondCOOLIRPA);
         
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(firstExpected, secondExpected)));
     }
+
+    @Test
+    public void parse_snippetTruncatedAtMaxLength() {
+        String truncatedSnippet = "This episode originally recorded June 8, 2020, and is sponsored "      
+                + "by Stamps.com (Go to http://stamps.com, click on the microphone at the top of "
+                + "the homepage, and type in ROOSTER to claim ";
+        String desc = truncatedSnippet + "your special offer).";
+        OfferSnippet expected = OfferSnippet.create("http://stamps.com", truncatedSnippet);
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
+    }
+
 
     /*
      * * ===================== TEST 'CODE' NO QUOTES ===================== * 

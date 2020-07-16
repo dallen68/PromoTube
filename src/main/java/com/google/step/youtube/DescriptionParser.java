@@ -11,7 +11,9 @@ import java.util.regex.Matcher;
  */
 public class DescriptionParser {
 
-    // enum is package private in order to access in tests
+    // package private in order to access in tests
+    static final int MAX_SNIPPET_LENGTH = 200;
+    
     enum Patterns {
 
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
@@ -62,22 +64,21 @@ public class DescriptionParser {
         return matches;
     }
 
-    /**
-     * Finds the snippet (paragraph) of description which conatins the promocode index.
-     * 
-     * @param promocodeIndex The index in the description which marks the start of the promocode.
-     * @param description of the video from which the promocode was extracted.
-     * @return The snippet (paragraph) which contains the promocodeIndex. A paragraph delineated by 
-     *         two (2) newline characters (\n).
-     */
+
+    // Finds the snippet (line) of description which conatins the promocode index. 
+    // Truncates the snippet at MAX_SNIPPET_LENGTH characters.
     private static String getSnippet(int promocodeIndex, String description) {
-        String delineator = "\n\n";
+        String delineator = "\n";
 
         int startDelineator = description.lastIndexOf(delineator, promocodeIndex);
-        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
+        int startSnippet = startDelineator == -1 ? 
+                Math.max(0, promocodeIndex - MAX_SNIPPET_LENGTH/2) :
+                Math.max(promocodeIndex - MAX_SNIPPET_LENGTH/2, startDelineator + delineator.length());
 
         int endDelineator = description.indexOf(delineator, promocodeIndex);
-        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
+        int endSnippet = endDelineator == -1 ? 
+                Math.min(description.length(), promocodeIndex + MAX_SNIPPET_LENGTH/2) :
+                Math.min(promocodeIndex + MAX_SNIPPET_LENGTH/2, endDelineator);
 
         return description.substring(startSnippet, endSnippet);
     }
