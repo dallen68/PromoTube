@@ -32,6 +32,26 @@ public class DescriptionParser {
     }
 
     /**
+     * Parses the given string for promotional codes and affiliate links in proximity to 
+     * the given company name.
+     * 
+     * @param company The name of the company to find promocodes for.
+     * @param description of the YouTube video to be parsed.
+     * @return A list of all promotional codes and affiliate links found in the
+     *         description in the same line as the company name (case insensitive), 
+     *         duplicates allowed.
+     */
+    public static List<OfferSnippet> parseByCompany(String company, String description) {
+        List<OfferSnippet> offers = new ArrayList<>();
+        for (int i = description.toLowerCase().indexOf(company.toLowerCase()); i != -1;) {
+            String snippet = getCompleteSnippet(i, description);
+            description = description.substring(i + company.length());
+            offers.addAll(parse(snippet));
+        }
+        return offers;
+    }
+
+    /**
      * Parses the given string for promotional codes and affiliate links.
      *
      * @param description of the YouTube video to be parsed.
@@ -59,29 +79,33 @@ public class DescriptionParser {
         Matcher matcher = pattern.matcher(description);
 
         while (matcher.find()) {
-            matches.add(OfferSnippet.create(matcher.group(), getSnippet(matcher.start(), description)));
+            matches.add(OfferSnippet.create(matcher.group(), getTrimmedSnippet(matcher.start(), description)));
         }
         return matches;
     }
 
-    // Finds the snippet (line) of description which conatins the promocode index. 
+    // Finds the snippet (line) of description which conatins the target index. 
     // Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
-    private static String getSnippet(int promocodeIndex, String description) {
-        String delineator = "\n";
-        int startDelineator = description.lastIndexOf(delineator, promocodeIndex);
-        int endDelineator = description.indexOf(delineator, promocodeIndex);
-
-        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
-        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
-        String completeSnippet = description.substring(startSnippet, endSnippet);
-
+    private static String getTrimmedSnippet(int targetIndex, String description) {
+        String completeSnippet = getCompleteSnippet(targetIndex, description);
         if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
             return completeSnippet;
         }
 
-        int startIndexByWord = description.indexOf(" ", promocodeIndex - MAX_SNIPPET_LENGTH/2) + 1;
-        int endIndexByWord = description.lastIndexOf(" ", promocodeIndex + MAX_SNIPPET_LENGTH/2);
+        int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH/2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH/2);
         return description.substring(startIndexByWord, endIndexByWord);
+    }
+
+    // Finds the snippet (line) of description which conatins the target index. 
+    private static String getCompleteSnippet(int targetIndex, String description) {
+        String delineator = "\n";
+        int startDelineator = description.lastIndexOf(delineator, targetIndex);
+        int endDelineator = description.indexOf(delineator, targetIndex);
+
+        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
+        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
+        return description.substring(startSnippet, endSnippet);
     }
 
 }

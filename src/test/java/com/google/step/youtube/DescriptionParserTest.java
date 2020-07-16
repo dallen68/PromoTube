@@ -20,7 +20,7 @@ public final class DescriptionParserTest {
     private static final Pattern TO_AT_LINKS_PATTERN = DescriptionParser.Patterns.TO_AT_LINKS.getPattern();
 
     /*
-     * * ==================== GENERAL TESTS FOR PARSE ==================== *
+     * * ======================== TESTS FOR PARSE ======================== *
      */
 
     @Test
