@@ -64,23 +64,24 @@ public class DescriptionParser {
         return matches;
     }
 
-
     // Finds the snippet (line) of description which conatins the promocode index. 
-    // Truncates the snippet at MAX_SNIPPET_LENGTH characters.
+    // Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
     private static String getSnippet(int promocodeIndex, String description) {
         String delineator = "\n";
-
         int startDelineator = description.lastIndexOf(delineator, promocodeIndex);
-        int startSnippet = startDelineator == -1 ? 
-                Math.max(0, promocodeIndex - MAX_SNIPPET_LENGTH/2) :
-                Math.max(promocodeIndex - MAX_SNIPPET_LENGTH/2, startDelineator + delineator.length());
-
         int endDelineator = description.indexOf(delineator, promocodeIndex);
-        int endSnippet = endDelineator == -1 ? 
-                Math.min(description.length(), promocodeIndex + MAX_SNIPPET_LENGTH/2) :
-                Math.min(promocodeIndex + MAX_SNIPPET_LENGTH/2, endDelineator);
 
-        return description.substring(startSnippet, endSnippet);
+        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
+        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
+        String completeSnippet = description.substring(startSnippet, endSnippet);
+
+        if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
+            return completeSnippet;
+        }
+
+        int startIndexByWord = description.indexOf(" ", promocodeIndex - MAX_SNIPPET_LENGTH/2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", promocodeIndex + MAX_SNIPPET_LENGTH/2);
+        return description.substring(startIndexByWord, endIndexByWord);
     }
 
 }

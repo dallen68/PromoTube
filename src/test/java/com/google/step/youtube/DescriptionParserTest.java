@@ -86,10 +86,11 @@ public final class DescriptionParserTest {
 
     @Test
     public void parse_snippetTruncatedAtMaxLength() {
-        String truncatedSnippet = "This episode originally recorded June 8, 2020, and is sponsored "      
-                + "by Stamps.com (Go to http://stamps.com, click on the microphone at the top of "
-                + "the homepage, and type in ROOSTER to claim ";
-        String desc = truncatedSnippet + "your special offer).";
+        String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
+                + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone "
+                + "at the top of the homepage, and type in ROOSTER to claim";
+        String desc = "Mercari (Buy or sell almost anything on Mercari on the " 
+                + truncatedSnippet + " your special offer).";
         OfferSnippet expected = OfferSnippet.create("http://stamps.com", truncatedSnippet);
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
     }
