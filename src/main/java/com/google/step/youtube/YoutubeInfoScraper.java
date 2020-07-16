@@ -93,9 +93,12 @@ public class YoutubeInfoScraper {
         PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(50L)
                 .setPlaylistId(uploadId).execute();
         // getItems() return null when no items match the criteria (uploadId).
-        if (response.getItems() == null || response.getItems().isEmpty()) {
+        if (response.getItems() == null) {
             return Optional.empty();
-        }
+         }
+         if (response.getItems().isEmpty()) {
+            return Optional.empty();
+         }
         return Optional.of(response.getItems());
     }
 
