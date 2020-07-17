@@ -28,11 +28,11 @@ public class YoutubeInfoScraper {
     private static final String APPLICATION_NAME = "promotube";
     private final YouTube youTubeClient;
 
-    public YoutubeInfoScraper(YouTube youTubeClient) throws IOException {
+    public YoutubeInfoScraper(YouTube youTubeClient) {
         this.youTubeClient = youTubeClient;
     }
 
-    public YoutubeInfoScraper() throws IOException {
+    public YoutubeInfoScraper() {
         this(new YouTube.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(),
                 /* httpRequestInitializer= */ null).setApplicationName(APPLICATION_NAME)
                         .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY)).build());
@@ -95,10 +95,10 @@ public class YoutubeInfoScraper {
         // getItems() return null when no items match the criteria (uploadId).
         if (response.getItems() == null) {
             return Optional.empty();
-         }
-         if (response.getItems().isEmpty()) {
+        }
+        if (response.getItems().isEmpty()) {
             return Optional.empty();
-         }
+        }
         return Optional.of(response.getItems());
     }
 
