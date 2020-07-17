@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
  */
 public class DescriptionParser {
 
+    private static final String DELINEATOR = "\n";
+
     // package private in order to access in tests
     static final int MAX_SNIPPET_LENGTH = 200;
     
@@ -43,10 +45,11 @@ public class DescriptionParser {
      */
     public static List<OfferSnippet> parseByCompany(String company, String description) {
         List<OfferSnippet> offers = new ArrayList<>();
-        for (int i = description.toLowerCase().indexOf(company.toLowerCase()); i != -1;) {
-            String snippet = getCompleteSnippet(i, description);
-            description = description.substring(i + company.length() - 1);
-            offers.addAll(parse(snippet));
+        String[] descriptionSnippets = description.split(DELINEATOR); 
+        for (String snippet : descriptionSnippets) {
+            if (snippet.toLowerCase().indexOf(company.toLowerCase()) != -1) {
+                offers.addAll(parse(snippet));
+            }
         }
         return offers;
     }
@@ -84,8 +87,10 @@ public class DescriptionParser {
         return matches;
     }
 
-    // Finds the snippet (line) of description which conatins the target index. 
-    // Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
+    /*
+     * Finds the snippet (line) of description which conatins the target index. 
+     * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
+     */
     private static String getTrimmedSnippet(int targetIndex, String description) {
         String completeSnippet = getCompleteSnippet(targetIndex, description);
         if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
@@ -97,13 +102,14 @@ public class DescriptionParser {
         return description.substring(startIndexByWord, endIndexByWord);
     }
 
-    // Finds the snippet (line) of description which conatins the target index. 
+    /* 
+     * Finds the snippet (line) of description which conatins the target index. 
+     */
     private static String getCompleteSnippet(int targetIndex, String description) {
-        String delineator = "\n";
-        int startDelineator = description.lastIndexOf(delineator, targetIndex);
-        int endDelineator = description.indexOf(delineator, targetIndex);
+        int startDelineator = description.lastIndexOf(DELINEATOR, targetIndex);
+        int endDelineator = description.indexOf(DELINEATOR, targetIndex);
 
-        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
+        int startSnippet = startDelineator == -1 ? 0 : startDelineator + DELINEATOR.length();
         int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
         return description.substring(startSnippet, endSnippet);
     }

@@ -60,15 +60,14 @@ public final class DescriptionParserTest {
 
     @Test
     public void parseByCompany_2CompanyNames2Promocodes() {
-        String company = "Nord VPN";
+        String company = "NordVPN";
         String snippet1 = "NordVPN DOWNLOAD (affiliate link): Go to https://NordVPN.com/pewdiepie";
-        String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of Nord VPN.";
-        String desc = snippet1 + " \n" + snippet2;
+        String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of NordVPN.";
+        String desc = snippet1 + "\n" + snippet2;
         List<OfferSnippet> expected = Arrays.asList(
                                     OfferSnippet.create("https://NordVPN.com/pewdiepie", snippet1), 
                                     OfferSnippet.create("PEWDIEPIE", snippet2));
         assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
-        
     }
 
 
