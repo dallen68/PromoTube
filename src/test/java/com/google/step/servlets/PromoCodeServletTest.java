@@ -85,13 +85,13 @@ public final class PromoCodeServletTest {
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
 
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
-                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
+                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
     }
 
     @Test
@@ -104,13 +104,13 @@ public final class PromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeUserUploadPlaylist(USERNAME)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(
-                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
+                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
+                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
     }
 
     @Test
