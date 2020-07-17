@@ -105,7 +105,7 @@ public class YoutubeInfoScraper {
     public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
         SearchListResponse response = youTubeClient.search().list("").setMaxResults(50L).setQ(keyword)
                 .setFields("items(id)").execute();
-        if (response.getItems() == null || response.getItems().isEmpty()) {
+        if (response.getItems() == null) {
             return Optional.empty();
         }
         List<String> videoIds = new ArrayList<>();

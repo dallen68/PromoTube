@@ -249,15 +249,7 @@ public final class YoutubeInfoScraperTest {
         Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD_NO_RESULTS);
         assertThat(actual.isPresent(), equalTo(false));
     }
-
-    @Test
-    public void scrapeVideoIdsFromSearch_emptyList() throws IOException {
-        mockSearchResponse = new SearchListResponse();
-        when(mockListSearch.execute()).thenReturn(mockSearchResponse.setItems(Arrays.asList()));
-        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD_NO_RESULTS);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
+    
     @Test
     public void scrapeVideoIdsFromSearch_returnVideoIds() throws IOException {
         mockSearchResponse = new SearchListResponse();
