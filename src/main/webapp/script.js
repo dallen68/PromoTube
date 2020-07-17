@@ -25,5 +25,4 @@ async function displayCodes() {
             promoCode.innerHTML = codes[i].promoCode;
         }
     }
-    
 }

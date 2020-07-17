@@ -44,7 +44,7 @@ public class PromoCodeServlet extends HttpServlet {
             if (channelId.startsWith("https://www.youtube.com/channel/")) {
                 playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId.split("/")[4]);
             } else if (channelId.startsWith("https://www.youtube.com/user/")) {
-                playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId.split("/")[4]);
+                playlistId = infoScraper.scrapeUserUploadPlaylist(channelId.split("/")[4]);
             } else {
                 response.getWriter().println(new Gson().toJson(ImmutableList.of()));
                 return;
@@ -59,6 +59,5 @@ public class PromoCodeServlet extends HttpServlet {
         } catch (IOException exception) {
             response.getWriter().println(new Gson().toJson(ImmutableList.of()));
         }
-
     }
 }
