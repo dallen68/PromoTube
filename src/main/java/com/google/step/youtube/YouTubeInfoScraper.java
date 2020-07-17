@@ -116,7 +116,7 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        checkState(!response.getItems().isEmpty(), "Expected more than 0 SearchListResponse items to be found.");
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 SearchResult items to be found.");
         List<String> videoIds = new ArrayList<>();
         for (SearchResult result : response.getItems()) {
             videoIds.add(result.getId().getVideoId());
