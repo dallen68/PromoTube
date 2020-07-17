@@ -21,18 +21,18 @@ import java.util.Optional;
  * Scrapes a channel's upload playlist and scrapes the channel's videos +
  * descriptions
  */
-public class YoutubeInfoScraper {
+public class YouTubeInfoScraper {
 
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
     private final YouTube youTubeClient;
 
-    public YoutubeInfoScraper(YouTube youTubeClient) {
+    public YouTubeInfoScraper(YouTube youTubeClient) {
         this.youTubeClient = youTubeClient;
     }
 
-    public YoutubeInfoScraper() {
+    public YouTubeInfoScraper() {
         this(new YouTube.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(),
                 /* httpRequestInitializer= */ null).setApplicationName(APPLICATION_NAME)
                         .setYouTubeRequestInitializer(new YouTubeRequestInitializer(API_KEY)).build());

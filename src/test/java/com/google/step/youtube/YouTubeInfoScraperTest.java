@@ -44,9 +44,9 @@ import org.junit.Test;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class YoutubeInfoScraperTest {
+public final class YouTubeInfoScraperTest {
 
-    private YoutubeInfoScraper scraper;
+    private YouTubeInfoScraper scraper;
     private Channels.List mockListChannels;
     private PlaylistItems.List mockListPlaylistItems;
 
@@ -78,7 +78,7 @@ public final class YoutubeInfoScraperTest {
         when(mockListPlaylistItems.setMaxResults(50L)).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
 
-        scraper = new YoutubeInfoScraper(mockYouTubeClient);
+        scraper = new YouTubeInfoScraper(mockYouTubeClient);
     }
 
     @Test
