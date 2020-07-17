@@ -20,8 +20,8 @@ async function displayCodes() {
             var videoUrl = row.insertCell(0);
             var promoCode = row.insertCell(1);
             videoUrl.innerHTML = '<a href="https://www.youtube.com/watch?v='
-               + codes[i].videoId +'">https://www.youtube.com/watch?v='
-               + codes[i].videoId + '</a>';
+               + codes[i].videoId +'" target="_blank">'
+               + codes[i].videoTitle + '</a>';
             promoCode.innerHTML = codes[i].promoCode;
         }
     }
