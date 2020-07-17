@@ -60,7 +60,7 @@ public final class PromoCodeServletTest {
 
     @Test
     public void incorrectChannelIdRequest() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(NONEXISTENT_CHANNEL_ID);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(NONEXISTENT_CHANNEL_ID);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -76,7 +76,7 @@ public final class PromoCodeServletTest {
 
     @Test
     public void correctChannelIdRequest() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_URL);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(CHANNEL_ID_URL);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -84,19 +84,19 @@ public final class PromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
 
-        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
-                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(
+                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
+                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
     }
 
     @Test
     public void correctUserIdRequest() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(USERNAME_URL);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(USERNAME_URL);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -110,12 +110,12 @@ public final class PromoCodeServletTest {
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
+                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
     }
 
     @Test
     public void channelIdRequestThrowsException() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(IOEXCEPTION_CHANNEL_ID);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(IOEXCEPTION_CHANNEL_ID);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -131,7 +131,7 @@ public final class PromoCodeServletTest {
 
     @Test
     public void correctChannelIdRequestNoCodes() throws IOException {
-        when(request.getParameter("formInput")).thenReturn(CHANNEL_ID_URL);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(CHANNEL_ID_URL);
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
