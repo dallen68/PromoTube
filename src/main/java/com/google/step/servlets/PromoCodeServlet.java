@@ -29,22 +29,22 @@ public class PromoCodeServlet extends HttpServlet {
         infoScraper = new YouTubeInfoScraper();
     }
     /**
-     * Takes in formInput as a parameter and then checks for a promoCodes based on the channelId.
-     * If the channelId is real and there are codes the json will return a list of promoCodes.
-     * If the channelId is not proper then the json will return an empty list.
+     * Takes in formInput as a parameter and then checks for a promoCodes based on the userInput.
+     * If the userInput is real and there are codes the json will return a list of promoCodes.
+     * If the userInput is not proper then the json will return an empty list.
      * In a case where an exception is thrown the json will return an empty list.
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String channelId = request.getParameter("formInput");
+        String userInput = request.getParameter("formInput");
         response.setContentType("application/json");
         
         try {
             Optional<String> playlistId;
-            if (channelId.startsWith("https://www.youtube.com/channel/")) {
-                playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId.split("/")[4]);
-            } else if (channelId.startsWith("https://www.youtube.com/user/")) {
-                playlistId = infoScraper.scrapeUserUploadPlaylist(channelId.split("/")[4]);
+            if (userInput.startsWith("https://www.youtube.com/channel/")) {
+                playlistId = infoScraper.scrapeChannelUploadPlaylist(userInput.split("/")[4]);
+            } else if (userInput.startsWith("https://www.youtube.com/user/")) {
+                playlistId = infoScraper.scrapeUserUploadPlaylist(userInput.split("/")[4]);
             } else {
                 response.getWriter().println(new Gson().toJson(ImmutableList.of()));
                 return;
