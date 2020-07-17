@@ -6,6 +6,8 @@ import static com.google.api.client.repackaged.com.google.common.base.Preconditi
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
@@ -76,9 +78,9 @@ public class YouTubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parse(snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
-                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(),
-                        snippet.getResourceId().getVideoId(), snippet.getTitle(), 
-                        new Date(snippet.getPublishedAt().getValue())));
+                promoCodes.add(
+                        PromoCode.create(offer.getPromoCode(), offer.getSnippet(), snippet.getResourceId().getVideoId(),
+                                snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
             }
         }
         return Optional.of(promoCodes);
@@ -100,6 +102,21 @@ public class YouTubeInfoScraper {
         if (response.getItems().isEmpty()) {
             return Optional.empty();
         }
+        return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param videoIds List of ids of youtube videos.
+     * @return an optional list of Videos. The optional will be empty if id is
+     *         invalid or no items were found.
+     */
+    public Optional<List<Video>> scrapeVideoInformation(List<String> videoIds) throws IOException {
+        VideoListResponse response = youTubeClient.videos().list("snippet").setId(String.join(",", videoIds))
+                .setFields("items(id, snippet(publishedAt, title, description))").execute();
+        if (response.getItems() == null) {
+            return Optional.empty();
+        }
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 Videos to be found.");
         return Optional.of(response.getItems());
     }
 
