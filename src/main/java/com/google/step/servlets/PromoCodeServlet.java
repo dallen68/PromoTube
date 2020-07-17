@@ -38,18 +38,24 @@ public class PromoCodeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String channelId = request.getParameter("formInput");
         response.setContentType("application/json");
+        
         try {
-            Optional<String> playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId);
-            if (playlistId.isPresent()) {
-                Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistId.get());
-                if (promoCodeList.isPresent()) {
-                    response.getWriter().println(new Gson().toJson(promoCodeList.get()));
-                } else {
-                    response.getWriter().println(new Gson().toJson(ImmutableList.of()));
-                }
+            Optional<String> playlistId;
+            if (channelId.startsWith("https://www.youtube.com/channel/")) {
+                playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId.split("/")[4]);
+            } else if (channelId.startsWith("https://www.youtube.com/user/")) {
+                playlistId = infoScraper.scrapeChannelUploadPlaylist(channelId.split("/")[4]);
             } else {
                 response.getWriter().println(new Gson().toJson(ImmutableList.of()));
+                return;
             }
+            
+            if (!playlistId.isPresent()) {
+                response.getWriter().println(new Gson().toJson(ImmutableList.of()));
+                return;
+            }
+            Optional<List<PromoCode>> promoCodeList = infoScraper.scrapePromoCodesFromPlaylist(playlistId.get());
+            response.getWriter().println(new Gson().toJson(promoCodeList.orElse(ImmutableList.of())));
         } catch (IOException exception) {
             response.getWriter().println(new Gson().toJson(ImmutableList.of()));
         }
