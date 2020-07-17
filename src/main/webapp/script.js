@@ -6,8 +6,9 @@ async function displayCodes() {
     const tableEl = document.getElementById('promoCodeTable');
     tableEl.innerHTML =
                 `<tr>
-                    <th>VideoURL</th>
-                    <th>PROMO CODE</th>
+                    <th id="table-header">Video</th>
+                    <th id="table-header">Promo Code or Affiliate Link</th>
+                    <th id="table-header">Description Snippet</th>
                 </tr>`;
     if (codes == 0) {
         let row = tableEl.insertRow(-1);
@@ -19,10 +20,17 @@ async function displayCodes() {
             let row = tableEl.insertRow(-1);
             var videoUrl = row.insertCell(0);
             var promoCode = row.insertCell(1);
+            var descriptionSnippet = row.insertCell(2);
             videoUrl.innerHTML = '<a href="https://www.youtube.com/watch?v='
                + codes[i].videoId +'" target="_blank">'
                + codes[i].videoTitle + '</a>';
             promoCode.innerHTML = codes[i].promoCode;
+            descriptionSnippet.innerHTML = boldString(codes[i].snippet, codes[i].promoCode);
         }
     }
 }
+
+function boldString(str, substr) {
+    var strRegExp = new RegExp(substr, 'g');
+    return str.replace(strRegExp, '<b>'+substr+'</b>');
+  }
