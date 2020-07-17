@@ -62,7 +62,7 @@ public final class DescriptionParserTest {
     @Test
     public void parseByCompany_2CompanyNames2Promocodes() {
         String company = "NordVPN";
-        String snippet1 = "NordVPN DOWNLOAD (affiliate link): Go to https://NordVPN.com/pewdiepie";
+        String snippet1 = "Nord VPN DOWNLOAD (affiliate link): Go to https://NordVPN.com/pewdiepie";
         String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of NordVPN.";
         String desc = snippet1 + "\n" + snippet2;
         List<OfferSnippet> expected = Arrays.asList(
