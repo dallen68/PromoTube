@@ -1,5 +1,6 @@
 package com.google.step.youtube;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -11,11 +12,13 @@ import java.util.regex.Matcher;
  */
 public class DescriptionParser {
 
-    private static final String DELINEATOR = "\n";
-
-    // package private in order to access in tests
-    static final int MAX_SNIPPET_LENGTH = 200;
+    private static final char DELIMITER = '\n';
+    private static final int MAX_SNIPPET_LENGTH = 200;
     
+    /**
+     * Patterns used in regular expressions for parsing promocodes and affiliate links
+     */
+    @VisibleForTesting
     enum Patterns {
 
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
@@ -45,7 +48,8 @@ public class DescriptionParser {
      */
     public static List<OfferSnippet> parseByCompany(String company, String description) {
         List<OfferSnippet> offers = new ArrayList<>();
-        String[] descriptionSnippets = description.split(DELINEATOR); 
+        String[] descriptionSnippets = description.split(String.valueOf(DELIMITER)); 
+        
         for (String snippet : descriptionSnippets) {
             if (snippet.toLowerCase().indexOf(company.toLowerCase()) != -1) {
                 offers.addAll(parse(snippet));
@@ -97,6 +101,7 @@ public class DescriptionParser {
             return completeSnippet;
         }
 
+        // add 1 to not include starting space in snippet
         int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH/2) + 1;
         int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH/2);
         return description.substring(startIndexByWord, endIndexByWord);
@@ -106,11 +111,12 @@ public class DescriptionParser {
      * Finds the snippet (line) of description which conatins the target index. 
      */
     private static String getCompleteSnippet(int targetIndex, String description) {
-        int startDelineator = description.lastIndexOf(DELINEATOR, targetIndex);
-        int endDelineator = description.indexOf(DELINEATOR, targetIndex);
+        int startDelimeter = description.lastIndexOf(DELIMITER, targetIndex);
+        int endDelimeter = description.indexOf(DELIMITER, targetIndex);
 
-        int startSnippet = startDelineator == -1 ? 0 : startDelineator + DELINEATOR.length();
-        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
+        // add 1 to not include delimiter in snippet
+        int startSnippet = startDelimeter == -1 ? 0 : startDelimeter + 1;
+        int endSnippet = endDelimeter == -1 ? description.length() : endDelimeter;
         return description.substring(startSnippet, endSnippet);
     }
 

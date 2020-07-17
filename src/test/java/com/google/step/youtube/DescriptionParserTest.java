@@ -4,10 +4,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -95,33 +96,31 @@ public final class DescriptionParserTest {
         OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", descPEWDIEPIE);
         OfferSnippet expectedCOOLIRPA = OfferSnippet.create("COOLIRPA", descCOOLIRPA);
         OfferSnippet expectedNordVPN = OfferSnippet.create("https://NordVPN.com/pewdiepie", descPEWDIEPIE);
-        List<OfferSnippet> expected = 
-            Arrays.asList(expectedFUNGBROS10, expectedPEWDIEPIE, expectedCOOLIRPA, expectedNordVPN);
         
-        assertThat(DescriptionParser.parse(desc), equalTo(expected));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
+                        expectedFUNGBROS10, expectedPEWDIEPIE, expectedCOOLIRPA, expectedNordVPN)));
     }
 
     @Test
     public void parse_codeNoQuotes_extraLineAfter() {
         String snippetFUNGBROS10 = "Use code FUNGBROS10 ";
         String desc = snippetFUNGBROS10 + "\nRyan: https://www.instagram.com/ryan.w.benson/";
-        OfferSnippet expected = OfferSnippet.create("FUNGBROS10", snippetFUNGBROS10);
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
+                                            OfferSnippet.create("FUNGBROS10", snippetFUNGBROS10))));
     }
 
     @Test
     public void parse_codeWithQuotes_oneLineDescription() {
         String desc = "Click here and use my code \"COOLIRPA\". ";
-        OfferSnippet expected = OfferSnippet.create("COOLIRPA", desc);
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(OfferSnippet.create("COOLIRPA", desc))));
     }
 
     @Test
     public void parse_toAtLink_extraLineBefore() {
         String snippetNordVPN = "Go to https://NordVPN.com/pewdiepie and get 70% off";
         String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n" + snippetNordVPN + "\n";
-        OfferSnippet expected = OfferSnippet.create("https://NordVPN.com/pewdiepie", snippetNordVPN);
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
+                            OfferSnippet.create("https://NordVPN.com/pewdiepie", snippetNordVPN))));
     }
 
     @Test
@@ -143,8 +142,8 @@ public final class DescriptionParserTest {
                 + "at the top of the homepage, and type in ROOSTER to claim";
         String desc = "Mercari (Buy or sell almost anything on Mercari on the " 
                 + truncatedSnippet + " your special offer).";
-        OfferSnippet expected = OfferSnippet.create("http://stamps.com", truncatedSnippet);
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expected)));
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
+                                        OfferSnippet.create("http://stamps.com", truncatedSnippet))));
     }
 
 
@@ -536,11 +535,9 @@ public final class DescriptionParserTest {
     }
 
 
-    // helper method for findMatches() tests
+    // helper method for findMatches() tests, only checking for promocode field 
     private List<String> extractPromoCodes(List<OfferSnippet> offerSnippets) {
-        List<String> promoCodes = new ArrayList<>();
-        offerSnippets.forEach( (snippet) -> promoCodes.add(snippet.getPromoCode()));
-        return promoCodes;
+        return offerSnippets.stream().map(OfferSnippet::getPromoCode).collect(ImmutableList.toImmutableList());
     } 
 
 }
