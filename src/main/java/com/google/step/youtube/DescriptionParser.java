@@ -48,9 +48,8 @@ public class DescriptionParser {
      */
     public static List<OfferSnippet> parseByCompany(String company, String description) {
         List<OfferSnippet> offers = new ArrayList<>();
-        String[] descriptionSnippets = description.split(String.valueOf(DELIMITER)); 
-        
-        for (String snippet : descriptionSnippets) {
+
+        for (String snippet : description.split(String.valueOf(DELIMITER))) {
             if (snippet.toLowerCase().indexOf(company.toLowerCase()) != -1) {
                 offers.addAll(parse(snippet));
             }
@@ -102,8 +101,8 @@ public class DescriptionParser {
         }
 
         // add 1 to not include starting space in snippet
-        int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH/2) + 1;
-        int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH/2);
+        int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH / 2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH / 2);
         return description.substring(startIndexByWord, endIndexByWord);
     }
 
