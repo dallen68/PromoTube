@@ -25,12 +25,12 @@ async function displayCodes() {
                + codes[i].videoId +'" target="_blank">'
                + codes[i].videoTitle + '</a>';
             promoCode.innerHTML = codes[i].promoCode;
-            descriptionSnippet.innerHTML = boldString(codes[i].snippet, codes[i].promoCode);
+            descriptionSnippet.innerHTML = boldSubstring(codes[i].snippet, codes[i].promoCode);
         }
     }
 }
 
-function boldString(str, substr) {
+function boldSubstring(str, substr) {
     var strRegExp = new RegExp(substr, 'g');
     return str.replace(strRegExp, '<b>'+substr+'</b>');
   }
