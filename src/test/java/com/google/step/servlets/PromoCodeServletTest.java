@@ -41,6 +41,7 @@ public final class PromoCodeServletTest {
     private static final String IOEXCEPTION_CHANNEL_ID = "IOEXCEPTION_CHANNEL_ID";
     private static final Date DATE = new Date(0);
     private static final String CHANNEL_NAME = "CHANNEL_NAME";
+    private static final String SNIPPET = "SNIPPET";
 
     @Mock
     private HttpServletRequest request;
@@ -82,14 +83,15 @@ public final class PromoCodeServletTest {
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
-        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(
-                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, VIDEO_ID, VIDEO_TITLE, DATE))));
+
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, MOCK_DATE))));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
-                "[{\"promoCode\":\"CHANNEL_NAME\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\",\"videoUploadDate\":\""
-                        + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
+                "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
+                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
     }
 
     @Test
@@ -107,8 +109,8 @@ public final class PromoCodeServletTest {
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
-                "[{\"promoCode\":\"CHANNEL_NAME\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\",\"videoUploadDate\":\""
-                        + DateFormat.getDateTimeInstance().format(DATE) + "\"}]\n"));
+                "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
+                + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(MOCK_DATE) + "\"}]\n"));
     }
 
     @Test
