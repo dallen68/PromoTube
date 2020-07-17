@@ -1,6 +1,6 @@
 package com.google.step.servlets;
 
-import com.google.step.youtube.YoutubeInfoScraper;
+import com.google.step.youtube.YouTubeInfoScraper;
 import com.google.step.youtube.PromoCode;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
@@ -15,9 +15,9 @@ import java.util.Optional;
 @WebServlet("/promo-code")
 public class PromoCodeServlet extends HttpServlet {
 
-    private YoutubeInfoScraper infoScraper;
+    private YouTubeInfoScraper infoScraper;
 
-    public PromoCodeServlet(YoutubeInfoScraper infoScraper) {
+    public PromoCodeServlet(YouTubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
     public PromoCodeServlet() {
@@ -26,7 +26,7 @@ public class PromoCodeServlet extends HttpServlet {
 
     @Override
     public void init() {
-        infoScraper = new YoutubeInfoScraper();
+        infoScraper = new YouTubeInfoScraper();
     }
     /**
      * Takes in formInput as a parameter and then checks for a promoCodes based on the channelId.

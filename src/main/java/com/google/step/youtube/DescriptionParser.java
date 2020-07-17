@@ -1,5 +1,6 @@
 package com.google.step.youtube;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -11,9 +12,13 @@ import java.util.regex.Matcher;
  */
 public class DescriptionParser {
 
-    // package private in order to access in tests
+    @VisibleForTesting
     static final int MAX_SNIPPET_LENGTH = 200;
     
+    /**
+     * Patterns used in regular expressions for parsing promocodes and affiliate links
+     */
+    @VisibleForTesting
     enum Patterns {
 
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
@@ -64,23 +69,27 @@ public class DescriptionParser {
         return matches;
     }
 
-    // Finds the snippet (line) of description which conatins the promocode index. 
-    // Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
+    /* 
+     * Finds the snippet (line) of description which conatins the promocode index. 
+     * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words. 
+     */
     private static String getSnippet(int promocodeIndex, String description) {
-        String delineator = "\n";
-        int startDelineator = description.lastIndexOf(delineator, promocodeIndex);
-        int endDelineator = description.indexOf(delineator, promocodeIndex);
+        char delimiter = '\n';
+        int startDelimiter = description.lastIndexOf(delimiter, promocodeIndex);
+        int endDelimiter = description.indexOf(delimiter, promocodeIndex);
 
-        int startSnippet = startDelineator == -1 ? 0 : startDelineator + delineator.length();
-        int endSnippet = endDelineator == -1 ? description.length() : endDelineator;
-        String completeSnippet = description.substring(startSnippet, endSnippet);
+        // add 1 to not include delimiter in snippet
+        int snippetStart = startDelimiter == -1 ? 0 : startDelimiter + 1;
+        int snippetEnd = endDelimiter == -1 ? description.length() : endDelimiter;
+        String completeSnippet = description.substring(snippetStart, snippetEnd);
 
         if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
             return completeSnippet;
         }
 
-        int startIndexByWord = description.indexOf(" ", promocodeIndex - MAX_SNIPPET_LENGTH/2) + 1;
-        int endIndexByWord = description.lastIndexOf(" ", promocodeIndex + MAX_SNIPPET_LENGTH/2);
+        // add 1 to not include the space in snippet
+        int startIndexByWord = description.indexOf(" ", promocodeIndex - MAX_SNIPPET_LENGTH / 2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", promocodeIndex + MAX_SNIPPET_LENGTH / 2);
         return description.substring(startIndexByWord, endIndexByWord);
     }
 

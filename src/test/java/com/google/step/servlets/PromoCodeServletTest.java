@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
-import com.google.step.youtube.YoutubeInfoScraper;
+import com.google.step.youtube.YouTubeInfoScraper;
 import com.google.step.youtube.PromoCode;
 
 import org.junit.Before;
@@ -47,11 +47,11 @@ public final class PromoCodeServletTest {
     private HttpServletResponse response;
 
     @Mock
-    private YoutubeInfoScraper infoScraper;
+    private YouTubeInfoScraper infoScraper;
 
     @Before
     public void setup() throws IOException {
-        infoScraper = mock(YoutubeInfoScraper.class);
+        infoScraper = mock(YouTubeInfoScraper.class);
         servlet = new PromoCodeServlet(infoScraper);
     }
 
