@@ -90,14 +90,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeChannelUploadPlaylist_emptyList() throws IOException {
-        ChannelListResponse testChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(testChannelResponse.setItems(Arrays.asList()));
-        Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
     public void scrapeChannelUploadPlaylist_channelExists() throws IOException {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
@@ -124,14 +116,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeUserUploadPlaylist_emptyList() throws IOException {
-        ChannelListResponse testChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(testChannelResponse.setItems(Arrays.asList()));
-        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
     public void scrapeUserUploadPlaylist_userExists() throws IOException {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
@@ -154,14 +138,6 @@ public final class YouTubeInfoScraperTest {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(NONEXISTENT_UPLOAD_ID);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
-    public void scrapePlaylistItems_emptyList() throws IOException {
-        PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse.setItems(Arrays.asList()));
-        Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
 
