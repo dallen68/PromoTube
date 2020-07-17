@@ -197,7 +197,10 @@ public final class YouTubeInfoScraperTest {
                         .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(PromoCode.create("RO", VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(),
+                equalTo(Arrays.asList(
+                        PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
+                        VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -229,9 +232,10 @@ public final class YouTubeInfoScraperTest {
                         .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(),
-                equalTo(Arrays.asList(PromoCode.create("http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
-                        PromoCode.create("LINUS", VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(), equalTo(Arrays.asList(
+                PromoCode.create("http://boxofawesome.com",
+                        "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
+                PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
