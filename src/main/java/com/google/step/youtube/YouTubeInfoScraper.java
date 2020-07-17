@@ -107,8 +107,8 @@ public class YouTubeInfoScraper {
 
     /**
      * @param keyword Word to search with.
-     * @return an optional list of videoIds.The optional will be empty if id is invalid
-     *         or no items were found.
+     * @return an optional list of videoIds.The optional will be empty if id is
+     *         invalid.
      */
     public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
         SearchListResponse response = youTubeClient.search().list("").setMaxResults(50L).setQ(keyword)
@@ -116,7 +116,7 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        checkState(!response.getItems().isEmpty(), "Expected more than zero videos to be found.");
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 SearchListResponse items to be found.");
         List<String> videoIds = new ArrayList<>();
         for (SearchResult result : response.getItems()) {
             videoIds.add(result.getId().getVideoId());
