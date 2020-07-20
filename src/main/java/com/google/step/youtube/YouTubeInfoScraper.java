@@ -107,7 +107,7 @@ public class YouTubeInfoScraper {
 
     /**
      * @param keyword Word to search with.
-     * @return an optional list of videoIds.The optional will be empty if id is
+     * @return an optional list of videoIds. The optional will be empty if id is
      *         invalid.
      */
     public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
