@@ -95,13 +95,13 @@ public class DescriptionParser {
      * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
      */
     private static String getBoundedSnippet(int targetIndex, String description) {
-        int startDelimeter = description.lastIndexOf(DELIMITER, targetIndex);
-        int endDelimeter = description.indexOf(DELIMITER, targetIndex);
+        int startDelimiter = description.lastIndexOf(DELIMITER, targetIndex);
+        int endDelimiter = description.indexOf(DELIMITER, targetIndex);
 
         // add 1 to not include delimiter in snippet
-        int startSnippet = startDelimeter == -1 ? 0 : startDelimeter + 1;
-        int endSnippet = endDelimeter == -1 ? description.length() : endDelimeter;
-        String completeSnippet = description.substring(startSnippet, endSnippet);
+        int snippetStart = startDelimiter == -1 ? 0 : startDelimiter + 1;
+        int snippetEnd = endDelimiter == -1 ? description.length() : endDelimiter;
+        String completeSnippet = description.substring(snippetStart, snippetEnd);
 
         if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
             return completeSnippet;
