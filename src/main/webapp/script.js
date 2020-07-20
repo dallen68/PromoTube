@@ -6,6 +6,7 @@ async function displayCodes() {
     if(selected.id === "channel"){
         response = await fetch('/promo-code?formInput=' + formInput);
     } else {
+        //TODO: Business URI 
        response = await fetch('/promo-code?formInput=' + formInput);
     }
     const codes = await response.json();
