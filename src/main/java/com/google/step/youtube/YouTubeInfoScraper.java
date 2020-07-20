@@ -107,8 +107,9 @@ public class YouTubeInfoScraper {
 
     /**
      * @param videoIds List of ids of youtube videos.
-     * @return an optional list of Videos. The optional will be empty if id is
-     *         invalid or no items were found.
+     * @return an optional list of Videos which contain a VideoSnippet and the video
+     *         id. The optional will be empty if id is invalid or no items were
+     *         found.
      */
     public Optional<List<Video>> scrapeVideoInformation(List<String> videoIds) throws IOException {
         VideoListResponse response = youTubeClient.videos().list("snippet").setId(String.join(",", videoIds))
