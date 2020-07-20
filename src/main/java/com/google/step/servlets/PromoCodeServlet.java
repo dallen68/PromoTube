@@ -19,7 +19,7 @@ public class PromoCodeServlet extends HttpServlet {
     private YouTubeInfoScraper infoScraper;
 
     @VisibleForTesting
-    static final String REQUEST_PARAMETER = "formInput";
+    final String REQUEST_PARAMETER = "formInput";
 
     public PromoCodeServlet(YouTubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
