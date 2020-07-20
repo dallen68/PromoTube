@@ -1,8 +1,12 @@
 async function displayCodes() {
     var formInput = document.getElementById('formInput').value;
-    console.log("HELLO");
     const response = await fetch('/promo-code?formInput=' + formInput);
     const codes = await response.json();
+
+    
+}
+
+function setTable() {
     const tableEl = document.getElementById('promoCodeTable');
     tableEl.innerHTML =
                 `<tr>
@@ -25,5 +29,4 @@ async function displayCodes() {
             promoCode.innerHTML = codes[i].promoCode;
         }
     }
-    
 }
