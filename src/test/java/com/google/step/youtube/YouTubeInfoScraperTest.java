@@ -63,7 +63,7 @@ public final class YouTubeInfoScraperTest {
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
     private static final String KEYWORD = "KEYWORD";
-    private static final String KEYWORD_NO_RESULTS = "KEYWORD_NO_RESULTS";
+    private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
     private static final Date DATE = new Date(0L);
 
     @Before
@@ -276,7 +276,7 @@ public final class YouTubeInfoScraperTest {
     public void scrapeVideoIdsFromSearch_returnNull() throws IOException {
         SearchListResponse testSearchResponse = new SearchListResponse();
         when(mockListSearch.execute()).thenReturn(testSearchResponse);
-        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD_NO_RESULTS);
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(NO_RESULTS_KEYWORD);
         assertThat(actual.isPresent(), equalTo(false));
     }
     
