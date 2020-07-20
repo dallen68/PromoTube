@@ -85,7 +85,7 @@ public class DescriptionParser {
         Matcher matcher = pattern.matcher(description);
 
         while (matcher.find()) {
-            matches.add(OfferSnippet.create(matcher.group(), getTrimmedSnippet(matcher.start(), description)));
+            matches.add(OfferSnippet.create(matcher.group(), getBoundedSnippet(matcher.start(), description)));
         }
         return matches;
     }
@@ -94,8 +94,15 @@ public class DescriptionParser {
      * Finds the snippet (line) of description which conatins the target index. 
      * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
      */
-    private static String getTrimmedSnippet(int targetIndex, String description) {
-        String completeSnippet = getCompleteSnippet(targetIndex, description);
+    private static String getBoundedSnippet(int targetIndex, String description) {
+        int startDelimeter = description.lastIndexOf(DELIMITER, targetIndex);
+        int endDelimeter = description.indexOf(DELIMITER, targetIndex);
+
+        // add 1 to not include delimiter in snippet
+        int startSnippet = startDelimeter == -1 ? 0 : startDelimeter + 1;
+        int endSnippet = endDelimeter == -1 ? description.length() : endDelimeter;
+        String completeSnippet = description.substring(startSnippet, endSnippet);
+
         if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
             return completeSnippet;
         }
@@ -104,19 +111,6 @@ public class DescriptionParser {
         int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH / 2) + 1;
         int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH / 2);
         return description.substring(startIndexByWord, endIndexByWord);
-    }
-
-    /* 
-     * Finds the snippet (line) of description which conatins the target index. 
-     */
-    private static String getCompleteSnippet(int targetIndex, String description) {
-        int startDelimeter = description.lastIndexOf(DELIMITER, targetIndex);
-        int endDelimeter = description.indexOf(DELIMITER, targetIndex);
-
-        // add 1 to not include delimiter in snippet
-        int startSnippet = startDelimeter == -1 ? 0 : startDelimeter + 1;
-        int endSnippet = endDelimeter == -1 ? description.length() : endDelimeter;
-        return description.substring(startSnippet, endSnippet);
     }
 
 }
