@@ -30,8 +30,11 @@ import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.ResourceId;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.YouTube.PlaylistItems;
+import com.google.api.services.youtube.YouTube.Search;
 import com.google.api.services.youtube.YouTube;
 import java.io.IOException;
 import java.util.Arrays;
@@ -48,6 +51,7 @@ public final class YouTubeInfoScraperTest {
 
     private YouTubeInfoScraper scraper;
     private Channels.List mockListChannels;
+    private Search.List mockListSearch;
     private PlaylistItems.List mockListPlaylistItems;
 
     private static final String NONEXISTENT_CHANNEL_ID = "NONEXISTENT_CHANNEL_ID";
@@ -58,6 +62,9 @@ public final class YouTubeInfoScraperTest {
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
+    private static final String KEYWORD = "KEYWORD";
+    private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
+    private static final long MAX_RESULTS = 50;
     private static final Date DATE = new Date(0L);
 
     @Before
@@ -75,8 +82,16 @@ public final class YouTubeInfoScraperTest {
         mockListPlaylistItems = mock(YouTube.PlaylistItems.List.class);
         when(mockYouTubeClient.playlistItems()).thenReturn(mockPlaylistItems);
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
-        when(mockListPlaylistItems.setMaxResults(50L)).thenReturn(mockListPlaylistItems);
+        when(mockListPlaylistItems.setMaxResults(MAX_RESULTS)).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
+
+        Search mockSearch = mock(Search.class);
+        mockListSearch = mock(Search.List.class);
+        when(mockYouTubeClient.search()).thenReturn(mockSearch);
+        when(mockSearch.list("")).thenReturn(mockListSearch);
+        when(mockListSearch.setMaxResults(MAX_RESULTS)).thenReturn(mockListSearch);
+        when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
+        when(mockListSearch.setFields("items(id)")).thenReturn(mockListSearch);
 
         scraper = new YouTubeInfoScraper(mockYouTubeClient);
     }
@@ -234,4 +249,29 @@ public final class YouTubeInfoScraperTest {
         when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
         assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID));
     }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_returnNull() throws IOException {
+        SearchListResponse testSearchResponse = new SearchListResponse();
+        when(mockListSearch.execute()).thenReturn(testSearchResponse);
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(NO_RESULTS_KEYWORD);
+        assertThat(actual.isPresent(), equalTo(false));
+    }
+    
+    @Test
+    public void scrapeVideoIdsFromSearch_returnVideoIds() throws IOException {
+        SearchListResponse testSearchResponse = new SearchListResponse();
+        testSearchResponse.setItems(Arrays.asList(new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID)),
+                new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID))));
+        when(mockListSearch.execute()).thenReturn(testSearchResponse);
+        Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD);
+        assertThat(actual.get(), equalTo(Arrays.asList(VIDEO_ID, VIDEO_ID)));
+    }
+
+    @Test
+    public void scrapeVideoIdsFromSearch_IOException() throws IOException {
+        when(mockListSearch.execute()).thenThrow(IOException.class);
+        assertThrows(IOException.class, () -> scraper.scrapeVideoIdsFromSearch(VIDEO_ID));
+    }
+
 }

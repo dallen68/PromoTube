@@ -6,6 +6,8 @@ import static com.google.api.client.repackaged.com.google.common.base.Preconditi
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
@@ -26,6 +28,7 @@ public class YouTubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
+    private static final long MAX_RESULTS = 50;
     private final YouTube youTubeClient;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
@@ -91,13 +94,32 @@ public class YouTubeInfoScraper {
      *         or no items were found.
      */
     public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId) throws IOException {
-        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(50L)
+        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(MAX_RESULTS)
                 .setPlaylistId(uploadId).execute();
         // getItems() return null when no items match the criteria (uploadId).
         if (response.getItems() == null) {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param keyword Word to search with.
+     * @return an optional list of videoIds. The optional will be empty if id is
+     *         invalid.
+     */
+    public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
+        SearchListResponse response = youTubeClient.search().list("").setMaxResults(MAX_RESULTS).setQ(keyword)
+                .setFields("items(id)").execute();
+        if (response.getItems() == null) {
+            return Optional.empty();
+        }
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 SearchResult items to be found.");
+        List<String> videoIds = new ArrayList<>();
+        for (SearchResult result : response.getItems()) {
+            videoIds.add(result.getId().getVideoId());
+        }
+        return Optional.of(videoIds);
     }
 
     private Optional<String> getYoutubeChannelResponse(ChannelListResponse response) {
