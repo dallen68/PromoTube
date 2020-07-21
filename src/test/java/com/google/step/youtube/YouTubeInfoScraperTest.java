@@ -104,14 +104,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeChannelUploadPlaylist_emptyList() throws IOException {
-        ChannelListResponse testChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(testChannelResponse.setItems(Arrays.asList()));
-        Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
     public void scrapeChannelUploadPlaylist_channelExists() throws IOException {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
@@ -138,14 +130,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeUserUploadPlaylist_emptyList() throws IOException {
-        ChannelListResponse testChannelResponse = new ChannelListResponse();
-        when(mockListChannels.execute()).thenReturn(testChannelResponse.setItems(Arrays.asList()));
-        Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
     public void scrapeUserUploadPlaylist_userExists() throws IOException {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
@@ -168,14 +152,6 @@ public final class YouTubeInfoScraperTest {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(NONEXISTENT_UPLOAD_ID);
-        assertThat(actual.isPresent(), equalTo(false));
-    }
-
-    @Test
-    public void scrapePlaylistItems_emptyList() throws IOException {
-        PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
-        when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse.setItems(Arrays.asList()));
-        Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.isPresent(), equalTo(false));
     }
 
@@ -214,7 +190,7 @@ public final class YouTubeInfoScraperTest {
         assertThat(actual.get(),
                 equalTo(Arrays.asList(
                         PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
-                        VIDEO_ID, VIDEO_TITLE, DATE))));
+                                VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -248,7 +224,8 @@ public final class YouTubeInfoScraperTest {
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(
                 PromoCode.create("http://boxofawesome.com",
-                        "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
+                        "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID,
+                        VIDEO_TITLE, DATE),
                 PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
