@@ -21,7 +21,59 @@ public final class DescriptionParserTest {
     private static final Pattern TO_AT_LINKS_PATTERN = DescriptionParser.Patterns.TO_AT_LINKS.getPattern();
 
     /*
-     * * ==================== GENERAL TESTS FOR PARSE ==================== *
+     * * ================== TESTS FOR PARSE BY COMPANY =================== *
+     */
+
+    @Test
+    public void parseByCompany_0CompanyName1Promocode() {
+        String company = "Postmates";
+        String desc = "Get 20% OFF + Free International Shipping instantly at http://Manscaped.com/phil";
+        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void parseByCompany_1CompanyName1Promocode() {
+        String company = "Postmates";
+        String desc = "And if you want to order food through Postmates use my code A1JZN";
+        List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("A1JZN", desc));
+        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+    }
+
+    @Test
+    public void parseByCompany_1CompanyName2Promocodes() {
+        String company = "Postmates";
+        String desc = "And if you want to order food through Postmates go to "
+                + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
+        List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("A1JZN", desc), 
+                                    OfferSnippet.create("https://pmfleet.app.link/zyoaw9s3R6", desc));
+        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+    }
+
+    @Test
+    public void parseByCompany_2CompanyNames1Promocode() {
+        String company = "Outdoor voices";
+        String snippet = "DISCOUNT!!! For a limited time only, take 25% off your first purchase at "
+                + "Outdoor Voices with the code OVDOINGTHINGS25. This offer is valid online only. ";
+        String desc = snippet + "\nMust apply code at Outdoor voices checkout. Expires August 31, 2020.";
+        List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("OVDOINGTHINGS25", snippet));
+        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+    }
+
+    @Test
+    public void parseByCompany_2CompanyNames2Promocodes() {
+        String company = "NordVPN";
+        String snippet1 = "Nord VPN DOWNLOAD (affiliate link): Go to https://NordVPN.com/pewdiepie";
+        String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of NordVPN.";
+        String desc = snippet1 + "\n" + snippet2;
+        List<OfferSnippet> expected = Arrays.asList(
+                                    OfferSnippet.create("https://NordVPN.com/pewdiepie", snippet1), 
+                                    OfferSnippet.create("PEWDIEPIE", snippet2));
+        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+    }
+
+
+    /*
+     * * ======================== TESTS FOR PARSE ======================== *
      */
 
     @Test
