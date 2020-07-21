@@ -1,9 +1,9 @@
 async function displayCodes() {
     var formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
-    var response; 
+    let response; 
     // TODO: Change name of URI's to appropriate servlet names.
-    if(selected.id === "channel"){
+    if (selected.id === "channel") {
         response = await fetch('/promo-code?formInput=' + formInput);
     } else {
        // TODO: Add business URI 
