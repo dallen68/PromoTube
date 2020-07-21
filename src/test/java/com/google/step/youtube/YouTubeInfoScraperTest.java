@@ -64,6 +64,7 @@ public final class YouTubeInfoScraperTest {
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
     private static final String KEYWORD = "KEYWORD";
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
+    private static final long MAX_RESULTS = 50;
     private static final Date DATE = new Date(0L);
 
     @Before
@@ -81,14 +82,14 @@ public final class YouTubeInfoScraperTest {
         mockListPlaylistItems = mock(YouTube.PlaylistItems.List.class);
         when(mockYouTubeClient.playlistItems()).thenReturn(mockPlaylistItems);
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
-        when(mockListPlaylistItems.setMaxResults(50L)).thenReturn(mockListPlaylistItems);
+        when(mockListPlaylistItems.setMaxResults(MAX_RESULTS)).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
 
         Search mockSearch = mock(Search.class);
         mockListSearch = mock(Search.List.class);
         when(mockYouTubeClient.search()).thenReturn(mockSearch);
         when(mockSearch.list("")).thenReturn(mockListSearch);
-        when(mockListSearch.setMaxResults(50L)).thenReturn(mockListSearch);
+        when(mockListSearch.setMaxResults(MAX_RESULTS)).thenReturn(mockListSearch);
         when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
         when(mockListSearch.setFields("items(id)")).thenReturn(mockListSearch);
 
