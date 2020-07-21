@@ -107,12 +107,13 @@ public class YouTubeInfoScraper {
     }
 
     /**
-     * @param keyword keyword to parse promo-codes for. 
+     * @param keyword  keyword to parse promo-codes with.
      * @param videoIds List of ids of a youtube video.
-     * @return an optional list of promo-codes. The optional will be empty if video-ids were invalid or
-     *         no items were found.
+     * @return an optional list of promo-codes. The optional will be empty if
+     *         video-ids were invalid or no items were found.
      */
-    public Optional<List<PromoCode>> scrapePromoCodesFromVideos(String keyword, List<String> videoIds) throws IOException {
+    public Optional<List<PromoCode>> scrapePromoCodesFromVideos(String keyword, List<String> videoIds)
+            throws IOException {
         Optional<List<Video>> videos = scrapeVideoInformation(videoIds);
         if (videos.isEmpty()) {
             return Optional.empty();
