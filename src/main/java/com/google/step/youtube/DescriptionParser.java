@@ -12,8 +12,8 @@ import java.util.regex.Matcher;
  */
 public class DescriptionParser {
 
-    @VisibleForTesting
-    static final int MAX_SNIPPET_LENGTH = 200;
+    private static final char DELIMITER = '\n';
+    private static final int MAX_SNIPPET_LENGTH = 200;
     
     /**
      * Patterns used in regular expressions for parsing promocodes and affiliate links
@@ -34,6 +34,27 @@ public class DescriptionParser {
         public Pattern getPattern() {
             return this.regex;
         }
+    }
+
+    /**
+     * Parses the given string for promotional codes and affiliate links in proximity to 
+     * the given company name.
+     * 
+     * @param company The name of the company to find promocodes for.
+     * @param description of the YouTube video to be parsed.
+     * @return A list of all promotional codes and affiliate links found in the
+     *         description in the same line as the company name (case insensitive), 
+     *         duplicates allowed.
+     */
+    public static List<OfferSnippet> parseByCompany(String company, String description) {
+        List<OfferSnippet> offers = new ArrayList<>();
+
+        for (String snippet : description.split(String.valueOf(DELIMITER))) {
+            if (snippet.toLowerCase().indexOf(company.toLowerCase()) != -1) {
+                offers.addAll(parse(snippet));
+            }
+        }
+        return offers;
     }
 
     /**
@@ -64,19 +85,18 @@ public class DescriptionParser {
         Matcher matcher = pattern.matcher(description);
 
         while (matcher.find()) {
-            matches.add(OfferSnippet.create(matcher.group(), getSnippet(matcher.start(), description)));
+            matches.add(OfferSnippet.create(matcher.group(), getBoundedSnippet(matcher.start(), description)));
         }
         return matches;
     }
 
-    /* 
-     * Finds the snippet (line) of description which conatins the promocode index. 
-     * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words. 
+    /*
+     * Finds the snippet (line) of description which conatins the target index. 
+     * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
      */
-    private static String getSnippet(int promocodeIndex, String description) {
-        char delimiter = '\n';
-        int startDelimiter = description.lastIndexOf(delimiter, promocodeIndex);
-        int endDelimiter = description.indexOf(delimiter, promocodeIndex);
+    private static String getBoundedSnippet(int targetIndex, String description) {
+        int startDelimiter = description.lastIndexOf(DELIMITER, targetIndex);
+        int endDelimiter = description.indexOf(DELIMITER, targetIndex);
 
         // add 1 to not include delimiter in snippet
         int snippetStart = startDelimiter == -1 ? 0 : startDelimiter + 1;
@@ -87,9 +107,9 @@ public class DescriptionParser {
             return completeSnippet;
         }
 
-        // add 1 to not include the space in snippet
-        int startIndexByWord = description.indexOf(" ", promocodeIndex - MAX_SNIPPET_LENGTH / 2) + 1;
-        int endIndexByWord = description.lastIndexOf(" ", promocodeIndex + MAX_SNIPPET_LENGTH / 2);
+        // add 1 to not include starting space in snippet
+        int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH / 2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH / 2);
         return description.substring(startIndexByWord, endIndexByWord);
     }
 
