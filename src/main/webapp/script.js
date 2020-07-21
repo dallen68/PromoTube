@@ -6,7 +6,7 @@ async function displayCodes() {
     if(selected.id === "channel"){
         response = await fetch('/promo-code?formInput=' + formInput);
     } else {
-        //TODO: Business URI 
+       // TODO: Add business URI 
        response = await fetch('/promo-code?formInput=' + formInput);
     }
     const codes = await response.json();
@@ -20,7 +20,7 @@ function setTable(codes) {
                     <th>VideoURL</th>
                     <th>PROMO CODE</th>
                 </tr>`;
-    if (codes === 0) {
+    if (codes.length === 0) {
         let row = tableEl.insertRow(-1);
         var noCodes = row.insertCell(0);
         noCodes.innerHTML = '<p>Sorry! There are no codes with this Id.</p>'
