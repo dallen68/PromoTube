@@ -70,7 +70,7 @@ public class YouTubeInfoScraper {
      */
     public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId) throws IOException {
         Optional<List<PlaylistItem>> playlistItems = scrapePlaylistItems(uploadId);
-        if (playlistItems.isEmpty()) {
+        if (!playlistItems.isPresent()) {
             return Optional.empty();
         }
         List<PromoCode> promoCodes = new ArrayList<>();
@@ -99,9 +99,6 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
         return Optional.of(response.getItems());
     }
 
@@ -126,11 +123,8 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
-        checkState(response.getItems().size() == 1, "We should only be requesting a single channelId but got "
-                + response.getItems().size() + " in response");
+        checkState(response.getItems().size() == 1, String.format(
+                "We should only be requesting a single channelId but got %d in response.", response.getItems().size()));
         return Optional.of(response.getItems().get(0).getContentDetails().getRelatedPlaylists().getUploads());
     }
 }
