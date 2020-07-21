@@ -3,6 +3,7 @@ package com.google.step.servlets;
 import com.google.step.youtube.YouTubeInfoScraper;
 import com.google.step.youtube.PromoCode;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +18,13 @@ public class PromoCodeServlet extends HttpServlet {
 
     private YouTubeInfoScraper infoScraper;
 
+    @VisibleForTesting
+    final String REQUEST_PARAMETER = "formInput";
+
     public PromoCodeServlet(YouTubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
+
     public PromoCodeServlet() {
         init();
     }
@@ -28,17 +33,19 @@ public class PromoCodeServlet extends HttpServlet {
     public void init() {
         infoScraper = new YouTubeInfoScraper();
     }
+
     /**
-     * Takes in formInput as a parameter and then checks for a promoCodes based on the userInput.
-     * If the userInput is real and there are codes the json will return a list of promoCodes.
-     * If the userInput is not proper then the json will return an empty list.
-     * In a case where an exception is thrown the json will return an empty list.
+     * Takes in formInput as a parameter and then checks for a promoCodes based on
+     * the userInput. If the userInput is real and there are codes the json will
+     * return a list of promoCodes. If the userInput is not proper then the json
+     * will return an empty list. In a case where an exception is thrown the json
+     * will return an empty list.
      */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String userInput = request.getParameter("formInput");
+        String userInput = request.getParameter(REQUEST_PARAMETER);
         response.setContentType("application/json");
-        
+
         try {
             Optional<String> playlistId;
             if (userInput.startsWith("https://www.youtube.com/channel/")) {
@@ -49,7 +56,7 @@ public class PromoCodeServlet extends HttpServlet {
                 response.getWriter().println(new Gson().toJson(ImmutableList.of()));
                 return;
             }
-            
+
             if (!playlistId.isPresent()) {
                 response.getWriter().println(new Gson().toJson(ImmutableList.of()));
                 return;
