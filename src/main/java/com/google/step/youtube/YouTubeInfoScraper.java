@@ -68,7 +68,7 @@ public class YouTubeInfoScraper {
      */
     public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId) throws IOException {
         Optional<List<PlaylistItem>> playlistItems = scrapePlaylistItems(uploadId);
-        if (playlistItems.isEmpty()) {
+        if (!playlistItems.isPresent()) {
             return Optional.empty();
         }
         List<PromoCode> promoCodes = new ArrayList<>();
