@@ -257,7 +257,7 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeVideoInformation_standardRequest() throws IOException {
+    public void scrapeVideoInformation_validRequest() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
         testVideoResponse.setItems(Arrays.asList(new Video(), new Video()));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
