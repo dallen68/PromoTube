@@ -6,6 +6,8 @@ import static com.google.api.client.repackaged.com.google.common.base.Preconditi
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
@@ -100,6 +102,22 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
+        return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param videoIds List of ids of youtube videos.
+     * @return an optional list of Videos which contain a VideoSnippet and the video
+     *         id. The optional will be empty if id is invalid or no items were
+     *         found.
+     */
+    public Optional<List<Video>> scrapeVideoInformation(List<String> videoIds) throws IOException {
+        VideoListResponse response = youTubeClient.videos().list("snippet").setId(String.join(",", videoIds))
+                .setFields("items(id, snippet(publishedAt, title, description))").execute();
+        if (response.getItems() == null) {
+            return Optional.empty();
+        }
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 Videos to be found.");
         return Optional.of(response.getItems());
     }
 
