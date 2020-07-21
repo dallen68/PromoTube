@@ -23,7 +23,9 @@ public class DescriptionParser {
 
         CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
         CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))")),
-        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+"));
+        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+")),
+        SYMBOL_BEFORE_LINK(Pattern.compile("(?<=(([0-9]%)|(\\$[0-9]))(?s).{1,100})(https*:\\/\\/)[^\\s,\\)]+"));
+        // SYMBOL_AFTER_LINK(Pattern.compile("((https*:\\/\\/)[^\\s,\\)]+)(?=(?s).{1,100}(([0-9]%)|(\\$[0-9])))"));
 
         private final Pattern regex;
 
@@ -70,8 +72,28 @@ public class DescriptionParser {
         for (Patterns regex : Patterns.values()) {
             codes.addAll(findMatches(regex.getPattern(), description));
         }
+
+        // codes.addAll(parseForSymbols(description));
+
         return codes;
     }
+
+    // /*
+    //  * Finds affilitate links starting with http:// or https:// in the same paragraph as 
+    //  * an instance of [0-9]% or $[0-9].
+    //  */
+    // private static List<OfferSnippet> parseForSymbols(String description) {
+    //     List<OfferSnippet> offers = new ArrayList<>();
+    //     String symbolsRegex = "(.*[0-9]%.*)|(.*\\$[0-9].*)";
+    //     Pattern linksPattern = Pattern.compile("(https*:\\/\\/)[^\\s,\\)]+");
+    //     String[] desc = description.split("\n\n");
+    //     for (String paragraph : desc) {
+    //         if (paragraph.matches(symbolsRegex)) {
+    //             offers.addAll(findMatches(linksPattern, paragraph));
+    //         }
+    //     }
+    //     return offers;
+    // }
 
     /**
      * Finds all matches in the given string from the given regex pattern.
@@ -80,7 +102,8 @@ public class DescriptionParser {
      * @param description of the YouTube video to be parsed.
      * @return A list of all matches found in description.
      */
-    public static List<OfferSnippet> findMatches(Pattern pattern, String description) {
+    @VisibleForTesting
+    static List<OfferSnippet> findMatches(Pattern pattern, String description) {
         List<OfferSnippet> matches = new ArrayList<>();
         Matcher matcher = pattern.matcher(description);
 
