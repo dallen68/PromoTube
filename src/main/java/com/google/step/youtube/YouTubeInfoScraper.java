@@ -8,6 +8,7 @@ import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
@@ -103,6 +104,29 @@ public class YouTubeInfoScraper {
             return Optional.empty();
         }
         return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param keyword keyword to parse promo-codes for. 
+     * @param videoIds List of ids of a youtube video.
+     * @return an optional list of promo-codes. The optional will be empty if video-ids were invalid or
+     *         no items were found.
+     */
+    public Optional<List<PromoCode>> scrapePromoCodesFromVideos(String keyword, List<String> videoIds) throws IOException {
+        Optional<List<Video>> videos = scrapeVideoInformation(videoIds);
+        if (videos.isEmpty()) {
+            return Optional.empty();
+        }
+        List<PromoCode> promoCodes = new ArrayList<>();
+        for (Video video : videos.get()) {
+            VideoSnippet snippet = video.getSnippet();
+            List<OfferSnippet> itemOfferSnippets = DescriptionParser.parseByCompany(keyword, snippet.getDescription());
+            for (OfferSnippet offer : itemOfferSnippets) {
+                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(), video.getId(),
+                        snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
+            }
+        }
+        return Optional.of(promoCodes);
     }
 
     /**
