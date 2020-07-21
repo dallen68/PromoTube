@@ -32,6 +32,7 @@ import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.YouTube.Channels;
 import com.google.api.services.youtube.YouTube.PlaylistItems;
 import com.google.api.services.youtube.YouTube.Videos;
@@ -69,6 +70,8 @@ public final class YouTubeInfoScraperTest {
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
     private static final String KEYWORD = "KEYWORD";
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
+    private static final List<String> EMPTY_VIDEO_ID_LIST = Arrays.asList();
+    private static final List<String> VIDEO_ID_LIST = Arrays.asList();
     private static final long MAX_RESULTS = 50;
     private static final Date DATE = new Date(0L);
 
@@ -310,4 +313,57 @@ public final class YouTubeInfoScraperTest {
         assertThrows(IOException.class, () -> scraper.scrapeVideoIdsFromSearch(VIDEO_ID));
     }
 
+    @Test
+    public void scrapePromoCodesFromVideos_emptyVideoIdList() throws IOException {
+        VideoListResponse testVideoResponse = new VideoListResponse();
+        when(mockListVideos.execute()).thenReturn(testVideoResponse);
+        Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, EMPTY_VIDEO_ID_LIST);
+        assertThat(actual.isPresent(), equalTo(false));
+    }
+
+    /** Multiple items with one item having no promo-code in the description. */
+    @Test
+    public void scrapePromoCodesFromVideos_multipleItemsSomeCodesFound() throws IOException {
+        VideoListResponse testVideoResponse = new VideoListResponse();
+        // Two company names one promo-code found.
+        String snippet = "DISCOUNT!!! For a limited time only, take 25% off your first purchase at " + KEYWORD
+                + " with the code OVDOINGTHINGS25. This offer is valid online only. ";
+        String description1 = snippet + "\nMust apply code at " + KEYWORD + " checkout. Expires August 31, 2020.";
+        // One keyword two promo-codes found.
+        String description2 = "And if you want to order food through " + KEYWORD + " go to "
+                + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
+        String descriptionWithNoCode = KEYWORD + " is a great company!";
+        testVideoResponse.setItems(Arrays.asList(
+                new Video().setId(VIDEO_ID)
+                        .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description1)
+                                .setPublishedAt(new DateTime(DATE))),
+                new Video().setId(VIDEO_ID)
+                        .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description2)
+                                .setPublishedAt(new DateTime(DATE))),
+                new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE)
+                        .setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
+        when(mockListVideos.execute()).thenReturn(testVideoResponse);
+        Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
+        assertThat(actual.get(), equalTo(Arrays.asList(
+                PromoCode.create("OVDOINGTHINGS25", snippet, VIDEO_ID, VIDEO_TITLE, DATE),
+                PromoCode.create("A1JZN", description2, VIDEO_ID, VIDEO_TITLE, DATE),
+                PromoCode.create("https://pmfleet.app.link/zyoaw9s3R6", description2, VIDEO_ID, VIDEO_TITLE, DATE))));
+    }
+
+    @Test
+    public void scrapePromoCodesFromVideos_oneItemNoCodesFound() throws IOException {
+        VideoListResponse testVideoResponse = new VideoListResponse();
+        String descriptionWithNoCode = KEYWORD + " is a great company!";
+        testVideoResponse.setItems(Arrays.asList(new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet()
+                .setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
+        when(mockListVideos.execute()).thenReturn(testVideoResponse);
+        Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
+        assertThat(actual.get().isEmpty(), equalTo(true));
+    }
+
+    @Test
+    public void scrapePromoCodesFromVideos_IOException() throws IOException {
+        when(mockListVideos.execute()).thenThrow(IOException.class);
+        assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST));
+    }
 }
