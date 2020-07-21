@@ -76,9 +76,9 @@ public class YouTubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parse(snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
-                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(),
-                        snippet.getResourceId().getVideoId(), snippet.getTitle(), 
-                        new Date(snippet.getPublishedAt().getValue())));
+                promoCodes.add(
+                        PromoCode.create(offer.getPromoCode(), offer.getSnippet(), snippet.getResourceId().getVideoId(),
+                                snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
             }
         }
         return Optional.of(promoCodes);
@@ -97,9 +97,6 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
         return Optional.of(response.getItems());
     }
 
@@ -108,11 +105,8 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
-        checkState(response.getItems().size() == 1, "We should only be requesting a single channelId but got "
-                + response.getItems().size() + " in response");
+        checkState(response.getItems().size() == 1, String.format(
+                "We should only be requesting a single channelId but got %d in response.", response.getItems().size()));
         return Optional.of(response.getItems().get(0).getContentDetails().getRelatedPlaylists().getUploads());
     }
 }
