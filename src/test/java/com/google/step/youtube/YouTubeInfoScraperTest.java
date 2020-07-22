@@ -218,7 +218,7 @@ public final class YouTubeInfoScraperTest {
         assertThat(actual.isPresent(), equalTo(false));
     }
 
-    /** Multiple items with one item having no promo-code in the description. */
+    /* Multiple items with one item having no promo-code in the description. */
     @Test
     public void scrapePromoCodesFromPlaylist_multipleItemsSomeCodesFound() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
@@ -321,7 +321,7 @@ public final class YouTubeInfoScraperTest {
         assertThat(actual.isPresent(), equalTo(false));
     }
 
-    /** Multiple items with one item having no promo-code in the description. */
+    /* Multiple items with one item having no promo-code in the description. */
     @Test
     public void scrapePromoCodesFromVideos_multipleItemsSomeCodesFound() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
