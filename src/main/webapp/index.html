@@ -1,30 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>PromoTube</title>
-        <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
-        <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-        <!-- TODO: download bootstrap instead of linking to it -->
-    </head>
-    <header>
-        <div class="text-center">
-            <img src="images/promoTube_logo.png" class="img-fluid logo" alt="PromoTube Logo"/>
-        </div>
-    </header>
-    <body>
-        <div class="content">
-            
+
+<head>
+    <meta charset="UTF-8">
+    <title>PromoTube</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <!-- TODO: download bootstrap instead of linking to it -->
+</head>
+<header>
+    <div class="text-center">
+        <img src="images/promoTube_logo.png" class="img-fluid logo" alt="PromoTube Logo" />
+    </div>
+</header>
+
+<body>
+    <div class="content">
+
         <div id="searchForm">
             <!-- Put elements outside of a form to prevent page from refreshing -->
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="searchOption" id="channel" checked>Search by Channel URL
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="searchOption" id="business">Search by Business
+                </label>
+            </div>
+            <br>
+            <br>
             <input type="text" id="formInput" class="form-control" name="formInput" placeholder="Enter Channel ID">
             <br>
             <input type="submit" class="btn btn-primary" value="Submit" onclick="displayCodes()">
-        </div>
-                
+        </div>      
             <br>
             <div class="promoCodeList col-md">
                 <table class="table table-hover table-responsive table-striped" id="promoCodeTable">
@@ -36,5 +51,6 @@
                 </table>
             </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
