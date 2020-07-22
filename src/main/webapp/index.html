@@ -21,36 +21,39 @@
     </div>
 </header>
 
-<body>
+<body onload="resetForm('channel')">
     <div class="content">
 
         <div id="searchForm">
             <!-- Put elements outside of a form to prevent page from refreshing -->
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-secondary active">
-                    <input type="radio" name="searchOption" id="channel" checked>Search by Channel URL
+                    <input type="radio" name="searchOption" id="channel" checked onclick="resetForm(this.id)">Search by
+                    Channel URL
                 </label>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="searchOption" id="business">Search by Business
+                    <input type="radio" name="searchOption" id="business" onclick="resetForm(this.id)">Search by
+                    Business
                 </label>
             </div>
             <br>
             <br>
-            <input type="text" id="formInput" class="form-control" name="formInput" placeholder="Enter Channel ID">
+            <input type="text" id="formInput" class="form-control" name="formInput" placeholder="">
             <br>
             <input type="submit" class="btn btn-primary" value="Submit" onclick="displayCodes()">
-        </div>      
-            <br>
-            <div class="promoCodeList col-md">
-                <table class="table table-hover table-responsive table-striped" id="promoCodeTable">
-                    <tr>
-                        <th id="table-header">Video</th>
-                        <th id="table-header">Promo Code or Affiliate Link</th>
-                        <th id="table-header">Description Snippet</th>
-                    </tr>
-                </table>
-            </div>
+        </div>
+        <br>
+        <div class="promoCodeList col-md">
+            <table class="table table-hover table-responsive table-striped" id="promoCodeTable">
+                <tr>
+                    <th id="table-header">Video</th>
+                    <th id="table-header">Promo Code or Affiliate Link</th>
+                    <th id="table-header">Description Snippet</th>
+                </tr>
+            </table>
         </div>
     </div>
+    </div>
 </body>
+
 </html>
