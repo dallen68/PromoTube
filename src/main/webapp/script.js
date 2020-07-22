@@ -1,10 +1,10 @@
 async function displayCodes() {
     var formInput = document.getElementById('formInput').value;
-    const response = await fetch('/promo-code?formInput=' + formInput);
+    const response = await fetch('/channel/promo-code?formInput=' + formInput);
     const codes = await response.json();
     const tableEl = document.getElementById('promoCodeTable');
     tableEl.innerHTML =
-                `<tr>
+        `<tr>
                     <th id="table-header">Video</th>
                     <th id="table-header">Promo Code or Affiliate Link</th>
                     <th id="table-header">Description Snippet</th>
@@ -21,8 +21,8 @@ async function displayCodes() {
             var promoCode = row.insertCell(1);
             var descriptionSnippet = row.insertCell(2);
             videoUrl.innerHTML = '<a href="https://www.youtube.com/watch?v='
-               + codes[i].videoId +'" target="_blank">'
-               + codes[i].videoTitle + '</a>';
+                + codes[i].videoId + '" target="_blank">'
+                + codes[i].videoTitle + '</a>';
             promoCode.innerHTML = codes[i].promoCode;
             descriptionSnippet.innerHTML = boldSubstring(codes[i].snippet, codes[i].promoCode);
         }
@@ -31,5 +31,5 @@ async function displayCodes() {
 
 function boldSubstring(str, substr) {
     var strRegExp = new RegExp(substr, 'g');
-    return str.replace(strRegExp, '<b>'+substr+'</b>');
-  }
+    return str.replace(strRegExp, '<b>' + substr + '</b>');
+}
