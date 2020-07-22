@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet("/channel/promo-code")
+@WebServlet("/channel/promo-codes")
 public class ChannelPromoCodeServlet extends HttpServlet {
 
     private YouTubeInfoScraper infoScraper;
