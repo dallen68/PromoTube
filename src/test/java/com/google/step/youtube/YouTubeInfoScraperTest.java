@@ -101,11 +101,10 @@ public final class YouTubeInfoScraperTest {
         Search mockSearch = mock(Search.class);
         mockListSearch = mock(Search.List.class);
         when(mockYouTubeClient.search()).thenReturn(mockSearch);
-        when(mockSearch.list("")).thenReturn(mockListSearch);
+        when(mockSearch.list("snippet")).thenReturn(mockListSearch);
         when(mockListSearch.setMaxResults(MAX_RESULTS)).thenReturn(mockListSearch);
         when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
-        when(mockListSearch.setFields("items(id)")).thenReturn(mockListSearch);
-
+    
         scraper = new YouTubeInfoScraper(mockYouTubeClient);
     }
 
