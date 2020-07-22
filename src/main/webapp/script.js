@@ -1,7 +1,7 @@
 
 const channelPlaceholder = "Enter a Channel's URL";
 const businessPlaceholder = "Enter a Business's Name";
-const channelId = "channel"
+const channelId = "channel";
 
 async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
