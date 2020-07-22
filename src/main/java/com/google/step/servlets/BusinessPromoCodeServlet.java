@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.step.youtube.PromoCode;
 import com.google.step.youtube.YouTubeInfoScraper;
 
-@WebServlet("/business/promo-code")
+@WebServlet("/business/promo-codes")
 public class BusinessPromoCodeServlet extends HttpServlet {
 
     private YouTubeInfoScraper infoScraper;
