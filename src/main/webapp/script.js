@@ -2,11 +2,11 @@ async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
     let response; 
-    // TODO: Change name of URI's to appropriate servlet names.
+    // TODO(dantebot): Change name of URI's to appropriate servlet names.
     if (selected.id === "channel") {
         response = await fetch('/promo-code?formInput=' + formInput);
     } else {
-       // TODO: Add business URI 
+       // TODO(dantebot): Add business URI 
        response = await fetch('/promo-code?formInput=' + formInput);
     }
     const codes = await response.json();
