@@ -1,9 +1,14 @@
+
+const channelPlaceholder = "Enter a Channel's URL";
+const businessPlaceholder = "Enter a Business's Name";
+const channelId = "channel";
+
 async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
     let response; 
     // TODO(dantebot): Change name of URI's to appropriate servlet names.
-    if (selected.id === "channel") {
+    if (selected.id === channelId) {
         response = await fetch('/promo-code?formInput=' + formInput);
     } else {
        // TODO(dantebot): Add business URI 
@@ -45,3 +50,9 @@ function boldSubstring(str, substr) {
     let strRegExp = new RegExp(substr, 'g');
     return str.replace(strRegExp, '<b>'+substr+'</b>');
   }
+
+function resetForm(id) {
+    $("#formInput").val("");
+    const placeholder = id === channelId ? channelPlaceholder : businessPlaceholder;
+    $("#formInput").attr("placeholder", placeholder);
+}
