@@ -133,12 +133,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeChannelUploadPlaylist_IOException() throws IOException {
-        when(mockListChannels.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeChannelUploadPlaylist(CHANNEL_ID));
-    }
-
-    @Test
     public void scrapeUserUploadPlaylist_nonExistentUserName() throws IOException {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         when(mockListChannels.execute()).thenReturn(testChannelResponse);
@@ -159,12 +153,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapeUserUploadPlaylist_IOException() throws IOException {
-        when(mockListChannels.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeUserUploadPlaylist(USERNAME));
-    }
-
-    @Test
     public void scrapePlaylistItems_nonExistentUploadId() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
@@ -179,12 +167,6 @@ public final class YouTubeInfoScraperTest {
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.get(), equalTo(testPlaylistResponse.getItems()));
-    }
-
-    @Test
-    public void scrapePlaylistItems_IOException() throws IOException {
-        when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapePlaylistItems(UPLOAD_ID));
     }
 
     @Test
@@ -261,12 +243,6 @@ public final class YouTubeInfoScraperTest {
     }
 
     @Test
-    public void scrapePromoCodesFromPlaylist_IOException() throws IOException {
-        when(mockListPlaylistItems.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID));
-    }
-
-    @Test
     public void scrapeVideoInformation_returnNull() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
@@ -281,12 +257,6 @@ public final class YouTubeInfoScraperTest {
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<Video>> actual = scraper.scrapeVideoInformation(Arrays.asList(VIDEO_ID, VIDEO_ID));
         assertThat(actual.get(), equalTo(Arrays.asList(new Video(), new Video())));
-    }
-
-    @Test
-    public void scrapeVideoInformation_IOException() throws IOException {
-        when(mockListVideos.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeVideoInformation(Arrays.asList(VIDEO_ID)));
     }
 
     @Test
@@ -305,12 +275,6 @@ public final class YouTubeInfoScraperTest {
         when(mockListSearch.execute()).thenReturn(testSearchResponse);
         Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD);
         assertThat(actual.get(), equalTo(Arrays.asList(VIDEO_ID, VIDEO_ID)));
-    }
-
-    @Test
-    public void scrapeVideoIdsFromSearch_IOException() throws IOException {
-        when(mockListSearch.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapeVideoIdsFromSearch(VIDEO_ID));
     }
 
     @Test
@@ -359,11 +323,5 @@ public final class YouTubeInfoScraperTest {
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get().isEmpty(), equalTo(true));
-    }
-
-    @Test
-    public void scrapePromoCodesFromVideos_IOException() throws IOException {
-        when(mockListVideos.execute()).thenThrow(IOException.class);
-        assertThrows(IOException.class, () -> scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST));
     }
 }
