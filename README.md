@@ -8,12 +8,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+This app requires Maven. To install Maven run
 
 ```
-run
 sudo apt install maven
 ```
+inside of your terminal
 
 ### Installing
 
