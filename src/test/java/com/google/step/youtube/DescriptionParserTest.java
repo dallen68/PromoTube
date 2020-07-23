@@ -167,19 +167,19 @@ public final class DescriptionParserTest {
      */
 
     @Test
-    public void codeNoQuotes_lettersAndNumbers() {
+    public void codeNoQuotes_lettersNumbersHyphen() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
-                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS-10";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS10")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS-10")));
     }
 
     @Test
     public void codeNoQuotes_promocodeCaseSensitive() {
-        String desc = "Use code LINUSsssS and get 25% off GlassWire at https://lmg.gg/glasswire";
+        String desc = "Use code LinusssS and get 25% off GlassWire at https://lmg.gg/glasswire";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LINUS")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LinusssS")));
     }
 
     @Test

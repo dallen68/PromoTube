@@ -23,7 +23,7 @@ public class DescriptionParser {
     @VisibleForTesting
     enum Patterns {
 
-        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2})([A-Z0-9]{2,})")),
+        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2})([A-Z0-9][A-Za-z0-9\\-]+)")),
         CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2}(\"|'))(.+?)(?=(\"|'))")),
         TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)(?s).{1,2})(https*:\\/\\/)[^\\s,\\)]+")),
         SYMBOL_NEAR_LINK(Pattern.compile(
