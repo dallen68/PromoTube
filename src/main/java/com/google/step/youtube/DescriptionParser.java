@@ -99,11 +99,13 @@ public class DescriptionParser {
         return matches;
     }
 
+    /*
+     * Remove duplicate OfferSnippets from originalOffers. Note that the order of elements may change.
+     */
     private static List<OfferSnippet> removeDuplicateOffers(List<OfferSnippet> originalOffers) {
         List<OfferSnippet> noDupsOffers = new ArrayList<>();
         Set<OfferSnippet> offerSet = new HashSet<>(originalOffers);
         noDupsOffers.addAll(offerSet);
-
         return noDupsOffers;
     }
 
