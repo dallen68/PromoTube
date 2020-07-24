@@ -35,8 +35,6 @@ To run unit tests run
 mvn test
 ```
 
-### End to End Test
-
 To run end to end tests run
 ```
 mvn package appengine:run
@@ -44,12 +42,17 @@ mvn package appengine:run
 
 ## Deployment
 
-To deploy the app run
+To deploy the app on a server run
 
 ```
 mvn package appengine:deploy
 ```
 with the proper project ID in the pom.xml file.
+
+To deploy locally run
+```
+mvn package appengine:run
+```
 
 ## Built With
 
