@@ -151,8 +151,8 @@ public class YouTubeInfoScraper {
      *         invalid.
      */
     public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
-        SearchListResponse response = youTubeClient.search().list("").setMaxResults(MAX_RESULTS).setQ(keyword)
-                .setFields("items(id)").execute();
+        SearchListResponse response = youTubeClient.search().list("snippet").setMaxResults(MAX_RESULTS).setQ(keyword)
+                .execute();
         if (response.getItems() == null) {
             return Optional.empty();
         }
