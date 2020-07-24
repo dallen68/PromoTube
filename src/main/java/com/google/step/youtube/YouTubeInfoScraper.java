@@ -16,6 +16,7 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,9 +32,11 @@ public class YouTubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
-    private static final long MAX_PLAYLIST_RESULTS = 50;
-    private static final long MAX_SEARCH_RESULTS = 100;
     private final YouTube youTubeClient;
+
+    @VisibleForTesting
+    static final long MAX_PLAYLIST_RESULTS = 50;
+    static final long MAX_SEARCH_RESULTS = 100;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
         this.youTubeClient = youTubeClient;
