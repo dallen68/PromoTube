@@ -2,9 +2,11 @@ package com.google.step.youtube;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.Set;
 
 /**
  * Class for parsing the descriptions of YouTube videos for promotional codes
@@ -21,11 +23,14 @@ public class DescriptionParser {
     @VisibleForTesting
     enum Patterns {
 
-        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
-        CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))")),
-        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+")),
-        SYMBOL_BEFORE_LINK(Pattern.compile("(?<=(([0-9]%)|(\\$[0-9])).{1,100})(https*:\\/\\/)[^\\s,\\)]+")),
-        SYMBOL_AFTER_LINK(Pattern.compile("((https*:\\/\\/)[^\\s,\\)]+)(?=.{1,100}(([0-9]%)|(\\$[0-9])))"));
+        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2})([A-Z0-9][A-Za-z0-9\\-]+)")),
+        CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2}(\"|'))(.+?)(?=(\"|'))")),
+        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)(?s).{1,2})(https*:\\/\\/)[^\\s,\\)]+")),
+        SYMBOL_NEAR_LINK(Pattern.compile(
+                // check for link with $[0-9] or [0-9]% symbol <=100 chars before it
+                  "((?<=(([0-9]%)|(\\$[0-9])).{1,100})(https*:\\/\\/)[^\\s,\\)]+)|"
+                // check for link with $[0-9] or [0-9]% symbol <=100 chars after it
+                + "(((https*:\\/\\/)[^\\s,\\)]+)(?=.{1,100}(([0-9]%)|(\\$[0-9]))))"));
 
         private final Pattern regex;
 
@@ -73,7 +78,7 @@ public class DescriptionParser {
             codes.addAll(findMatches(regex.getPattern(), description));
         }
 
-        return codes;
+        return removeDuplicateOffers(codes);
     }
 
     /**
@@ -92,6 +97,14 @@ public class DescriptionParser {
             matches.add(OfferSnippet.create(matcher.group(), getBoundedSnippet(matcher.start(), description)));
         }
         return matches;
+    }
+
+    private static List<OfferSnippet> removeDuplicateOffers(List<OfferSnippet> originalOffers) {
+        List<OfferSnippet> noDupsOffers = new ArrayList<>();
+        Set<OfferSnippet> offerSet = new HashSet<>(originalOffers);
+        noDupsOffers.addAll(offerSet);
+
+        return noDupsOffers;
     }
 
     /*
