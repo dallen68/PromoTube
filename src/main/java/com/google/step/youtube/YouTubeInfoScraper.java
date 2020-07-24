@@ -31,7 +31,8 @@ public class YouTubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
-    private static final long MAX_RESULTS = 100;
+    private static final long MAX_PLAYLIST_RESULTS = 50;
+    private static final long MAX_SEARCH_RESULTS = 100;
     private final YouTube youTubeClient;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
@@ -97,7 +98,7 @@ public class YouTubeInfoScraper {
      *         or no items were found.
      */
     public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId) throws IOException {
-        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(MAX_RESULTS)
+        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(MAX_PLAYLIST_RESULTS)
                 .setPlaylistId(uploadId).execute();
         // getItems() return null when no items match the criteria (uploadId).
         if (response.getItems() == null) {
@@ -152,7 +153,7 @@ public class YouTubeInfoScraper {
      *         invalid.
      */
     public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
-        SearchListResponse response = youTubeClient.search().list("snippet").setMaxResults(MAX_RESULTS).setQ(keyword)
+        SearchListResponse response = youTubeClient.search().list("snippet").setMaxResults(MAX_SEARCH_RESULTS).setQ(keyword)
                 .execute();
         if (response.getItems() == null) {
             return Optional.empty();

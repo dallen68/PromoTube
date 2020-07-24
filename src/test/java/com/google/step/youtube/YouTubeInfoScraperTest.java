@@ -72,7 +72,8 @@ public final class YouTubeInfoScraperTest {
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
     private static final List<String> EMPTY_VIDEO_ID_LIST = Arrays.asList();
     private static final List<String> VIDEO_ID_LIST = Arrays.asList();
-    private static final long MAX_RESULTS = 100;
+    private static final long MAX_PLAYLIST_RESULTS = 50;
+    private static final long MAX_SEARCH_RESULTS = 100;
     private static final Date DATE = new Date(0L);
 
     @Before
@@ -90,7 +91,7 @@ public final class YouTubeInfoScraperTest {
         mockListPlaylistItems = mock(YouTube.PlaylistItems.List.class);
         when(mockYouTubeClient.playlistItems()).thenReturn(mockPlaylistItems);
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
-        when(mockListPlaylistItems.setMaxResults(MAX_RESULTS)).thenReturn(mockListPlaylistItems);
+        when(mockListPlaylistItems.setMaxResults(MAX_PLAYLIST_RESULTS)).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
 
         Videos mockVideos = mock(YouTube.Videos.class);
@@ -105,7 +106,7 @@ public final class YouTubeInfoScraperTest {
         mockListSearch = mock(Search.List.class);
         when(mockYouTubeClient.search()).thenReturn(mockSearch);
         when(mockSearch.list("snippet")).thenReturn(mockListSearch);
-        when(mockListSearch.setMaxResults(MAX_RESULTS)).thenReturn(mockListSearch);
+        when(mockListSearch.setMaxResults(MAX_SEARCH_RESULTS)).thenReturn(mockListSearch);
         when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
     
         scraper = new YouTubeInfoScraper(mockYouTubeClient);
