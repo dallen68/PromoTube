@@ -72,7 +72,7 @@ public final class YouTubeInfoScraperTest {
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
     private static final List<String> EMPTY_VIDEO_ID_LIST = Arrays.asList();
     private static final List<String> VIDEO_ID_LIST = Arrays.asList();
-    private static final long MAX_RESULTS = 50;
+    private static final long MAX_RESULTS = 100;
     private static final Date DATE = new Date(0L);
 
     @Before

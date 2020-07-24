@@ -31,7 +31,7 @@ public class YouTubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
-    private static final long MAX_RESULTS = 50;
+    private static final long MAX_RESULTS = 100;
     private final YouTube youTubeClient;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
