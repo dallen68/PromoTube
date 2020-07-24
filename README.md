@@ -1,8 +1,6 @@
 # PromoTube
 
-PromoTube is a webapp that allows users to easily find promo codes and affiliate links that go with their favorite creators or products.
-It uses the YouTube Data API to find videos from a given channel. We then parse the video descriptions and return the found promo codes.
-It also is able to find promo codes from business's in a similar way.
+PromoTube is a browser-based web application which extracts promotional codes and affiliate links from YouTube video descriptions.
 
 ## Getting Started
 
