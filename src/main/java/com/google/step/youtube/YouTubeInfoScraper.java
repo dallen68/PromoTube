@@ -6,6 +6,10 @@ import static com.google.api.client.repackaged.com.google.common.base.Preconditi
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeRequestInitializer;
@@ -26,6 +30,7 @@ public class YouTubeInfoScraper {
     // TODO: Add seperate file to hold API Key
     private static final String API_KEY = "";
     private static final String APPLICATION_NAME = "promotube";
+    private static final long MAX_RESULTS = 50;
     private final YouTube youTubeClient;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
@@ -68,7 +73,7 @@ public class YouTubeInfoScraper {
      */
     public Optional<List<PromoCode>> scrapePromoCodesFromPlaylist(String uploadId) throws IOException {
         Optional<List<PlaylistItem>> playlistItems = scrapePlaylistItems(uploadId);
-        if (playlistItems.isEmpty()) {
+        if (!playlistItems.isPresent()) {
             return Optional.empty();
         }
         List<PromoCode> promoCodes = new ArrayList<>();
@@ -76,9 +81,9 @@ public class YouTubeInfoScraper {
             PlaylistItemSnippet snippet = item.getSnippet();
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parse(snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
-                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(),
-                        snippet.getResourceId().getVideoId(), snippet.getTitle(), 
-                        new Date(snippet.getPublishedAt().getValue())));
+                promoCodes.add(
+                        PromoCode.create(offer.getPromoCode(), offer.getSnippet(), snippet.getResourceId().getVideoId(),
+                                snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
             }
         }
         return Optional.of(promoCodes);
@@ -91,16 +96,48 @@ public class YouTubeInfoScraper {
      *         or no items were found.
      */
     public Optional<List<PlaylistItem>> scrapePlaylistItems(String uploadId) throws IOException {
-        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(50L)
+        PlaylistItemListResponse response = youTubeClient.playlistItems().list("snippet").setMaxResults(MAX_RESULTS)
                 .setPlaylistId(uploadId).execute();
         // getItems() return null when no items match the criteria (uploadId).
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
+        return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param videoIds List of ids of youtube videos.
+     * @return an optional list of Videos which contain a VideoSnippet and the video
+     *         id. The optional will be empty if id is invalid or no items were
+     *         found.
+     */
+    public Optional<List<Video>> scrapeVideoInformation(List<String> videoIds) throws IOException {
+        VideoListResponse response = youTubeClient.videos().list("snippet").setId(String.join(",", videoIds))
+                .setFields("items(id, snippet(publishedAt, title, description))").execute();
+        if (response.getItems() == null) {
             return Optional.empty();
         }
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 Videos to be found.");
         return Optional.of(response.getItems());
+    }
+
+    /**
+     * @param keyword Word to search with.
+     * @return an optional list of videoIds. The optional will be empty if id is
+     *         invalid.
+     */
+    public Optional<List<String>> scrapeVideoIdsFromSearch(String keyword) throws IOException {
+        SearchListResponse response = youTubeClient.search().list("snippet").setMaxResults(MAX_RESULTS).setQ(keyword)
+                .execute();
+        if (response.getItems() == null) {
+            return Optional.empty();
+        }
+        checkState(!response.getItems().isEmpty(), "Expected more than 0 SearchResult items to be found.");
+        List<String> videoIds = new ArrayList<>();
+        for (SearchResult result : response.getItems()) {
+            videoIds.add(result.getId().getVideoId());
+        }
+        return Optional.of(videoIds);
     }
 
     private Optional<String> getYoutubeChannelResponse(ChannelListResponse response) {
@@ -108,11 +145,8 @@ public class YouTubeInfoScraper {
         if (response.getItems() == null) {
             return Optional.empty();
         }
-        if (response.getItems().isEmpty()) {
-            return Optional.empty();
-        }
-        checkState(response.getItems().size() == 1, "We should only be requesting a single channelId but got "
-                + response.getItems().size() + " in response");
+        checkState(response.getItems().size() == 1, String.format(
+                "We should only be requesting a single channelId but got %d in response.", response.getItems().size()));
         return Optional.of(response.getItems().get(0).getContentDetails().getRelatedPlaylists().getUploads());
     }
 }
