@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class PromoCodeServletTest {
+public final class ChannelPromoCodeServletTest {
 
-    private PromoCodeServlet servlet;
+    private ChannelPromoCodeServlet servlet;
 
     private static final String NONEXISTENT_CHANNEL_ID = "NONEXISTENT_CHANNEL_ID";
     private static final String CHANNEL_ID_URL = "https://www.youtube.com/channel/CHANNEL_ID";
@@ -55,7 +55,7 @@ public final class PromoCodeServletTest {
     @Before
     public void setup() throws IOException {
         infoScraper = mock(YouTubeInfoScraper.class);
-        servlet = new PromoCodeServlet(infoScraper);
+        servlet = new ChannelPromoCodeServlet(infoScraper);
     }
 
     @Test

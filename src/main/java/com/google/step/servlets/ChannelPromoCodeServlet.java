@@ -13,19 +13,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet("/promo-code")
-public class PromoCodeServlet extends HttpServlet {
+@WebServlet("/channel/promo-codes")
+public class ChannelPromoCodeServlet extends HttpServlet {
 
     private YouTubeInfoScraper infoScraper;
 
     @VisibleForTesting
     final String REQUEST_PARAMETER = "formInput";
 
-    public PromoCodeServlet(YouTubeInfoScraper infoScraper) {
+    public ChannelPromoCodeServlet(YouTubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
 
-    public PromoCodeServlet() {
+    public ChannelPromoCodeServlet() {
         init();
     }
 
