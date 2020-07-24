@@ -1,6 +1,8 @@
 # PromoTube
 
 PromoTube is a webapp that allows users to easily find promo codes and affiliate links that go with their favorite creators or products.
+It uses the YouTube Data API to find videos from a given channel. We then parse the video descriptions and return the found promo codes.
+It also is able to find promo codes from business's in a similar way.
 
 ## Getting Started
 
@@ -25,7 +27,6 @@ Note: These instructions are for Linux systems.
 
 ## Running the Tests
 
-Explain how to run the automated tests for this system
 
 ### Unit Testing
 
@@ -43,7 +44,12 @@ mvn package appengine:run
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+To deploy the app run
+
+```
+mvn package appengine:deploy
+```
+with the proper project ID in the pom.xml file.
 
 ## Built With
 
@@ -70,6 +76,4 @@ This project is licensed under the Apache 2 Licenses - see the [LICENSE](LICENSE
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* We would like to thank our hosts Sam Li and Derrill Dabkoski who guided us through this process
