@@ -59,7 +59,7 @@ mvn package appengine:run
 * [BootStrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - The CSS framework used
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [jQuery](https://api.jquery.com/) - Javascript Library
-* [YouTube Data API](https://developers.google.com/youtube/v3) - YouTube API
+* [YouTube Data API v3](https://developers.google.com/youtube/v3) - YouTube API
 
 ## Authors
 
