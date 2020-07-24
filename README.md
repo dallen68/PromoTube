@@ -1,7 +1,10 @@
 # PromoTube
 
 PromoTube is a browser-based web application which extracts promotional codes and affiliate links from YouTube video descriptions.
-YouTube content creators receive external sponsorships from companies to advertise products to their subscribers. This often comes in the form of promo codes and affiliate links which are written in the description of their YouTube video. These provide discounts for their followers while also giving some proceeds back to the creator. Currently, there exists no way for viewers or consumers to easily aggregate these discount codes without manually searching through videos. By compiling the promotional codes from a specific content creator, users will be able to more easily support their favorite YouTubers and find discounts for themselves.
+
+## Background
+
+YouTube content creators receive external sponsorships from companies to advertise products to their subscribers. This often comes in the form of promo codes and affiliate links which are written in the description of their YouTube video. These provide discounts for their followers while also giving some proceeds back to the creator. Currently, there exists no way for viewers or consumers to easily aggregate these discount codes without manually searching through videos. By compiling the promotional codes from a specific content creator or company, users will be able to more easily support their favorite YouTubers while finding discounts for themselves.
 
 ## Getting Started
 
@@ -24,8 +27,7 @@ sudo apt install default-jdk
 ```
 Note: These instructions are for Linux systems.
 
-## Running the Tests
-
+## Running Tests
 
 ### Unit Testing
 
@@ -52,26 +54,27 @@ To deploy locally run
 ```
 mvn package appengine:run
 ```
+This will deploy the webapp on local host port 8081 at http://localhost:8081
 
 ## Built With
 
 * [BootStrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - The CSS framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
 * [jQuery](https://api.jquery.com/) - Javascript Library
+* [Maven](https://maven.apache.org/) - Dependency Management
 * [YouTube Data API v3](https://developers.google.com/youtube/v3) - YouTube API
 
 ## Authors
 
-* **Dante Allen** - *Initial work* - [dallen68](https://github.com/dallen68)
-* **Margaret Chan** - *Initial work* - [margaretchan](https://github.com/margaretchan)
-* **Josef Jankowski** - *Initial work* - [josefj1519](https://github.com/josefj1519)
+* **Dante Allen** - [dallen68](https://github.com/dallen68)
+* **Margaret Chan** - [margaretchan](https://github.com/margaretchan)
+* **Josef Jankowski** - [josefj1519](https://github.com/josefj1519)
 
 See also the list of [contributors](https://github.com/dallen68/PromoTube/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the Apache 2 Licenses - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache 2 License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-* We would like to thank our hosts Sam Li and Derrill Dabkoski who guided us through this process.
+* We would like to thank our hosts [Sam Li](https://github.com/LiRq95) and [Derrill Dabkoski](https://github.com/derrillhd) who guided us through this process.
