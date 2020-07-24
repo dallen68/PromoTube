@@ -157,7 +157,7 @@ public final class DescriptionParserTest {
         String desc = "Mercari (Buy or sell almost anything on Mercari on the " 
                 + truncatedSnippet + " your special offer).";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                                        OfferSnippet.create("http://stamps.com", truncatedSnippet))));
+                    OfferSnippet.create("http://stamps.com", "... " + truncatedSnippet + " ..."))));
     }
 
 

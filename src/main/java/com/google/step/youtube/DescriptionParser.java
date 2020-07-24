@@ -114,7 +114,7 @@ public class DescriptionParser {
         // add 1 to not include starting space in snippet
         int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH / 2) + 1;
         int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH / 2);
-        return description.substring(startIndexByWord, endIndexByWord);
+        return "... " + description.substring(startIndexByWord, endIndexByWord) + " ...";
     }
 
 }
