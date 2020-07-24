@@ -2,17 +2,15 @@
 const channelPlaceholder = "Enter a Channel's URL";
 const businessPlaceholder = "Enter a Business's Name";
 const channelId = "channel";
+const noCodesNode = document.createTextNode("Sorry! We didn\'t find any codes.");
 
 async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
-    let response; 
-    // TODO(dantebot): Change name of URI's to appropriate servlet names.
-
+    let response;
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
-    } else {
-       // TODO(dantebot): Add business URI 
+    } else { 
        response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
@@ -28,10 +26,9 @@ function setTable(codes) {
                     <th id="table-header">Description Snippet</th>
                 </tr>`;
     if (codes.length === 0) {
-        let row = tableEl.insertRow(-1);
-        let noCodes = row.insertCell(0);
-        noCodes.innerHTML = '<p>Sorry! There are no codes with this Id.</p>'
+        tableEl.appendChild(noCodesNode);
     } else {
+        noCodesNode.remove();
         const numOfCodes = Object.keys(codes).length;
         for (i = 0; i < numOfCodes; i++) {
             let row = tableEl.insertRow(-1);
@@ -49,8 +46,8 @@ function setTable(codes) {
 
 function boldSubstring(str, substr) {
     let strRegExp = new RegExp(substr, 'g');
-    return str.replace(strRegExp, '<b>'+substr+'</b>');
-  }
+    return str.replace(strRegExp, '<b>' + substr + '</b>');
+}
 
 function resetForm(id) {
     $("#formInput").val("");
