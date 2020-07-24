@@ -8,12 +8,10 @@ async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
     let response;
-    // TODO(dantebot): Change name of URI's to appropriate servlet names.
-    if (selected.id === channelId) {
-        response = await fetch('/promo-code?formInput=' + formInput);
-    } else {
-        // TODO(dantebot): Add business URI 
-        response = await fetch('/promo-code?formInput=' + formInput);
+    if (selected.id === "channel") {
+        response = await fetch('/channel/promo-codes?formInput=' + formInput);
+    } else { 
+       response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
     setTable(codes);
@@ -22,7 +20,7 @@ async function displayCodes() {
 function setTable(codes) {
     const tableEl = document.getElementById('promoCodeTable');
     tableEl.innerHTML =
-                `<tr>
+        `<tr>
                     <th id="table-header">Video</th>
                     <th id="table-header">Promo Code or Affiliate Link</th>
                     <th id="table-header">Description Snippet</th>

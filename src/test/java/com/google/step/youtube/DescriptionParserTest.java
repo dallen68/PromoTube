@@ -19,6 +19,9 @@ public final class DescriptionParserTest {
     private static final Pattern CODE_NO_QUOTES_PATTERN = DescriptionParser.Patterns.CODE_NO_QUOTES.getPattern();
     private static final Pattern CODE_WITH_QUOTES_PATTERN = DescriptionParser.Patterns.CODE_WITH_QUOTES.getPattern();
     private static final Pattern TO_AT_LINKS_PATTERN = DescriptionParser.Patterns.TO_AT_LINKS.getPattern();
+    private static final Pattern SYMBOL_NEAR_LINK_PATTERN = DescriptionParser.Patterns.SYMBOL_NEAR_LINK.getPattern();
+
+    private static final String COMPANY_NAME = "COMPANY_NAME";
 
     /*
      * * ================== TESTS FOR PARSE BY COMPANY =================== *
@@ -26,49 +29,58 @@ public final class DescriptionParserTest {
 
     @Test
     public void parseByCompany_0CompanyName1Promocode() {
-        String company = "Postmates";
         String desc = "Get 20% OFF + Free International Shipping instantly at http://Manscaped.com/phil";
-        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(Collections.emptyList()));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(Collections.emptyList()));
+    }
+
+    @Test
+    public void parseByCompany_1CompanyName0Promocodes() {
+        String desc = "And if you want to order food through " + COMPANY_NAME + " use my code";
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(Collections.emptyList()));
     }
 
     @Test
     public void parseByCompany_1CompanyName1Promocode() {
-        String company = "Postmates";
-        String desc = "And if you want to order food through Postmates use my code A1JZN";
+        String desc = "And if you want to order food through " + COMPANY_NAME + " use my code A1JZN";
         List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("A1JZN", desc));
-        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
     }
 
     @Test
     public void parseByCompany_1CompanyName2Promocodes() {
-        String company = "Postmates";
-        String desc = "And if you want to order food through Postmates go to "
+        String desc = "And if you want to order food through " + COMPANY_NAME + " go to "
                 + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
-        List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("A1JZN", desc), 
-                                    OfferSnippet.create("https://pmfleet.app.link/zyoaw9s3R6", desc));
-        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+        List<OfferSnippet> expected = Arrays.asList(
+                                    OfferSnippet.create("https://pmfleet.app.link/zyoaw9s3R6", desc),
+                                    OfferSnippet.create("A1JZN", desc));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
     }
 
     @Test
     public void parseByCompany_2CompanyNames1Promocode() {
-        String company = "Outdoor voices";
         String snippet = "DISCOUNT!!! For a limited time only, take 25% off your first purchase at "
-                + "Outdoor Voices with the code OVDOINGTHINGS25. This offer is valid online only. ";
-        String desc = snippet + "\nMust apply code at Outdoor voices checkout. Expires August 31, 2020.";
+                + COMPANY_NAME + "with the code OVDOINGTHINGS25. This offer is valid online only. ";
+        String desc = snippet + "\nMust apply code at " + COMPANY_NAME + " checkout. Expires August 31, 2020.";
         List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("OVDOINGTHINGS25", snippet));
-        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
     }
 
     @Test
     public void parseByCompany_2CompanyNames2Promocodes() {
-        String company = "NordVPN";
-        String snippet1 = "Nord VPN DOWNLOAD (affiliate link): Go to https://NordVPN.com/pewdiepie";
-        String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of NordVPN.";
+        String snippet1 = "DOWNLOAD (affiliate link): Go to https://" + COMPANY_NAME + ".com/pewdiepie";
+        String snippet2 = "and use code PEWDIEPIE to get 70% off a 3 year plan of" + COMPANY_NAME + ".";
         String desc = snippet1 + "\n" + snippet2;
         List<OfferSnippet> expected = Arrays.asList(
-                                    OfferSnippet.create("https://NordVPN.com/pewdiepie", snippet1), 
+                                    OfferSnippet.create("https://" + COMPANY_NAME + ".com/pewdiepie", snippet1), 
                                     OfferSnippet.create("PEWDIEPIE", snippet2));
-        assertThat(DescriptionParser.parseByCompany(company, desc), equalTo(expected));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
+    }
+
+    @Test
+    public void parseByCompany_companyNameCaseSensitive() {
+        String desc = "Go to " + COMPANY_NAME.toLowerCase() + " and use code 20OFF";
+        List<OfferSnippet> expected = Arrays.asList(OfferSnippet.create("20OFF", desc));
+        assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
     }
 
 
@@ -90,19 +102,24 @@ public final class DescriptionParserTest {
         String descFUNGBROS10 = "Use code FUNGBROS10. ";
         String descCOOLIRPA = "Click here and use my code \"COOLIRPA\".";
         String descPEWDIEPIE = "Go to https://NordVPN.com/pewdiepie and use code PEWDIEPIE ";
-        String desc = descFUNGBROS10 + "\n" + descCOOLIRPA + "\n" + descPEWDIEPIE + "\n";
+        String descGlassware = "use https://lmg.gg/glasswire to get 25% off";
+        String descBokksu = "Get 10% off your own authentic Japanese snack box from Bokksu using my link: https://bit.ly/3fYbkZ5";
+        String desc = descFUNGBROS10 + "\n\n" + descCOOLIRPA + "\n\n" + descPEWDIEPIE + "\n\n" 
+                + descGlassware + "\n\n" + descBokksu;
 
         OfferSnippet expectedFUNGBROS10 = OfferSnippet.create("FUNGBROS10", descFUNGBROS10);
         OfferSnippet expectedPEWDIEPIE = OfferSnippet.create("PEWDIEPIE", descPEWDIEPIE);
         OfferSnippet expectedCOOLIRPA = OfferSnippet.create("COOLIRPA", descCOOLIRPA);
         OfferSnippet expectedNordVPN = OfferSnippet.create("https://NordVPN.com/pewdiepie", descPEWDIEPIE);
-        
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                        expectedFUNGBROS10, expectedPEWDIEPIE, expectedCOOLIRPA, expectedNordVPN)));
+        OfferSnippet expectedGlassware = OfferSnippet.create("https://lmg.gg/glasswire", descGlassware);
+        OfferSnippet expectedBokksu = OfferSnippet.create("https://bit.ly/3fYbkZ5", descBokksu);
+
+        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(expectedGlassware, 
+        expectedCOOLIRPA, expectedPEWDIEPIE, expectedNordVPN, expectedBokksu, expectedFUNGBROS10)));
     }
 
     @Test
-    public void parse_codeNoQuotes_extraLineAfter() {
+    public void parse_extraLineAfter() {
         String snippetFUNGBROS10 = "Use code FUNGBROS10 ";
         String desc = snippetFUNGBROS10 + "\nRyan: https://www.instagram.com/ryan.w.benson/";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
@@ -110,14 +127,14 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void parse_codeWithQuotes_oneLineDescription() {
+    public void parse_oneLineDescription() {
         String desc = "Click here and use my code \"COOLIRPA\". ";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(OfferSnippet.create("COOLIRPA", desc))));
     }
 
     @Test
-    public void parse_toAtLink_extraLineBefore() {
-        String snippetNordVPN = "Go to https://NordVPN.com/pewdiepie and get 70% off";
+    public void parse_extraLineBefore() {
+        String snippetNordVPN = "Go to https://NordVPN.com/pewdiepie and get 70 percent off";
         String desc = "ty for 10 years of pewdiepie youtube uploads brvus\n" + snippetNordVPN + "\n";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
                             OfferSnippet.create("https://NordVPN.com/pewdiepie", snippetNordVPN))));
@@ -125,8 +142,8 @@ public final class DescriptionParserTest {
 
     @Test
     public void parse_repeatedPromoCodesDifferentSnippets() {
-        String firstCOOLIRPA = "Use my code \"COOLIRPA\".";
-        String secondCOOLIRPA = "Also my code \"COOLIRPA\"";
+        String firstCOOLIRPA = "Also my code \"COOLIRPA\"";
+        String secondCOOLIRPA = "Use my code \"COOLIRPA\".";
         String desc = firstCOOLIRPA + "\n" + secondCOOLIRPA + "\n";
 
         OfferSnippet firstExpected = OfferSnippet.create("COOLIRPA", firstCOOLIRPA);
@@ -153,19 +170,19 @@ public final class DescriptionParserTest {
      */
 
     @Test
-    public void codeNoQuotes_lettersAndNumbers() {
+    public void codeNoQuotes_lettersNumbersHyphen() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
-                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS-10";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS10")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS-10")));
     }
 
     @Test
     public void codeNoQuotes_promocodeCaseSensitive() {
-        String desc = "Use code LINUSsssS and get 25% off GlassWire at https://lmg.gg/glasswire";
+        String desc = "Use code LinusssS and get 25% off GlassWire at https://lmg.gg/glasswire";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LINUS")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LinusssS")));
     }
 
     @Test
@@ -192,17 +209,17 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void codeNoQuotes_lookbehind() {
+    public void codeNoQuotes_ColonSpace() {
         String desc = "Get 20% off your first monthly box when you sign up at "
-                + "http://boxofawesome.com and enter the ROOSTER code at checkout!";
+                + "http://boxofawesome.com and enter the code: ROOSTER at checkout!";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("ROOSTER")));
     }
 
     @Test
-    public void codeNoQuotes_2Spaces() {
+    public void codeNoQuotes_3Spaces() {
         String desc = "Get 20% off your first monthly box when you sign up at "
-                + "http://boxofawesome.com and enter the code  ROOSTER at checkout!";
+                + "http://boxofawesome.com and enter the code   ROOSTER at checkout!";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }
@@ -320,9 +337,17 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void codeWithQuotes_2Spaces() {
+    public void codeWithQuotes_ColonSpace() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
-                + "https://darkventures.co.uk/shop with offer code  \"bobat15\"";
+                + "https://darkventures.co.uk/shop with offer code: \"bobat15\"";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("bobat15")));
+    }
+
+    @Test
+    public void codeWithQuotes_3Spaces() {
+        String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
+                + "https://darkventures.co.uk/shop with offer code   \"bobat15\"";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }
@@ -491,8 +516,15 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void toAtLinks_2SpacesBetween() {
-        String desc = "Use code LINUS and get 25% off GlassWire at  https://lmg.gg/glasswire";
+    public void toAtLinks_ColonSpace() {
+        String desc = "Use code LINUS and get 25% off GlassWire at: https://lmg.gg/glasswire";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://lmg.gg/glasswire")));
+    }
+
+    @Test
+    public void toAtLinks_3Spaces() {
+        String desc = "Use code LINUS and get 25% off GlassWire at   https://lmg.gg/glasswire";
         List<OfferSnippet> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }
@@ -535,7 +567,205 @@ public final class DescriptionParserTest {
     }
 
 
-    // helper method for findMatches() tests, only checking for promocode field 
+    /*
+     * * ================ TEST $ OR % SYMBOLS BEFORE LINK ================ * 
+     * ex. "get 50% off: https://google.com" | "get $20 off: https://website.com"
+     */
+
+    @Test 
+    public void symbolBeforeLink_regualarMatchHttpPercent() {
+        String desc = "Save 33% on your first Native Deodorant Pack. Click here: http://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("http://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_regualarMatchHttpDollarSign() {
+        String desc = "Save $20 on your first Native Deodorant Pack. Click here: http://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("http://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_noNumberBeforePercent() {
+        String desc = "Save % on your first Native Deodorant Pack. Click here: https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolBeforeLink_noNumberAfterDollar() {
+        String desc = "Save $ on your first Native Deodorant Pack. Click here: https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolBeforeLink_0CharsBetween() {
+        String desc = "Save $3https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolBeforeLink_1CharBetween() {
+        String desc = "Save $3 https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_moreThan100CharsBetween() {
+        String desc = "Save 33% on your first Native Deodorant Pack - normally 36, you'll get "
+                + "it for 24! Filler sentence here. Click here: https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolBeforeLink_newLineBetween() {
+        String desc = "Save $3 \n https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolBeforeLink_stopMatchingAtComma() {
+        String desc = "Save $30 https://bit.ly/nativecoolirpa,";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_stopMatchingAtCloseParens() {
+        String desc = "Save $30 https://bit.ly/nativecoolirpa)";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_keywordAtStart() {
+        String desc = "$30 https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_keywordAtEnd() {
+        String desc = "hello $30 https://bit.ly/nativecoolirpa";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolBeforeLink_multipleMatches() {
+        String desc = "hello $30: https://bit.ly/nativecoolirpa or 20% off at: https://lmg.gg/glasswire";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa", 
+                                                                    "https://lmg.gg/glasswire")));
+    }
+
+
+    /*
+     * * ================ TEST $ OR % SYMBOLS AFTER LINK ================ * 
+     * ex. "use https://google.com for 20% off" | "use https://website.com: $30 off"
+     */
+
+    @Test 
+    public void symbolAfterLink_regualarMatchHttpPercent() {
+        String desc = "Click here: http://bit.ly/nativecoolirpa and save 33% on your first Native Deodorant Pack.";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("http://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_regualarMatchHttpDollarSign() {
+        String desc = "Click here: http://bit.ly/nativecoolirpa to save $20 on your first Native Deodorant Pack.";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("http://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_noNumberBeforePercent() {
+        String desc = "Click here: https://bit.ly/nativecoolirpa and save % on your first Native Deodorant Pack.";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolAfterLink_noNumberAfterDollar() {
+        String desc = "Click here: https://bit.ly/nativecoolirpa and save $ on your first Native Deodorant Pack.";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolAfterLink_0CharsBetween() {
+        String desc = "https://$3";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolAfterLink_1CharBetween() {
+        String desc = "Save https://w $3";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://w")));
+    }
+
+    @Test 
+    public void symbolAfterLink_moreThan100CharsBetween() {
+        String desc = "Click here: https://bit.ly/nativecoolirpa and save on your first Native "
+                + "Deodorant Pack - normally 36, you'll get it for 24! Filler sentence here. Save $3";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolAfterLink_newLineBetween() {
+        String desc = "Save https://bit.ly/nativecoolirpa \n 30%";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
+    }
+
+    @Test 
+    public void symbolAfterLink_stopMatchingAtComma() {
+        String desc = "Save https://bit.ly/nativecoolirpa, $30";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_stopMatchingAtCloseParens() {
+        String desc = "Save (https://bit.ly/nativecoolirpa) 40%";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_keywordAtStart() {
+        String desc = "https://bit.ly/nativecoolirpa filler text $30 filler text";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_keywordAtEnd() {
+        String desc = "filler text https://bit.ly/nativecoolirpa filler text $30";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa")));
+    }
+
+    @Test 
+    public void symbolAfterLink_multipleMatches() {
+        String desc = "use: https://bit.ly/nativecoolirpa for $5 off or go to: https://lmg.gg/glasswire for 20% off";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(SYMBOL_NEAR_LINK_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://bit.ly/nativecoolirpa", 
+                                                                    "https://lmg.gg/glasswire")));
+    }
+
+
+    /* helper method for findMatches() tests, only checking for promocode field */
     private List<String> extractPromoCodes(List<OfferSnippet> offerSnippets) {
         return offerSnippets.stream().map(OfferSnippet::getPromoCode).collect(ImmutableList.toImmutableList());
     } 
