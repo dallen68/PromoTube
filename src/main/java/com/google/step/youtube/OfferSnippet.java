@@ -8,7 +8,7 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class OfferSnippet {
 
-    public static OfferSnippet create (String promoCode, String snippet) {
+    public static OfferSnippet create(String promoCode, String snippet) {
         return new AutoValue_OfferSnippet(promoCode, snippet);
     }
 
