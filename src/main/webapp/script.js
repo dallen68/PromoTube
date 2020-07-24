@@ -1,6 +1,7 @@
 
 const channelPlaceholder = "Enter a Channel's URL";
 const businessPlaceholder = "Enter a Business's Name";
+const loadingId = "loadingIcon";
 const channelId = "channel";
 const noCodesNode = document.createTextNode("Sorry! We didn\'t find any codes.");
 
@@ -8,12 +9,14 @@ async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
     let response;
+    triggerLoading();
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
     } else { 
        response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
+    triggerLoading();
     setTable(codes);
 }
 
@@ -53,4 +56,9 @@ function resetForm(id) {
     $("#formInput").val("");
     const placeholder = id === channelId ? channelPlaceholder : businessPlaceholder;
     $("#formInput").attr("placeholder", placeholder);
+}
+
+function triggerLoading() {
+    let loadingState = document.getElementById(loadingId).style.display;
+    document.getElementById(loadingId).style.display = loadingState === "none" ? "inline-block" : "none";
 }
