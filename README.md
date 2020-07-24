@@ -76,4 +76,4 @@ This project is licensed under the Apache 2 Licenses - see the [LICENSE](LICENSE
 
 ## Acknowledgments
 
-* We would like to thank our hosts Sam Li and Derrill Dabkoski who guided us through this process
+* We would like to thank our hosts Sam Li and Derrill Dabkoski who guided us through this process.
