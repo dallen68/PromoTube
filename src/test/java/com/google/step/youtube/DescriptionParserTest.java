@@ -170,19 +170,19 @@ public final class DescriptionParserTest {
      */
 
     @Test
-    public void codeNoQuotes_lettersAndNumbers() {
+    public void codeNoQuotes_lettersNumbersHyphen() {
         String desc = "Get 10% off (save up to $44!) your own authentic Japanese snack box from "
-                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS10";
+                + "Bokksu using my link: https://bit.ly/3fYbkZ5 and code FUNGBROS-10";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS10")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("FUNGBROS-10")));
     }
 
     @Test
     public void codeNoQuotes_promocodeCaseSensitive() {
-        String desc = "Use code LINUSsssS and get 25% off GlassWire at https://lmg.gg/glasswire";
+        String desc = "Use code LinusssS and get 25% off GlassWire at https://lmg.gg/glasswire";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
-        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LINUS")));
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("LinusssS")));
     }
 
     @Test
@@ -209,9 +209,17 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void codeNoQuotes_2Spaces() {
+    public void codeNoQuotes_ColonSpace() {
         String desc = "Get 20% off your first monthly box when you sign up at "
-                + "http://boxofawesome.com and enter the code  ROOSTER at checkout!";
+                + "http://boxofawesome.com and enter the code: ROOSTER at checkout!";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("ROOSTER")));
+    }
+
+    @Test
+    public void codeNoQuotes_3Spaces() {
+        String desc = "Get 20% off your first monthly box when you sign up at "
+                + "http://boxofawesome.com and enter the code   ROOSTER at checkout!";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_NO_QUOTES_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }
@@ -329,9 +337,17 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void codeWithQuotes_2Spaces() {
+    public void codeWithQuotes_ColonSpace() {
         String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
-                + "https://darkventures.co.uk/shop with offer code  \"bobat15\"";
+                + "https://darkventures.co.uk/shop with offer code: \"bobat15\"";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("bobat15")));
+    }
+
+    @Test
+    public void codeWithQuotes_3Spaces() {
+        String desc = "Get %15 off Rhino Skin, Unparallel shoes and much more at "
+                + "https://darkventures.co.uk/shop with offer code   \"bobat15\"";
         List<OfferSnippet> actual = DescriptionParser.findMatches(CODE_WITH_QUOTES_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }
@@ -500,8 +516,15 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void toAtLinks_2SpacesBetween() {
-        String desc = "Use code LINUS and get 25% off GlassWire at  https://lmg.gg/glasswire";
+    public void toAtLinks_ColonSpace() {
+        String desc = "Use code LINUS and get 25% off GlassWire at: https://lmg.gg/glasswire";
+        List<OfferSnippet> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
+        assertThat(extractPromoCodes(actual), equalTo(Arrays.asList("https://lmg.gg/glasswire")));
+    }
+
+    @Test
+    public void toAtLinks_3Spaces() {
+        String desc = "Use code LINUS and get 25% off GlassWire at   https://lmg.gg/glasswire";
         List<OfferSnippet> actual = DescriptionParser.findMatches(TO_AT_LINKS_PATTERN, desc);
         assertThat(extractPromoCodes(actual), equalTo(Collections.emptyList()));
     }

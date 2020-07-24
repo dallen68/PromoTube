@@ -1,7 +1,6 @@
 package com.google.step.youtube;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +23,9 @@ public class DescriptionParser {
     @VisibleForTesting
     enum Patterns {
 
-        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s)([A-Z0-9]{2,})")),
-        CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code\\s(\"|'))(.+?)(?=(\"|'))")),
-        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)\\s)(https*:\\/\\/)[^\\s,\\)]+")),
+        CODE_NO_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2})([A-Z0-9][A-Za-z0-9\\-]+)")),
+        CODE_WITH_QUOTES(Pattern.compile("(?<=\\b(?i)code(?s).{1,2}(\"|'))(.+?)(?=(\"|'))")),
+        TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)(?s).{1,2})(https*:\\/\\/)[^\\s,\\)]+")),
         SYMBOL_NEAR_LINK(Pattern.compile(
                 // check for link with $[0-9] or [0-9]% symbol <=100 chars before it
                   "((?<=(([0-9]%)|(\\$[0-9])).{1,100})(https*:\\/\\/)[^\\s,\\)]+)|"
