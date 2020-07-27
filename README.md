@@ -43,6 +43,7 @@ mvn package appengine:run
 
 ## Deployment
 
+Prior to deploying the app, add a YouTube Data API key to YouTubeInfoScraper.java.
 To deploy the app on a server run
 
 ```
