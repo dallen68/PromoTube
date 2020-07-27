@@ -14,8 +14,13 @@ import java.util.Set;
  */
 public class DescriptionParser {
 
-    private static final char DELIMITER = '\n';
     private static final int MAX_SNIPPET_LENGTH = 200;
+
+    @VisibleForTesting
+    static final char DELIMITER = '\n';
+
+    @VisibleForTesting
+    static final String ELLIPSIS = "...";
     
     /**
      * Patterns used in regular expressions for parsing promocodes and affiliate links
@@ -110,8 +115,9 @@ public class DescriptionParser {
     }
 
     /*
-     * Finds the snippet of description which conatins the target index. 
-     * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
+     * Finds the snippet of description which conatins the target index. Bounds the snippet at 
+     * MAX_SNIPPET_LENGTH characters and does not truncate words. If paragraphs are truncated 
+     * (using DELIMITER), an ellipsis is added to any side which has been truncated.
      */
     private static String getBoundedSnippet(int targetIndex, String description) {
         int startDelimiter = description.lastIndexOf(DELIMITER, targetIndex);
@@ -127,21 +133,29 @@ public class DescriptionParser {
         int lastSpaceInBounds = description.lastIndexOf(" ", endBoundIndex);
         int firstSpaceInBounds = description.indexOf(" ", startBoundIndex);
 
-        if (lineStart > startBoundIndex && endBoundIndex > lineEnd) {
+        if (lineStart >= startBoundIndex && endBoundIndex >= lineEnd) {
             return description.substring(lineStart, lineEnd);
-        } else if (lineStart > startBoundIndex) {
-            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
-            return description.substring(lineStart, snippetEnd) + " ...";
-        } else if (endBoundIndex > lineEnd) {
-            // add 1 to not include starting space in snippet
-            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
-            return "... " + description.substring(snippetStart, lineEnd);
-        } else {
-            // add 1 to not include starting space in snippet
-            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
-            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
-            return "... " + description.substring(snippetStart, snippetEnd) + " ...";
         }
+        
+        if (lineStart >= startBoundIndex) {
+            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
+            return String.format("%s %s", description.substring(lineStart, snippetEnd), ELLIPSIS); 
+        }
+        
+        if (endBoundIndex >= lineEnd) {
+            // add 1 to not include starting space in snippet
+            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
+            return String.format("%s %s", ELLIPSIS, description.substring(snippetStart, lineEnd)); 
+        } 
+        
+        if (lineStart < startBoundIndex && endBoundIndex < lineEnd) {
+            // add 1 to not include starting space in snippet
+            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
+            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
+            return String.format("%s %s %s", ELLIPSIS, description.substring(snippetStart, snippetEnd), ELLIPSIS);
+        }
+
+        throw new IllegalStateException("This line should be impossible");
     }
 
 }
