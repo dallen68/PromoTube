@@ -99,18 +99,16 @@ public class DescriptionParser {
         return matches;
     }
 
-    /*
-     * Remove duplicate OfferSnippets from originalOffers. Note that the order of elements may change.
-     */
     private static List<OfferSnippet> removeDuplicateOffers(List<OfferSnippet> originalOffers) {
         List<OfferSnippet> noDupsOffers = new ArrayList<>();
         Set<OfferSnippet> offerSet = new HashSet<>(originalOffers);
         noDupsOffers.addAll(offerSet);
+
         return noDupsOffers;
     }
 
     /*
-     * Finds the snippet of description which conatins the target index. 
+     * Finds the snippet (line) of description which conatins the target index. 
      * Bounds the snippet at MAX_SNIPPET_LENGTH characters and does not truncate words.
      */
     private static String getBoundedSnippet(int targetIndex, String description) {
@@ -118,30 +116,18 @@ public class DescriptionParser {
         int endDelimiter = description.indexOf(DELIMITER, targetIndex);
 
         // add 1 to not include delimiter in snippet
-        int lineStart = startDelimiter < 0 ? 0 : startDelimiter + 1;
-        int lineEnd = endDelimiter < 0 ? description.length() : endDelimiter;
+        int snippetStart = startDelimiter == -1 ? 0 : startDelimiter + 1;
+        int snippetEnd = endDelimiter == -1 ? description.length() : endDelimiter;
+        String completeSnippet = description.substring(snippetStart, snippetEnd);
 
-        int startBoundIndex = targetIndex - (MAX_SNIPPET_LENGTH / 2);
-        int endBoundIndex = targetIndex + (MAX_SNIPPET_LENGTH / 2);
-
-        int lastSpaceInBounds = description.lastIndexOf(" ", endBoundIndex);
-        int firstSpaceInBounds = description.indexOf(" ", startBoundIndex);
-
-        if (lineStart > startBoundIndex && endBoundIndex > lineEnd) {
-            return description.substring(lineStart, lineEnd);
-        } else if (lineStart > startBoundIndex) {
-            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
-            return description.substring(lineStart, snippetEnd) + " ...";
-        } else if (endBoundIndex > lineEnd) {
-            // add 1 to not include starting space in snippet
-            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
-            return "... " + description.substring(snippetStart, lineEnd);
-        } else {
-            // add 1 to not include starting space in snippet
-            int snippetStart = firstSpaceInBounds < 0 ? startBoundIndex : firstSpaceInBounds + 1;
-            int snippetEnd = lastSpaceInBounds < 0 ? endBoundIndex : lastSpaceInBounds;
-            return "... " + description.substring(snippetStart, snippetEnd) + " ...";
+        if (completeSnippet.length() <= MAX_SNIPPET_LENGTH) {
+            return completeSnippet;
         }
+
+        // add 1 to not include starting space in snippet
+        int startIndexByWord = description.indexOf(" ", targetIndex - MAX_SNIPPET_LENGTH / 2) + 1;
+        int endIndexByWord = description.lastIndexOf(" ", targetIndex + MAX_SNIPPET_LENGTH / 2);
+        return description.substring(startIndexByWord, endIndexByWord);
     }
 
 }

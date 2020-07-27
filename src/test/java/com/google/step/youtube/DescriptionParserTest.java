@@ -48,11 +48,11 @@ public final class DescriptionParserTest {
 
     @Test
     public void parseByCompany_1CompanyName2Promocodes() {
-        String desc = "Order food through " + COMPANY_NAME + " go to https://pmfleet.app.link/zyoaw9s3R6, "
-                + "use my code A1JZN";
+        String desc = "And if you want to order food through " + COMPANY_NAME + " go to "
+                + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
         List<OfferSnippet> expected = Arrays.asList(
-                                    OfferSnippet.create("A1JZN", desc),
-                                    OfferSnippet.create("https://pmfleet.app.link/zyoaw9s3R6", desc));
+                                    OfferSnippet.create("https://pmfleet.app.link/zyoaw9s3R6", desc),
+                                    OfferSnippet.create("A1JZN", desc));
         assertThat(DescriptionParser.parseByCompany(COMPANY_NAME, desc), equalTo(expected));
     }
 
@@ -153,43 +153,14 @@ public final class DescriptionParserTest {
     }
 
     @Test
-    public void parse_snippetTruncateBothEnds() {
+    public void parse_snippetTruncatedAtMaxLength() {
         String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
                 + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone "
                 + "at the top of the homepage, and type in ROOSTER to claim";
         String desc = "Mercari (Buy or sell almost anything on Mercari on the " 
                 + truncatedSnippet + " your special offer).";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", "... " + truncatedSnippet + " ..."))));
-    }
-
-    @Test
-    public void parse_snippetTruncateBeginning() {
-        String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
-                + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone "
-                + "at the top of the homepage, and type in ROOSTER to claim";
-        String desc = "Mercari (Buy or sell almost anything on Mercari on the " + truncatedSnippet;
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", "... " + truncatedSnippet))));
-    }
-
-    @Test
-    public void parse_snippetTruncateEnd() {
-        String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
-                + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone "
-                + "at the top of the homepage, and type in ROOSTER to claim";
-        String desc = truncatedSnippet + " your special offer).";
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", truncatedSnippet + " ..."))));
-    }
-
-    @Test
-    public void parse_snippetStopAtDelimiter() {
-        String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
-                + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone ";
-        String desc = truncatedSnippet + "\nat the top of the homepage, and type in ROOSTER to claim";
-        assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", truncatedSnippet))));
+                                        OfferSnippet.create("http://stamps.com", truncatedSnippet))));
     }
 
 
