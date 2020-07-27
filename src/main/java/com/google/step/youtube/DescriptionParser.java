@@ -123,7 +123,6 @@ public class DescriptionParser {
 
         int startBoundIndex = targetIndex - (MAX_SNIPPET_LENGTH / 2);
         int endBoundIndex = targetIndex + (MAX_SNIPPET_LENGTH / 2);
-        // could factor out description.lastIndexOf(" ", endBoundIndex) and indexOf
 
         int lastSpaceInBounds = description.lastIndexOf(" ", endBoundIndex);
         int firstSpaceInBounds = description.indexOf(" ", startBoundIndex);
