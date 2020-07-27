@@ -36,6 +36,7 @@ public class YouTubeInfoScraper {
 
     @VisibleForTesting
     static final long MAX_PLAYLIST_RESULTS = 50;
+    @VisibleForTesting
     static final long MAX_SEARCH_RESULTS = 100;
 
     public YouTubeInfoScraper(YouTube youTubeClient) {
