@@ -29,6 +29,11 @@
     width: 80%;
 }
 
+#promoCodeTable {
+    margin: auto;
+    width: 75% !important; 
+}
+
 #table-header {
     width: 10%;
     font-size: 18px;
