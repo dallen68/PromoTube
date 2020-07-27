@@ -160,8 +160,7 @@ public final class DescriptionParserTest {
         String desc = "Mercari (Buy or sell almost anything on Mercari on the " 
                 + truncatedSnippet + " your special offer).";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", String.format("%s %s %s", 
-                    DescriptionParser.ELLIPSIS, truncatedSnippet, DescriptionParser.ELLIPSIS)))));
+                    OfferSnippet.create("http://stamps.com", "... " + truncatedSnippet + " ..."))));
     }
 
     @Test
@@ -171,8 +170,7 @@ public final class DescriptionParserTest {
                 + "at the top of the homepage, and type in ROOSTER to claim";
         String desc = "Mercari (Buy or sell almost anything on Mercari on the " + truncatedSnippet;
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", String.format("%s %s", 
-                    DescriptionParser.ELLIPSIS, truncatedSnippet)))));
+                    OfferSnippet.create("http://stamps.com", "... " + truncatedSnippet))));
     }
 
     @Test
@@ -182,16 +180,14 @@ public final class DescriptionParserTest {
                 + "at the top of the homepage, and type in ROOSTER to claim";
         String desc = truncatedSnippet + " your special offer).";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                OfferSnippet.create("http://stamps.com", String.format("%s %s", 
-                truncatedSnippet, DescriptionParser.ELLIPSIS)))));
+                OfferSnippet.create("http://stamps.com", truncatedSnippet + " ..."))));
     }
 
     @Test
     public void parse_snippetStopAtDelimiter() {
         String truncatedSnippet = "App store). This episode originally recorded June 8, 2020, and "
                 + "is sponsored by Stamps.com (Go to http://stamps.com, click on the microphone ";
-        String desc = truncatedSnippet + DescriptionParser.DELIMITER 
-                + "at the top of the homepage, and type in ROOSTER to claim";
+        String desc = truncatedSnippet + "\nat the top of the homepage, and type in ROOSTER to claim";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
                     OfferSnippet.create("http://stamps.com", truncatedSnippet))));
     }

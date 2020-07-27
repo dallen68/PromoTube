@@ -13,14 +13,10 @@ import java.util.Set;
  * and affiliate links.
  */
 public class DescriptionParser {
-
+    
+    private static final char DELIMITER = '\n';
+    private static final String ELLIPSIS = "...";
     private static final int MAX_SNIPPET_LENGTH = 200;
-
-    @VisibleForTesting
-    static final char DELIMITER = '\n';
-
-    @VisibleForTesting
-    static final String ELLIPSIS = "...";
     
     /**
      * Patterns used in regular expressions for parsing promocodes and affiliate links
