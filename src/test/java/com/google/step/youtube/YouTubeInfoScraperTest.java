@@ -72,7 +72,6 @@ public final class YouTubeInfoScraperTest {
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
     private static final List<String> EMPTY_VIDEO_ID_LIST = Arrays.asList();
     private static final List<String> VIDEO_ID_LIST = Arrays.asList();
-    private static final long MAX_RESULTS = 50;
     private static final Date DATE = new Date(0L);
 
     @Before
@@ -90,7 +89,8 @@ public final class YouTubeInfoScraperTest {
         mockListPlaylistItems = mock(YouTube.PlaylistItems.List.class);
         when(mockYouTubeClient.playlistItems()).thenReturn(mockPlaylistItems);
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
-        when(mockListPlaylistItems.setMaxResults(MAX_RESULTS)).thenReturn(mockListPlaylistItems);
+        when(mockListPlaylistItems.setMaxResults(YouTubeInfoScraper.MAX_PLAYLIST_RESULTS))
+                        .thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
 
         Videos mockVideos = mock(YouTube.Videos.class);
@@ -105,7 +105,7 @@ public final class YouTubeInfoScraperTest {
         mockListSearch = mock(Search.List.class);
         when(mockYouTubeClient.search()).thenReturn(mockSearch);
         when(mockSearch.list("snippet")).thenReturn(mockListSearch);
-        when(mockListSearch.setMaxResults(MAX_RESULTS)).thenReturn(mockListSearch);
+        when(mockListSearch.setMaxResults(YouTubeInfoScraper.MAX_SEARCH_RESULTS)).thenReturn(mockListSearch);
         when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
     
         scraper = new YouTubeInfoScraper(mockYouTubeClient);
@@ -292,8 +292,9 @@ public final class YouTubeInfoScraperTest {
                 + " with the code OVDOINGTHINGS25. This offer is valid online only. ";
         String description1 = snippet + "\nMust apply code at " + KEYWORD + " checkout. Expires August 31, 2020.";
         // One keyword two promo-codes found.
-        String description2 = "And if you want to order food through " + KEYWORD + " go to "
-                + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
+        String description2Truncated = "you want to order food through " + KEYWORD + " go to "
+                        + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
+        String description2 = "And if " + description2Truncated;
         String descriptionWithNoCode = KEYWORD + " is a great company!";
         testVideoResponse.setItems(Arrays.asList(
                 new Video().setId(VIDEO_ID)
@@ -308,7 +309,7 @@ public final class YouTubeInfoScraperTest {
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get(), equalTo(Arrays.asList(
                 PromoCode.create("OVDOINGTHINGS25", snippet, VIDEO_ID, VIDEO_TITLE, DATE),
-                PromoCode.create("A1JZN", description2, VIDEO_ID, VIDEO_TITLE, DATE),
+                PromoCode.create("A1JZN", "... " + description2Truncated, VIDEO_ID, VIDEO_TITLE, DATE),
                 PromoCode.create("https://pmfleet.app.link/zyoaw9s3R6", description2, VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 

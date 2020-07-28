@@ -1,6 +1,10 @@
 # PromoTube
 
-PromoTube is a webapp that allows users to easily find promo codes and affiliate links that go with their favorite creators or products.
+PromoTube is a browser-based web application which extracts promotional codes and affiliate links from YouTube video descriptions.
+
+## Background
+
+YouTube content creators receive external sponsorships from companies to advertise products to their subscribers. This often comes in the form of promo codes and affiliate links which are written in the description of their YouTube video. These provide discounts for their followers while also giving some proceeds back to the creator. Currently, there exists no way for viewers or consumers to easily aggregate these discount codes without manually searching through videos. By compiling the promotional codes from a specific content creator or company, users will be able to more easily support their favorite YouTubers while finding discounts for themselves.
 
 ## Getting Started
 
@@ -8,81 +12,70 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+This app requires Maven. To install Maven run
 
 ```
-run
 sudo apt install maven
 ```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+This app requires at least JDK 8. To install JDK 8 or higher run
 ```
-Give the example
+sudo apt install openjdk-8-jre-headless
 ```
-
-And repeat
-
+or
 ```
-until finished
+sudo apt install default-jdk 
 ```
+Note: These instructions are for Linux systems.
 
-End with an example of getting some data out of the system or using it for a little demo
+## Running Tests
 
-## Running the tests
+### Unit Testing
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+To run unit tests run
 ```
-Give an example
+mvn test
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
+To run end to end tests run
 ```
-Give an example
+mvn package appengine:run
 ```
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Prior to deploying the app, add a YouTube Data API key to YouTubeInfoScraper.java.
+To deploy the app on a server run
+
+```
+mvn package appengine:deploy
+```
+with the proper project ID in the pom.xml file.
+
+To deploy locally run
+```
+mvn package appengine:run
+```
+This will deploy the webapp on local host port 8081 at http://localhost:8081
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [BootStrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - The CSS framework used
+* [jQuery](https://api.jquery.com/) - Javascript Library
 * [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+* [YouTube Data API v3](https://developers.google.com/youtube/v3) - YouTube API
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Dante Allen** - [dallen68](https://github.com/dallen68)
+* **Margaret Chan** - [margaretchan](https://github.com/margaretchan)
+* **Josef Jankowski** - [josefj1519](https://github.com/josefj1519)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/dallen68/PromoTube/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the Apache 2 License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* We would like to thank our hosts [Sam Li](https://github.com/LiRq95) and [Derrill Dabkoski](https://github.com/derrillhd) who guided us through this process.
