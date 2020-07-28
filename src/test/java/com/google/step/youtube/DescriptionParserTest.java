@@ -180,7 +180,7 @@ public final class DescriptionParserTest {
                 + "at the top of the homepage, and type in ROOSTER to claim";
         String desc = truncatedSnippet + " your special offer).";
         assertThat(DescriptionParser.parse(desc), equalTo(Arrays.asList(
-                    OfferSnippet.create("http://stamps.com", truncatedSnippet + " ..."))));
+                OfferSnippet.create("http://stamps.com", truncatedSnippet + " ..."))));
     }
 
     @Test
