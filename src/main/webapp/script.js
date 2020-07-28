@@ -61,7 +61,7 @@ function resetForm(id) {
 }
 
 /**
- *  Display loading icon if it is not being displayed. Or hide the loading icon if it is displayed.
+ *  Display loading icon if it is being hidden. Or hide the loading icon if it is displayed.
  */
 function triggerLoading() {
     let loadingState = document.getElementById(loadingId).style.display;
