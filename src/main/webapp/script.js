@@ -67,3 +67,10 @@ function triggerLoading() {
     let loadingState = document.getElementById(loadingId).style.display;
     document.getElementById(loadingId).style.display = loadingState === "none" ? "inline-block" : "none";
 }
+
+function checkEnterKeytoSearch() {
+    // 13 is the "Enter" key on the keyboard.
+    if(event.keyCode === 13){
+        displayCodes();
+    }
+}
