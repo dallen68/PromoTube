@@ -9,6 +9,7 @@ async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
     let response;
+    // Display loading icon.
     triggerLoading();
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
@@ -16,6 +17,7 @@ async function displayCodes() {
        response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
+    // Hide loading icon.
     triggerLoading();
     setTable(codes);
 }
@@ -58,6 +60,9 @@ function resetForm(id) {
     $("#formInput").attr("placeholder", placeholder);
 }
 
+/**
+ *  Display loading icon if it is not being displayed. Or hide the loading icon if it is displayed.
+ */
 function triggerLoading() {
     let loadingState = document.getElementById(loadingId).style.display;
     document.getElementById(loadingId).style.display = loadingState === "none" ? "inline-block" : "none";
