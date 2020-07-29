@@ -5,6 +5,13 @@ const loadingId = "loadingIcon";
 const channelId = "channel";
 const noCodesNode = document.createTextNode("Sorry! We didn\'t find any codes.");
 
+function checkEnterKeytoSearch() {
+    // 13 is the "Enter" key on the keyboard.
+    if (event.keyCode === 13) {
+        displayCodes();
+    }
+}
+
 async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
     const selected = document.querySelector('input[name="searchOption"]:checked');
@@ -13,8 +20,8 @@ async function displayCodes() {
     triggerLoading();
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
-    } else { 
-       response = await fetch('/business/promo-codes?formInput=' + formInput);
+    } else {
+        response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
     // Hide loading icon.
@@ -66,11 +73,4 @@ function resetForm(id) {
 function triggerLoading() {
     let loadingState = document.getElementById(loadingId).style.display;
     document.getElementById(loadingId).style.display = loadingState === "none" ? "inline-block" : "none";
-}
-
-function checkEnterKeytoSearch() {
-    // 13 is the "Enter" key on the keyboard.
-    if(event.keyCode === 13){
-        displayCodes();
-    }
 }
