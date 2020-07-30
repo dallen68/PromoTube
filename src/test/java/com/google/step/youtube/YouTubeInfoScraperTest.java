@@ -1,17 +1,3 @@
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package com.google.step.youtube;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,7 +76,7 @@ public final class YouTubeInfoScraperTest {
         when(mockYouTubeClient.playlistItems()).thenReturn(mockPlaylistItems);
         when(mockPlaylistItems.list("snippet")).thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setMaxResults(YouTubeInfoScraper.MAX_PLAYLIST_RESULTS))
-                        .thenReturn(mockListPlaylistItems);
+            .thenReturn(mockListPlaylistItems);
         when(mockListPlaylistItems.setPlaylistId(anyString())).thenReturn(mockListPlaylistItems);
 
         Videos mockVideos = mock(YouTube.Videos.class);
@@ -99,7 +85,7 @@ public final class YouTubeInfoScraperTest {
         when(mockVideos.list("snippet")).thenReturn(mockListVideos);
         when(mockListVideos.setId(anyString())).thenReturn(mockListVideos);
         when(mockListVideos.setFields("items(id, snippet(publishedAt, title, description))"))
-                .thenReturn(mockListVideos);
+            .thenReturn(mockListVideos);
 
         Search mockSearch = mock(Search.class);
         mockListSearch = mock(Search.List.class);
@@ -124,7 +110,7 @@ public final class YouTubeInfoScraperTest {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
         channel.setContentDetails(
-                new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
+            new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
         testChannelResponse.setItems(Arrays.asList(channel));
         when(mockListChannels.execute()).thenReturn(testChannelResponse);
         Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
@@ -144,7 +130,7 @@ public final class YouTubeInfoScraperTest {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
         channel.setContentDetails(
-                new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
+            new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
         testChannelResponse.setItems(Arrays.asList(channel));
         when(mockListChannels.execute()).thenReturn(testChannelResponse);
         Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
@@ -181,14 +167,14 @@ public final class YouTubeInfoScraperTest {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         String description = "Get 20% off your first monthly box and enter the code RO at checkout!";
         testPlaylistResponse.setItems(Arrays.asList(new PlaylistItem()
-                .setSnippet(new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(DATE))
-                        .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+            .setSnippet(new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(DATE))
+            .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(),
-                equalTo(Arrays.asList(
-                        PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
-                                VIDEO_ID, VIDEO_TITLE, DATE))));
+            equalTo(Arrays.asList(
+                PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
+                    VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -206,35 +192,35 @@ public final class YouTubeInfoScraperTest {
         String description1 = "Get 20% off your first monthly box when you sign up at http://boxofawesome.com";
         String description2 = "Use code LINUS and get 25% off GlassWire";
         String descriptionWithNoCode = "Check out our UPDATED version which has all the NEW ELEMENTS here: "
-                + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
-                + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
+            + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
+            + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
         testPlaylistResponse.setItems(Arrays.asList(
-                new PlaylistItem().setSnippet(
-                        new PlaylistItemSnippet().setDescription(description1).setPublishedAt(new DateTime(DATE))
-                                .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
-                new PlaylistItem().setSnippet(
-                        new PlaylistItemSnippet().setDescription(description2).setPublishedAt(new DateTime(DATE))
-                                .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
-                new PlaylistItem().setSnippet(new PlaylistItemSnippet().setDescription(descriptionWithNoCode)
-                        .setPublishedAt(new DateTime(DATE)).setTitle(VIDEO_TITLE)
-                        .setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+            new PlaylistItem().setSnippet(
+                new PlaylistItemSnippet().setDescription(description1).setPublishedAt(new DateTime(DATE))
+                    .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
+            new PlaylistItem().setSnippet(
+                new PlaylistItemSnippet().setDescription(description2).setPublishedAt(new DateTime(DATE))
+                    .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID))),
+            new PlaylistItem().setSnippet(
+                new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE))
+                    .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(
-                PromoCode.create("http://boxofawesome.com",
-                        "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
-                PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, DATE))));
+            PromoCode.create("http://boxofawesome.com",
+                "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
+            PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
     public void scrapePromoCodesFromPlaylist_oneItemNoCodeFound() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         String descriptionWithNoCode = "Check out our UPDATED version which has all the NEW ELEMENTS here: "
-                + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
-                + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
+            + "\n https://youtu.be/rz4Dd1I_fX0  The TEETH Song (Memorize Every Tooth): https://youtu.be/PI3hne8C8rU"
+            + "\nDownload on ITUNES: http://bit.ly/12AeW99 ";
         testPlaylistResponse.setItems(Arrays.asList(new PlaylistItem().setSnippet(
-                new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE))
-                        .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
+            new PlaylistItemSnippet().setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE))
+                .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get().isEmpty(), equalTo(true));
@@ -269,7 +255,7 @@ public final class YouTubeInfoScraperTest {
     public void scrapeVideoIdsFromSearch_returnVideoIds() throws IOException {
         SearchListResponse testSearchResponse = new SearchListResponse();
         testSearchResponse.setItems(Arrays.asList(new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID)),
-                new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID))));
+            new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID))));
         when(mockListSearch.execute()).thenReturn(testSearchResponse);
         Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD);
         assertThat(actual.get(), equalTo(Arrays.asList(VIDEO_ID, VIDEO_ID)));
@@ -289,28 +275,29 @@ public final class YouTubeInfoScraperTest {
         VideoListResponse testVideoResponse = new VideoListResponse();
         // Two company names one promo-code found.
         String snippet = "DISCOUNT!!! For a limited time only, take 25% off your first purchase at " + KEYWORD
-                + " with the code OVDOINGTHINGS25. This offer is valid online only. ";
+            + " with the code OVDOINGTHINGS25. This offer is valid online only. ";
         String description1 = snippet + "\nMust apply code at " + KEYWORD + " checkout. Expires August 31, 2020.";
         // One keyword two promo-codes found.
         String description2Truncated = "you want to order food through " + KEYWORD + " go to "
-                        + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
+            + "https://pmfleet.app.link/zyoaw9s3R6 and use my code A1JZN";
         String description2 = "And if " + description2Truncated;
         String descriptionWithNoCode = KEYWORD + " is a great company!";
         testVideoResponse.setItems(Arrays.asList(
-                new Video().setId(VIDEO_ID)
-                        .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description1)
-                                .setPublishedAt(new DateTime(DATE))),
-                new Video().setId(VIDEO_ID)
-                        .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description2)
-                                .setPublishedAt(new DateTime(DATE))),
-                new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE)
-                        .setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
+            new Video().setId(VIDEO_ID)
+                .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description1)
+                .setPublishedAt(new DateTime(DATE))),
+            new Video().setId(VIDEO_ID)
+                .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(description2)
+                .setPublishedAt(new DateTime(DATE))),
+            new Video().setId(VIDEO_ID)
+                .setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode)
+                .setPublishedAt(new DateTime(DATE)))));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get(), equalTo(Arrays.asList(
-                PromoCode.create("OVDOINGTHINGS25", snippet, VIDEO_ID, VIDEO_TITLE, DATE),
-                PromoCode.create("A1JZN", "... " + description2Truncated, VIDEO_ID, VIDEO_TITLE, DATE),
-                PromoCode.create("https://pmfleet.app.link/zyoaw9s3R6", description2, VIDEO_ID, VIDEO_TITLE, DATE))));
+            PromoCode.create("OVDOINGTHINGS25", snippet, VIDEO_ID, VIDEO_TITLE, DATE),
+            PromoCode.create("A1JZN", "... " + description2Truncated, VIDEO_ID, VIDEO_TITLE, DATE),
+            PromoCode.create("https://pmfleet.app.link/zyoaw9s3R6", description2, VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -318,7 +305,7 @@ public final class YouTubeInfoScraperTest {
         VideoListResponse testVideoResponse = new VideoListResponse();
         String descriptionWithNoCode = KEYWORD + " is a great company!";
         testVideoResponse.setItems(Arrays.asList(new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet()
-                .setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
+            .setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get().isEmpty(), equalTo(true));
