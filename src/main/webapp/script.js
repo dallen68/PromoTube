@@ -3,7 +3,14 @@ const channelPlaceholder = "Enter a Channel's URL";
 const businessPlaceholder = "Enter a Business's Name";
 const loadingId = "loadingIcon";
 const channelId = "channel";
+const ENTER_KEY_CODE = 13;
 const noCodesNode = document.createTextNode("Sorry! We didn\'t find any codes.");
+
+function checkEnterKeytoSearch() {
+    if (event.keyCode === ENTER_KEY_CODE) {
+        $("#submitButton").click();
+    }
+}
 
 async function displayCodes() {
     let formInput = document.getElementById('formInput').value;
@@ -13,8 +20,8 @@ async function displayCodes() {
     triggerLoading();
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
-    } else { 
-       response = await fetch('/business/promo-codes?formInput=' + formInput);
+    } else {
+        response = await fetch('/business/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
     // Hide loading icon.
