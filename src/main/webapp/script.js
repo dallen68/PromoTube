@@ -3,12 +3,12 @@ const channelPlaceholder = "Enter a Channel's URL";
 const businessPlaceholder = "Enter a Business's Name";
 const loadingId = "loadingIcon";
 const channelId = "channel";
+const ENTER_KEY_CODE = 13;
 const noCodesNode = document.createTextNode("Sorry! We didn\'t find any codes.");
 
 function checkEnterKeytoSearch() {
-    // 13 is the "Enter" key on the keyboard.
-    if (event.keyCode === 13) {
-        displayCodes();
+    if (event.keyCode === ENTER_KEY_CODE) {
+        $("#submitButton").click();
     }
 }
 
