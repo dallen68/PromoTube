@@ -94,8 +94,11 @@ public final class BusinessPromoCodeServletTest {
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeVideoIdsFromSearch(BUSINESS_NAME)).thenReturn(Optional.of(VIDEO_IDS));
-        when(infoScraper.scrapePromoCodesFromVideos(BUSINESS_NAME, VIDEO_IDS)).thenReturn(
-                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
+        when(infoScraper.scrapePromoCodesFromVideos(BUSINESS_NAME, VIDEO_IDS))
+        .thenReturn(Optional.of(Arrays.asList(
+            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
+        )));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 

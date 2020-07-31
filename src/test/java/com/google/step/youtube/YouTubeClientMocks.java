@@ -103,7 +103,8 @@ public class YouTubeClientMocks {
     }
 
     public static PromoCode newPromoCode(String description) {
-        return PromoCode.create(PROMOCODE, description, VIDEO_ID, VIDEO_TITLE, DATE);
+        return PromoCode.builder().setPromoCode(PROMOCODE).setSnippet(description).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build();
     }
 
     public static ChannelListResponse newBasicChannelResponse() {

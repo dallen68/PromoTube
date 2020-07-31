@@ -202,4 +202,5 @@ public final class YouTubeInfoScraperTest {
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get().isEmpty(), equalTo(true));
     }
+
 }
