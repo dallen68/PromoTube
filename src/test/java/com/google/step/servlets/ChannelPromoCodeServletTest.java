@@ -84,8 +84,11 @@ public final class ChannelPromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
 
-        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(
-                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
+        .thenReturn(Optional.of(Arrays.asList(
+            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
+        )));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
@@ -103,8 +106,11 @@ public final class ChannelPromoCodeServletTest {
 
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeUserUploadPlaylist(USERNAME)).thenReturn(Optional.of(UPLOAD_ID));
-        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID)).thenReturn(
-                Optional.of(Arrays.asList(PromoCode.create(CHANNEL_NAME, SNIPPET, VIDEO_ID, VIDEO_TITLE, DATE))));
+        when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
+        .thenReturn(Optional.of(Arrays.asList(
+            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
+        )));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 

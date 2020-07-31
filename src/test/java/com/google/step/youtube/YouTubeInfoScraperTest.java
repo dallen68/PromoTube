@@ -2,7 +2,6 @@ package com.google.step.youtube;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
@@ -171,10 +170,9 @@ public final class YouTubeInfoScraperTest {
             .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)))));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(),
-            equalTo(Arrays.asList(
-                PromoCode.create("RO", "Get 20% off your first monthly box and enter the code RO at checkout!",
-                    VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(), equalTo(Arrays.asList(
+            PromoCode.builder().setPromoCode("RO").setSnippet(description).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
     }
 
     @Test
@@ -207,9 +205,10 @@ public final class YouTubeInfoScraperTest {
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(
-            PromoCode.create("http://boxofawesome.com",
-                "Get 20% off your first monthly box when you sign up at http://boxofawesome.com", VIDEO_ID, VIDEO_TITLE, DATE),
-            PromoCode.create("LINUS", "Use code LINUS and get 25% off GlassWire", VIDEO_ID, VIDEO_TITLE, DATE))));
+            PromoCode.builder().setPromoCode("http://boxofawesome.com").setSnippet(description1)
+                .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build(),
+            PromoCode.builder().setPromoCode("LINUS").setSnippet(description2).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
     }
 
     @Test
@@ -295,9 +294,12 @@ public final class YouTubeInfoScraperTest {
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get(), equalTo(Arrays.asList(
-            PromoCode.create("OVDOINGTHINGS25", snippet, VIDEO_ID, VIDEO_TITLE, DATE),
-            PromoCode.create("A1JZN", "... " + description2Truncated, VIDEO_ID, VIDEO_TITLE, DATE),
-            PromoCode.create("https://pmfleet.app.link/zyoaw9s3R6", description2, VIDEO_ID, VIDEO_TITLE, DATE))));
+            PromoCode.builder().setPromoCode("OVDOINGTHINGS25").setSnippet(snippet).setVideoId(VIDEO_ID)
+                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build(),
+            PromoCode.builder().setPromoCode("A1JZN").setSnippet("... " + description2Truncated)
+                .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build(),
+            PromoCode.builder().setPromoCode("https://pmfleet.app.link/zyoaw9s3R6").setSnippet(description2)
+                .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
     }
 
     @Test
@@ -305,9 +307,10 @@ public final class YouTubeInfoScraperTest {
         VideoListResponse testVideoResponse = new VideoListResponse();
         String descriptionWithNoCode = KEYWORD + " is a great company!";
         testVideoResponse.setItems(Arrays.asList(new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet()
-            .setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
+                .setTitle(VIDEO_TITLE).setDescription(descriptionWithNoCode).setPublishedAt(new DateTime(DATE)))));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get().isEmpty(), equalTo(true));
     }
+
 }

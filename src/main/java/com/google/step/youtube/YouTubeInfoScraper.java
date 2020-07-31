@@ -88,8 +88,10 @@ public class YouTubeInfoScraper {
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parse(snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
                 promoCodes.add(
-                        PromoCode.create(offer.getPromoCode(), offer.getSnippet(), snippet.getResourceId().getVideoId(),
-                                snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
+                    PromoCode.builder().setPromoCode(offer.getPromoCode()).setSnippet(offer.getSnippet())
+                        .setVideoId(snippet.getResourceId().getVideoId()).setVideoTitle(snippet.getTitle())
+                        .setVideoUploadDate(new Date(snippet.getPublishedAt().getValue())).build()
+                );
             }
         }
         return Optional.of(promoCodes);
@@ -129,8 +131,11 @@ public class YouTubeInfoScraper {
             VideoSnippet snippet = video.getSnippet();
             List<OfferSnippet> itemOfferSnippets = DescriptionParser.parseByCompany(keyword, snippet.getDescription());
             for (OfferSnippet offer : itemOfferSnippets) {
-                promoCodes.add(PromoCode.create(offer.getPromoCode(), offer.getSnippet(), video.getId(),
-                        snippet.getTitle(), new Date(snippet.getPublishedAt().getValue())));
+                promoCodes.add(
+                    PromoCode.builder().setPromoCode(offer.getPromoCode()).setSnippet(offer.getSnippet())
+                        .setVideoId(video.getId()).setVideoTitle(snippet.getTitle())
+                        .setVideoUploadDate(new Date(snippet.getPublishedAt().getValue())).build()
+                );
             }
         }
         return Optional.of(promoCodes);
