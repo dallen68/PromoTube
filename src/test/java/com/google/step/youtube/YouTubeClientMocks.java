@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-public class YouTubeClientBuilder {
+public class YouTubeClientMocks {
 
     private static Channels.List mockListChannels;
     private static Videos.List mockListVideos;
