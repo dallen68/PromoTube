@@ -1,17 +1,3 @@
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package com.google.step.youtube;
 
 import static com.google.step.youtube.YouTubeClientBuilder.PROMOCODE_DESCRIPTION;
@@ -136,9 +122,8 @@ public final class YouTubeInfoScraperTest {
         PlaylistItemListResponse testPlaylistResponse = ytClientBuilder.newBasicPlaylistResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(),
-                equalTo(Arrays.asList( PromoCode.create(PROMOCODE, PROMOCODE_DESCRIPTION,
-                        VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(), equalTo(
+                Arrays.asList(PromoCode.create(PROMOCODE, PROMOCODE_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
@@ -154,11 +139,12 @@ public final class YouTubeInfoScraperTest {
     public void scrapePromoCodesFromPlaylist_multipleItemsSomeCodesFound() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         testPlaylistResponse.setItems(Arrays.asList(ytClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
-        ytClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION), ytClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
+                ytClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
+                ytClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(), 
-                YouTubeClientBuilder.newPromoCode())));
+        assertThat(actual.get(),
+                equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(), YouTubeClientBuilder.newPromoCode())));
     }
 
     @Test
@@ -214,15 +200,14 @@ public final class YouTubeInfoScraperTest {
     @Test
     public void scrapePromoCodesFromVideos_multipleItemsSomeCodesFound() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
-        testVideoResponse.setItems(Arrays.asList(
-            ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
-            ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
-            ytClientBuilder.newBasicVideoResponse(DESCRIPTION)));
+        testVideoResponse.setItems(Arrays.asList(ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
+                ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
+                ytClientBuilder.newBasicVideoResponse(DESCRIPTION)));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
-        assertThat(actual.get(), equalTo(Arrays.asList(
-                PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE),
-                PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(),
+                equalTo(Arrays.asList(PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE),
+                        PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE))));
     }
 
     @Test
