@@ -106,10 +106,8 @@ public class YouTubeClientBuilder {
 
     public static ChannelListResponse newBasicChannelResponse() {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
-        Channel channel = new Channel();
-        channel.setContentDetails(
-                new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)));
-        testChannelResponse.setItems(Arrays.asList(channel));
+        testChannelResponse.setItems(Arrays.asList(new Channel().setContentDetails(
+                new ChannelContentDetails().setRelatedPlaylists(new RelatedPlaylists().setUploads(UPLOAD_ID)))));
         return testChannelResponse;
     }
 
