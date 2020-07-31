@@ -29,11 +29,11 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class YouTubeClientMocks {
-
-    private static Channels.List mockListChannels;
-    private static Videos.List mockListVideos;
-    private static Search.List mockListSearch;
-    private static PlaylistItems.List mockListPlaylistItems;
+    private YouTube mockYouTubeClient;
+    private Channels.List mockListChannels;
+    private Videos.List mockListVideos;
+    private Search.List mockListSearch;
+    private PlaylistItems.List mockListPlaylistItems;
 
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
@@ -48,8 +48,8 @@ public class YouTubeClientMocks {
     public static final String KEYWORD_DESCRIPTION = "Get 25% off your first purchase at " + KEYWORD + " with the code "
             + PROMOCODE;
 
-    public static YouTube create() throws IOException {
-        YouTube mockYouTubeClient = mock(YouTube.class);
+    YouTubeClientMocks() throws IOException {
+        mockYouTubeClient = mock(YouTube.class);
 
         Channels mockChannels = mock(YouTube.Channels.class);
         mockListChannels = mock(YouTube.Channels.List.class);
@@ -80,28 +80,30 @@ public class YouTubeClientMocks {
         when(mockSearch.list("snippet")).thenReturn(mockListSearch);
         when(mockListSearch.setMaxResults(YouTubeInfoScraper.MAX_SEARCH_RESULTS)).thenReturn(mockListSearch);
         when(mockListSearch.setQ(anyString())).thenReturn(mockListSearch);
+    }
 
+    public YouTube getYouTubeMock() {
         return mockYouTubeClient;
+    }
+
+    public Channels.List getMockListChannels() {
+        return mockListChannels;
+    }
+
+    public PlaylistItems.List getMockListPlaylistItems() {
+        return mockListPlaylistItems;
+    }
+
+    public Videos.List getMockListVideos() {
+        return mockListVideos;
+    }
+
+    public Search.List getMockListSearch() {
+        return mockListSearch;
     }
 
     public static PromoCode newPromoCode(String description) {
         return PromoCode.create(PROMOCODE, description, VIDEO_ID, VIDEO_TITLE, DATE);
-    }
-
-    public static Channels.List getMockListChannels() {
-        return mockListChannels;
-    }
-
-    public static PlaylistItems.List getMockListPlaylistItems() {
-        return mockListPlaylistItems;
-    }
-
-    public static Videos.List getMockListVideos() {
-        return mockListVideos;
-    }
-
-    public static Search.List getMockListSearch() {
-        return mockListSearch;
     }
 
     public static ChannelListResponse newBasicChannelResponse() {

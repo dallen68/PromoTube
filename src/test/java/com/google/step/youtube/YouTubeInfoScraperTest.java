@@ -51,11 +51,12 @@ public final class YouTubeInfoScraperTest {
 
     @Before
     public void setUp() throws IOException {
-        scraper = new YouTubeInfoScraper(YouTubeClientMocks.create());
-        mockListChannels = YouTubeClientMocks.getMockListChannels();
-        mockListPlaylistItems = YouTubeClientMocks.getMockListPlaylistItems();
-        mockListVideos = YouTubeClientMocks.getMockListVideos();
-        mockListSearch = YouTubeClientMocks.getMockListSearch();
+        YouTubeClientMocks ytMock = new YouTubeClientMocks();
+        scraper = new YouTubeInfoScraper(ytMock.getYouTubeMock());
+        mockListChannels = ytMock.getMockListChannels();
+        mockListPlaylistItems = ytMock.getMockListPlaylistItems();
+        mockListVideos = ytMock.getMockListVideos();
+        mockListSearch = ytMock.getMockListSearch();
     }
 
     @Test
