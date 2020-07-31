@@ -87,7 +87,7 @@ public class YouTubeClientBuilder {
     public static PromoCode newPromoCode() {
         return PromoCode.create(PROMOCODE, PROMOCODE_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE);
     }
-    
+
     public Channels.List getMockListChannels() {
         return mockListChannels;
     }
