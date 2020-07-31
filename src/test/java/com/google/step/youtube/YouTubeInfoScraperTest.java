@@ -47,11 +47,9 @@ public final class YouTubeInfoScraperTest {
     private static final String USERNAME = "USERNAME";
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
-    private static final String VIDEO_TITLE = "VIDEO_TITLE";
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
     private static final List<String> EMPTY_VIDEO_ID_LIST = Arrays.asList();
     private static final List<String> VIDEO_ID_LIST = Arrays.asList();
-    private static final Date DATE = new Date(0L);
 
     @Before
     public void setUp() throws IOException {
@@ -122,8 +120,7 @@ public final class YouTubeInfoScraperTest {
         PlaylistItemListResponse testPlaylistResponse = ytClientBuilder.newBasicPlaylistResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(), equalTo(
-                Arrays.asList(PromoCode.create(PROMOCODE, PROMOCODE_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(PROMOCODE_DESCRIPTION))));
     }
 
     @Test
@@ -143,8 +140,8 @@ public final class YouTubeInfoScraperTest {
                 ytClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
-        assertThat(actual.get(),
-                equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(), YouTubeClientBuilder.newPromoCode())));
+        assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(PROMOCODE_DESCRIPTION),
+                YouTubeClientBuilder.newPromoCode(PROMOCODE_DESCRIPTION))));
     }
 
     @Test
@@ -205,9 +202,8 @@ public final class YouTubeInfoScraperTest {
                 ytClientBuilder.newBasicVideoResponse(DESCRIPTION)));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
-        assertThat(actual.get(),
-                equalTo(Arrays.asList(PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE),
-                        PromoCode.create(PROMOCODE, KEYWORD_DESCRIPTION, VIDEO_ID, VIDEO_TITLE, DATE))));
+        assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(KEYWORD_DESCRIPTION),
+                YouTubeClientBuilder.newPromoCode(KEYWORD_DESCRIPTION))));
     }
 
     @Test
