@@ -29,7 +29,7 @@ public class DescriptionParser {
         TO_AT_LINKS(Pattern.compile("(?<=\\b(?i)(to|at)(?s).{1,2})(https*:\\/\\/)[^\\s,\\)]+")),
         SYMBOL_NEAR_LINK(Pattern.compile(
                 // check for link with $[0-9] or [0-9]% symbol <=100 chars before it
-                  "((?<=(([0-9]%)|(\\$[0-9])).{1,100})(https*:\\/\\/)[^\\s,\\)]+)|"
+                "((?<=(([0-9]%)|(\\$[0-9])).{1,100})(https*:\\/\\/)[^\\s,\\)]+)|"
                 // check for link with $[0-9] or [0-9]% symbol <=100 chars after it
                 + "(((https*:\\/\\/)[^\\s,\\)]+)(?=.{1,100}(([0-9]%)|(\\$[0-9]))))"));
 
