@@ -32,7 +32,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public final class YouTubeInfoScraperTest {
 
-    private YouTubeClientBuilder ytClientBuilder;
     private YouTubeInfoScraper scraper;
     private Channels.List mockListChannels;
     private Videos.List mockListVideos;
@@ -53,12 +52,11 @@ public final class YouTubeInfoScraperTest {
 
     @Before
     public void setUp() throws IOException {
-        ytClientBuilder = new YouTubeClientBuilder();
         scraper = new YouTubeInfoScraper(YouTubeClientBuilder.create());
-        mockListChannels = ytClientBuilder.getMockListChannels();
-        mockListPlaylistItems = ytClientBuilder.getMockListPlaylistItems();
-        mockListVideos = ytClientBuilder.getMockListVideos();
-        mockListSearch = ytClientBuilder.getMockListSearch();
+        mockListChannels = YouTubeClientBuilder.getMockListChannels();
+        mockListPlaylistItems = YouTubeClientBuilder.getMockListPlaylistItems();
+        mockListVideos = YouTubeClientBuilder.getMockListVideos();
+        mockListSearch = YouTubeClientBuilder.getMockListSearch();
     }
 
     @Test
@@ -71,7 +69,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapeChannelUploadPlaylist_channelExists() throws IOException {
-        when(mockListChannels.execute()).thenReturn(ytClientBuilder.newBasicChannelResponse());
+        when(mockListChannels.execute()).thenReturn(YouTubeClientBuilder.newBasicChannelResponse());
         Optional<String> actual = scraper.scrapeChannelUploadPlaylist(CHANNEL_ID);
         assertThat(actual.get(), equalTo(UPLOAD_ID));
     }
@@ -86,7 +84,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapeUserUploadPlaylist_userExists() throws IOException {
-        when(mockListChannels.execute()).thenReturn(ytClientBuilder.newBasicChannelResponse());
+        when(mockListChannels.execute()).thenReturn(YouTubeClientBuilder.newBasicChannelResponse());
         Optional<String> actual = scraper.scrapeUserUploadPlaylist(USERNAME);
         assertThat(actual.get(), equalTo(UPLOAD_ID));
     }
@@ -101,7 +99,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapePlaylistItems_uploadIdExists() throws IOException {
-        PlaylistItemListResponse testPlaylistResponse = ytClientBuilder.newBasicPlaylistResponse();
+        PlaylistItemListResponse testPlaylistResponse = YouTubeClientBuilder.newBasicPlaylistResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PlaylistItem>> actual = scraper.scrapePlaylistItems(UPLOAD_ID);
         assertThat(actual.get(), equalTo(testPlaylistResponse.getItems()));
@@ -117,7 +115,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapePromoCodesFromPlaylist_oneItem() throws IOException {
-        PlaylistItemListResponse testPlaylistResponse = ytClientBuilder.newBasicPlaylistResponse();
+        PlaylistItemListResponse testPlaylistResponse = YouTubeClientBuilder.newBasicPlaylistResponse();
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(PROMOCODE_DESCRIPTION))));
@@ -135,9 +133,9 @@ public final class YouTubeInfoScraperTest {
     @Test
     public void scrapePromoCodesFromPlaylist_multipleItemsSomeCodesFound() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
-        testPlaylistResponse.setItems(Arrays.asList(ytClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
-                ytClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
-                ytClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
+        testPlaylistResponse.setItems(Arrays.asList(YouTubeClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
+                YouTubeClientBuilder.newBasicPlaylistItem(PROMOCODE_DESCRIPTION),
+                YouTubeClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(PROMOCODE_DESCRIPTION),
@@ -147,7 +145,7 @@ public final class YouTubeInfoScraperTest {
     @Test
     public void scrapePromoCodesFromPlaylist_oneItemNoCodeFound() throws IOException {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
-        testPlaylistResponse.setItems(Arrays.asList(ytClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
+        testPlaylistResponse.setItems(Arrays.asList(YouTubeClientBuilder.newBasicPlaylistItem(DESCRIPTION)));
         when(mockListPlaylistItems.execute()).thenReturn(testPlaylistResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromPlaylist(UPLOAD_ID);
         assertThat(actual.get().isEmpty(), equalTo(true));
@@ -163,7 +161,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapeVideoInformation_validRequest() throws IOException {
-        VideoListResponse testVideoResponse = ytClientBuilder.newBasicVideoListResponse();
+        VideoListResponse testVideoResponse = YouTubeClientBuilder.newBasicVideoListResponse();
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<Video>> actual = scraper.scrapeVideoInformation(Arrays.asList(VIDEO_ID, VIDEO_ID));
         assertThat(actual.get(), equalTo(Arrays.asList(new Video(), new Video())));
@@ -179,7 +177,7 @@ public final class YouTubeInfoScraperTest {
 
     @Test
     public void scrapeVideoIdsFromSearch_returnVideoIds() throws IOException {
-        SearchListResponse testSearchResponse = ytClientBuilder.newBaSearchListResponse();
+        SearchListResponse testSearchResponse = YouTubeClientBuilder.newBaSearchListResponse();
         when(mockListSearch.execute()).thenReturn(testSearchResponse);
         Optional<List<String>> actual = scraper.scrapeVideoIdsFromSearch(KEYWORD);
         assertThat(actual.get(), equalTo(Arrays.asList(VIDEO_ID, VIDEO_ID)));
@@ -197,9 +195,9 @@ public final class YouTubeInfoScraperTest {
     @Test
     public void scrapePromoCodesFromVideos_multipleItemsSomeCodesFound() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
-        testVideoResponse.setItems(Arrays.asList(ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
-                ytClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
-                ytClientBuilder.newBasicVideoResponse(DESCRIPTION)));
+        testVideoResponse.setItems(Arrays.asList(YouTubeClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
+                YouTubeClientBuilder.newBasicVideoResponse(KEYWORD_DESCRIPTION),
+                YouTubeClientBuilder.newBasicVideoResponse(DESCRIPTION)));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get(), equalTo(Arrays.asList(YouTubeClientBuilder.newPromoCode(KEYWORD_DESCRIPTION),
@@ -210,7 +208,7 @@ public final class YouTubeInfoScraperTest {
     public void scrapePromoCodesFromVideos_oneItemNoCodesFound() throws IOException {
         VideoListResponse testVideoResponse = new VideoListResponse();
         String descriptionWithNoCode = KEYWORD + " is a great company!";
-        testVideoResponse.setItems(Arrays.asList(ytClientBuilder.newBasicVideoResponse(descriptionWithNoCode)));
+        testVideoResponse.setItems(Arrays.asList(YouTubeClientBuilder.newBasicVideoResponse(descriptionWithNoCode)));
         when(mockListVideos.execute()).thenReturn(testVideoResponse);
         Optional<List<PromoCode>> actual = scraper.scrapePromoCodesFromVideos(KEYWORD, VIDEO_ID_LIST);
         assertThat(actual.get().isEmpty(), equalTo(true));

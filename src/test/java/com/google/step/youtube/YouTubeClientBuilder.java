@@ -88,23 +88,23 @@ public class YouTubeClientBuilder {
         return PromoCode.create(PROMOCODE, description, VIDEO_ID, VIDEO_TITLE, DATE);
     }
 
-    public Channels.List getMockListChannels() {
+    public static Channels.List getMockListChannels() {
         return mockListChannels;
     }
 
-    public PlaylistItems.List getMockListPlaylistItems() {
+    public static PlaylistItems.List getMockListPlaylistItems() {
         return mockListPlaylistItems;
     }
 
-    public Videos.List getMockListVideos() {
+    public static Videos.List getMockListVideos() {
         return mockListVideos;
     }
 
-    public Search.List getMockListSearch() {
+    public static Search.List getMockListSearch() {
         return mockListSearch;
     }
 
-    public ChannelListResponse newBasicChannelResponse() {
+    public static ChannelListResponse newBasicChannelResponse() {
         ChannelListResponse testChannelResponse = new ChannelListResponse();
         Channel channel = new Channel();
         channel.setContentDetails(
@@ -113,36 +113,36 @@ public class YouTubeClientBuilder {
         return testChannelResponse;
     }
 
-    public PlaylistItemListResponse newBasicPlaylistResponse() {
+    public static PlaylistItemListResponse newBasicPlaylistResponse() {
         PlaylistItemListResponse testPlaylistResponse = new PlaylistItemListResponse();
         testPlaylistResponse.setItems(Arrays.asList(newBasicPlaylistItem(PROMOCODE_DESCRIPTION)));
         return testPlaylistResponse;
     }
 
-    public PlaylistItem newBasicPlaylistItem(String description) {
+    public static PlaylistItem newBasicPlaylistItem(String description) {
         return new PlaylistItem()
                 .setSnippet(new PlaylistItemSnippet().setDescription(description).setPublishedAt(new DateTime(DATE))
                         .setTitle(VIDEO_TITLE).setResourceId(new ResourceId().setVideoId(VIDEO_ID)));
     }
 
-    public VideoListResponse newBasicVideoListResponse() {
+    public static VideoListResponse newBasicVideoListResponse() {
         VideoListResponse testVideoResponse = new VideoListResponse();
         testVideoResponse.setItems(Arrays.asList(new Video(), new Video()));
         return testVideoResponse;
     }
 
-    public Video newBasicVideoResponse(String description) {
+    public static Video newBasicVideoResponse(String description) {
         return new Video().setId(VIDEO_ID).setSnippet(new VideoSnippet().setTitle(VIDEO_TITLE)
                 .setDescription(description).setPublishedAt(new DateTime(DATE)));
     }
 
-    public SearchListResponse newBaSearchListResponse() {
+    public static SearchListResponse newBaSearchListResponse() {
         SearchListResponse testSearchResponse = new SearchListResponse();
         testSearchResponse.setItems(Arrays.asList(newBasicSearchResult(), newBasicSearchResult()));
         return testSearchResponse;
     }
 
-    public SearchResult newBasicSearchResult() {
+    public static SearchResult newBasicSearchResult() {
         return new SearchResult().setId(new ResourceId().setVideoId(VIDEO_ID));
     }
 }
