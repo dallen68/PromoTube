@@ -18,6 +18,7 @@ import com.google.api.services.youtube.YouTube.PlaylistItems;
 import com.google.api.services.youtube.YouTube.Videos;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.YouTube.Search;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.mockito.runners.MockitoJUnitRunner;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public final class YouTubeInfoScraperTest {
@@ -46,12 +48,12 @@ public final class YouTubeInfoScraperTest {
     private static final String UPLOAD_ID = "UPLOAD_ID";
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String NO_RESULTS_KEYWORD = "NO_RESULTS_KEYWORD";
-    private static final List<String> EMPTY_VIDEO_ID_LIST = Collections.emptyList();
-    private static final List<String> VIDEO_ID_LIST = Collections.emptyList();
+    private static final List<String> EMPTY_VIDEO_ID_LIST = ImmutableList.of();
+    private static final List<String> VIDEO_ID_LIST = ImmutableList.of();
 
     @Before
     public void setUp() throws IOException {
-        YouTubeClientMocks ytMock = new YouTubeClientMocks();
+        YouTubeClientMockBuilder ytMock = new YouTubeClientMockBuilder();
         scraper = new YouTubeInfoScraper(ytMock.getYouTubeMock());
         mockListChannels = ytMock.getMockListChannels();
         mockListPlaylistItems = ytMock.getMockListPlaylistItems();
