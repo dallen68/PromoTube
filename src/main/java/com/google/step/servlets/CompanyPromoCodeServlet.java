@@ -15,19 +15,19 @@ import com.google.gson.Gson;
 import com.google.step.youtube.PromoCode;
 import com.google.step.youtube.YouTubeInfoScraper;
 
-@WebServlet("/business/promo-codes")
-public class BusinessPromoCodeServlet extends HttpServlet {
+@WebServlet("/company/promo-codes")
+public class CompanyPromoCodeServlet extends HttpServlet {
 
     private YouTubeInfoScraper infoScraper;
 
     @VisibleForTesting
     final String REQUEST_PARAMETER = "formInput";
 
-    public BusinessPromoCodeServlet(YouTubeInfoScraper infoScraper) {
+    public CompanyPromoCodeServlet(YouTubeInfoScraper infoScraper) {
         this.infoScraper = infoScraper;
     }
 
-    public BusinessPromoCodeServlet() {
+    public CompanyPromoCodeServlet() {
         init();
     }
 
