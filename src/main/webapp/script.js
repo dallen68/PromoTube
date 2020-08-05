@@ -1,6 +1,6 @@
 
 const channelPlaceholder = "Enter a Channel's URL";
-const businessPlaceholder = "Enter a Business's Name";
+const companyPlaceholder = "Enter a Company's Name";
 const loadingId = "loadingIcon";
 const channelId = "channel";
 const ENTER_KEY_CODE = 13;
@@ -21,7 +21,7 @@ async function displayCodes() {
     if (selected.id === "channel") {
         response = await fetch('/channel/promo-codes?formInput=' + formInput);
     } else {
-        response = await fetch('/business/promo-codes?formInput=' + formInput);
+        response = await fetch('/company/promo-codes?formInput=' + formInput);
     }
     const codes = await response.json();
     // Hide loading icon.
@@ -63,7 +63,7 @@ function boldSubstring(str, substr) {
 
 function resetForm(id) {
     $("#formInput").val("");
-    const placeholder = id === channelId ? channelPlaceholder : businessPlaceholder;
+    const placeholder = id === channelId ? channelPlaceholder : companyPlaceholder;
     $("#formInput").attr("placeholder", placeholder);
 }
 

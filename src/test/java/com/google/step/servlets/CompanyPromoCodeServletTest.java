@@ -28,12 +28,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.Mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public final class BusinessPromoCodeServletTest {
+public final class CompanyPromoCodeServletTest {
 
-    private BusinessPromoCodeServlet servlet;
+    private CompanyPromoCodeServlet servlet;
 
-    private static final String NO_IDS_BUSINESS_NAME = "NO_IDS_BUSINESS_NAME";
-    private static final String BUSINESS_NAME = "BUSINESS_NAME";
+    private static final String NO_IDS_COMPANY_NAME = "NO_IDS_COMPANY_NAME";
+    private static final String COMPANY_NAME = "COMPANY_NAME";
     private static final List<String> VIDEO_IDS = ImmutableList.of("VIDEO_ID");
     private static final String VIDEO_ID = "VIDEO_ID";
     private static final String VIDEO_TITLE = "VIDEO_TITLE";
@@ -56,17 +56,17 @@ public final class BusinessPromoCodeServletTest {
     @Before
     public void setup() throws IOException {
         infoScraper = mock(YouTubeInfoScraper.class);
-        servlet = new BusinessPromoCodeServlet(infoScraper);
+        servlet = new CompanyPromoCodeServlet(infoScraper);
         sw = new StringWriter();
         pw = new PrintWriter(sw);
     }
 
     @Test
     public void noVideoIds() throws IOException {
-        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(NO_IDS_BUSINESS_NAME);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(NO_IDS_COMPANY_NAME);
 
         when(response.getWriter()).thenReturn(pw);
-        when(infoScraper.scrapeVideoIdsFromSearch(NO_IDS_BUSINESS_NAME)).thenReturn(Optional.empty());
+        when(infoScraper.scrapeVideoIdsFromSearch(NO_IDS_COMPANY_NAME)).thenReturn(Optional.empty());
 
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
@@ -76,11 +76,11 @@ public final class BusinessPromoCodeServletTest {
 
     @Test
     public void noPromoCodesFromVideos() throws IOException {
-        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(BUSINESS_NAME);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(COMPANY_NAME);
 
         when(response.getWriter()).thenReturn(pw);
-        when(infoScraper.scrapeVideoIdsFromSearch(BUSINESS_NAME)).thenReturn(Optional.of(VIDEO_IDS));
-        when(infoScraper.scrapePromoCodesFromVideos(BUSINESS_NAME, VIDEO_IDS)).thenReturn(Optional.empty());
+        when(infoScraper.scrapeVideoIdsFromSearch(COMPANY_NAME)).thenReturn(Optional.of(VIDEO_IDS));
+        when(infoScraper.scrapePromoCodesFromVideos(COMPANY_NAME, VIDEO_IDS)).thenReturn(Optional.empty());
 
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
@@ -90,11 +90,11 @@ public final class BusinessPromoCodeServletTest {
 
     @Test
     public void promoCodesScrapedFromNonEmptyVideos() throws IOException {
-        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(BUSINESS_NAME);
+        when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(COMPANY_NAME);
 
         when(response.getWriter()).thenReturn(pw);
-        when(infoScraper.scrapeVideoIdsFromSearch(BUSINESS_NAME)).thenReturn(Optional.of(VIDEO_IDS));
-        when(infoScraper.scrapePromoCodesFromVideos(BUSINESS_NAME, VIDEO_IDS))
+        when(infoScraper.scrapeVideoIdsFromSearch(COMPANY_NAME)).thenReturn(Optional.of(VIDEO_IDS));
+        when(infoScraper.scrapePromoCodesFromVideos(COMPANY_NAME, VIDEO_IDS))
         .thenReturn(Optional.of(Arrays.asList(
             PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
                 .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
@@ -108,7 +108,7 @@ public final class BusinessPromoCodeServletTest {
     }
 
     @Test
-    public void businessRequestThrowsException() throws IOException {
+    public void companyRequestThrowsException() throws IOException {
         when(request.getParameter(servlet.REQUEST_PARAMETER)).thenReturn(IOEXCEPTION_CHANNEL_ID);
 
         when(response.getWriter()).thenReturn(pw);
