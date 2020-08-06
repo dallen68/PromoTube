@@ -74,3 +74,9 @@ function triggerLoading() {
     let loadingState = document.getElementById(loadingId).style.display;
     document.getElementById(loadingId).style.display = loadingState === "none" ? "inline-block" : "none";
 }
+
+function onSubmit(token) {
+    // Submits reCAPTCHA
+    document.getElementById("submitButton").submit();
+}
+  

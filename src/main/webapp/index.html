@@ -8,12 +8,12 @@
     <script src="script.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-    <!-- TODO: download bootstrap instead of linking to it -->
 </head>
 <header>
     <div class="text-center">
@@ -40,7 +40,8 @@
             <br>
             <input type="text" id="formInput" class="form-control" name="formInput" onkeydown="checkEnterKeytoSearch()">
             <br>
-            <button type="submit" class="btn btn-primary" id="submitButton" onclick="displayCodes()">
+            <button type="submit" class="btn btn-primary g-recaptcha" id="submitButton" onclick="displayCodes()" 
+            data-sitekey="6LdncrsZAAAAAP_O58zucLY5JFFf7KZuhHe91vME" data-callback='onSubmit' data-action='submit'>
                 <span class="spinner-border spinner-border-sm" style="width: 1.4rem; height: 1.4rem; display: none;" id="loadingIcon"></span>
                 Submit
             </button>
