@@ -71,7 +71,7 @@ public final class CompanyPromoCodeServletTest {
 
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 
     @Test
@@ -85,7 +85,7 @@ public final class CompanyPromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 
     @Test
@@ -95,16 +95,15 @@ public final class CompanyPromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeVideoIdsFromSearch(COMPANY_NAME)).thenReturn(Optional.of(VIDEO_IDS));
         when(infoScraper.scrapePromoCodesFromVideos(COMPANY_NAME, VIDEO_IDS))
-        .thenReturn(Optional.of(Arrays.asList(
-            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
-                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
-        )));
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET)
+                        .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"+LINE_SEPARATOR));
+                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"
+                        + LINE_SEPARATOR));
     }
 
     @Test
@@ -117,6 +116,6 @@ public final class CompanyPromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 }

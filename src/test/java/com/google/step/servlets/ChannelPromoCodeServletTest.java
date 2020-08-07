@@ -72,7 +72,7 @@ public final class ChannelPromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 
     @Test
@@ -86,16 +86,15 @@ public final class ChannelPromoCodeServletTest {
         when(infoScraper.scrapeChannelUploadPlaylist(CHANNEL_ID)).thenReturn(Optional.of(UPLOAD_ID));
 
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
-        .thenReturn(Optional.of(Arrays.asList(
-            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
-                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
-        )));
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET)
+                        .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"+LINE_SEPARATOR));
+                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"
+                        + LINE_SEPARATOR));
     }
 
     @Test
@@ -108,16 +107,15 @@ public final class ChannelPromoCodeServletTest {
         when(response.getWriter()).thenReturn(pw);
         when(infoScraper.scrapeUserUploadPlaylist(USERNAME)).thenReturn(Optional.of(UPLOAD_ID));
         when(infoScraper.scrapePromoCodesFromPlaylist(UPLOAD_ID))
-        .thenReturn(Optional.of(Arrays.asList(
-            PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET).setVideoId(VIDEO_ID)
-                .setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build()
-        )));
+                .thenReturn(Optional.of(Arrays.asList(PromoCode.builder().setPromoCode(CHANNEL_NAME).setSnippet(SNIPPET)
+                        .setVideoId(VIDEO_ID).setVideoTitle(VIDEO_TITLE).setVideoUploadDate(DATE).build())));
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
         assertThat(result, equalTo(
                 "[{\"promoCode\":\"CHANNEL_NAME\",\"snippet\":\"SNIPPET\",\"videoId\":\"VIDEO_ID\",\"videoTitle\":\"VIDEO_TITLE\","
-                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"+LINE_SEPARATOR));
+                        + "\"videoUploadDate\":\"" + DateFormat.getDateTimeInstance().format(DATE) + "\"}]"
+                        + LINE_SEPARATOR));
     }
 
     @Test
@@ -133,7 +131,7 @@ public final class ChannelPromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 
     @Test
@@ -149,6 +147,6 @@ public final class ChannelPromoCodeServletTest {
         servlet.doGet(request, response);
         String result = sw.getBuffer().toString();
 
-        assertThat(result, equalTo("[]"+LINE_SEPARATOR));
+        assertThat(result, equalTo("[]" + LINE_SEPARATOR));
     }
 }
